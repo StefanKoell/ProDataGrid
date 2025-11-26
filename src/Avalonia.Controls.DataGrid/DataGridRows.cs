@@ -302,7 +302,7 @@ namespace Avalonia.Controls
             {
                 InsertElement(slot,
                     element: null,
-                    updateVerticalScrollBarOnly: _vScrollBar == null || _vScrollBar.IsVisible,
+                    updateVerticalScrollBarOnly: !HasLegacyVerticalScrollBar || IsLegacyVerticalScrollBarVisible,
                     isCollapsed: false,
                     isRow: isRow);
             }
@@ -391,9 +391,9 @@ namespace Avalonia.Controls
 
                 EnsureRowGroupSpacerColumn();
 
-                if (VerticalScrollBar != null)
+                if (HasLegacyVerticalScrollBar)
                 {
-                    DisplayData.PendingVerticalScrollHeight = Math.Min(verticalOffset, VerticalScrollBar.Maximum);
+                    DisplayData.PendingVerticalScrollHeight = Math.Min(verticalOffset, GetLegacyVerticalScrollMaximum());
                 }
             }
             else
@@ -664,7 +664,7 @@ namespace Avalonia.Controls
                 SlotCount += totalSlots - slot;
                 VisibleSlotCount += totalSlots - slot;
                 OnAddedElement_Phase2(0,
-                    updateVerticalScrollBarOnly: _vScrollBar == null || _vScrollBar.IsVisible);
+                    updateVerticalScrollBarOnly: !HasLegacyVerticalScrollBar || IsLegacyVerticalScrollBarVisible);
                 OnElementsChanged(grew: true);
             }
         }
@@ -1705,7 +1705,7 @@ namespace Avalonia.Controls
                 {
                     // Scrolling Down
                     int lastVisibleSlot = GetPreviousVisibleSlot(SlotCount);
-                    if (_vScrollBar != null && MathUtilities.LessThanOrClose(_vScrollBar.Maximum, newVerticalOffset))
+                    if (HasLegacyVerticalScrollBar && MathUtilities.LessThanOrClose(GetLegacyVerticalScrollMaximum(), newVerticalOffset))
                     {
                         // We've scrolled to the bottom of the ScrollBar, automatically place the user at the very bottom
                         // of the DataGrid.  If this produces very odd behavior, evaluate the coping strategy used by

@@ -558,27 +558,19 @@ namespace Avalonia.Controls
 
             if (mousePositionHeaders.X < leftEdge)
             {
-                if (scroll &&
-                    OwningGrid.HorizontalScrollBar != null &&
-                    OwningGrid.HorizontalScrollBar.IsVisible &&
-                    OwningGrid.HorizontalScrollBar.Value > 0)
+                if (scroll)
                 {
                     double newVal = mousePositionHeaders.X - leftEdge;
-                    scrollAmount = Math.Min(newVal, OwningGrid.HorizontalScrollBar.Value);
-                    OwningGrid.UpdateHorizontalOffset(scrollAmount + OwningGrid.HorizontalScrollBar.Value);
+                    scrollAmount = OwningGrid.TryScrollLeftForColumnDrag(-newVal);
                 }
                 mousePositionHeaders = mousePositionHeaders.WithX(leftEdge);
             }
             else if (mousePositionHeaders.X >= rightEdge)
             {
-                if (scroll &&
-                    OwningGrid.HorizontalScrollBar != null &&
-                    OwningGrid.HorizontalScrollBar.IsVisible &&
-                    OwningGrid.HorizontalScrollBar.Value < OwningGrid.HorizontalScrollBar.Maximum)
+                if (scroll)
                 {
                     double newVal = mousePositionHeaders.X - rightEdge;
-                    scrollAmount = Math.Min(newVal, OwningGrid.HorizontalScrollBar.Maximum - OwningGrid.HorizontalScrollBar.Value);
-                    OwningGrid.UpdateHorizontalOffset(scrollAmount + OwningGrid.HorizontalScrollBar.Value);
+                    scrollAmount = OwningGrid.TryScrollRightForColumnDrag(newVal);
                 }
                 mousePositionHeaders = mousePositionHeaders.WithX(rightEdge - 1);
             }

@@ -1,0 +1,176 @@
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved.
+
+#nullable disable
+
+using Avalonia.Automation.Peers;
+using Avalonia.Controls.Automation.Peers;
+using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Utils;
+using Avalonia.Interactivity;
+using Avalonia.VisualTree;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+
+namespace Avalonia.Controls
+{
+    /// <summary>
+    /// Template and initialization
+    /// </summary>
+#if !DATAGRID_INTERNAL
+    public
+#endif
+    partial class DataGrid
+    {
+
+        /// <summary>
+        /// Builds the visual tree for the column header when a new template is applied.
+        /// </summary>
+        //TODO Validation UI
+        protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+        {
+            // The template has changed, so we need to refresh the visuals
+            _measured = false;
+
+            if (_columnHeadersPresenter != null)
+            {
+                // If we're applying a new template, we want to remove the old column headers first
+                _columnHeadersPresenter.Children.Clear();
+            }
+
+            _columnHeadersPresenter = e.NameScope.Find<DataGridColumnHeadersPresenter>(DATAGRID_elementColumnHeadersPresenterName);
+
+            if (_columnHeadersPresenter != null)
+            {
+                if (ColumnsInternal.FillerColumn != null)
+                {
+                    ColumnsInternal.FillerColumn.IsRepresented = false;
+                }
+                _columnHeadersPresenter.OwningGrid = this;
+
+                // Columns were added before our Template was applied, add the ColumnHeaders now
+                List<DataGridColumn> sortedInternal = new List<DataGridColumn>(ColumnsItemsInternal);
+                sortedInternal.Sort(new DisplayIndexComparer());
+                foreach (DataGridColumn column in sortedInternal)
+                {
+                    InsertDisplayedColumnHeader(column);
+                }
+            }
+
+            if (_rowsPresenter != null)
+            {
+                // If we're applying a new template, we want to remove the old rows first
+                UnloadElements(recycle: false);
+            }
+
+            _rowsPresenter = e.NameScope.Find<DataGridRowsPresenter>(DATAGRID_elementRowsPresenterName);
+
+            if (_rowsPresenter != null)
+            {
+                _rowsPresenter.OwningGrid = this;
+                InvalidateRowHeightEstimate();
+                UpdateRowDetailsHeightEstimate();
+            }
+
+            // Look for the ScrollViewer (used in v2 themes with ILogicalScrollable)
+            _scrollViewer = e.NameScope.Find<ScrollViewer>(DATAGRID_elementScrollViewerName);
+
+            _frozenColumnScrollBarSpacer = e.NameScope.Find<Control>(DATAGRID_elementFrozenColumnScrollBarSpacerName);
+
+            // Setup legacy scroll bars (from DataGrid.LegacyScrolling.cs)
+            SetupLegacyScrollBars(e.NameScope);
+
+            _topLeftCornerHeader = e.NameScope.Find<ContentControl>(DATAGRID_elementTopLeftCornerHeaderName);
+            EnsureTopLeftCornerHeader(); // EnsureTopLeftCornerHeader checks for a null _topLeftCornerHeader;
+            _topRightCornerHeader = e.NameScope.Find<ContentControl>(DATAGRID_elementTopRightCornerHeaderName);
+            _bottomRightCorner = e.NameScope.Find<Visual>(DATAGRID_elementBottomRightCornerHeaderName);
+        }
+
+
+        protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+        {
+            base.OnAttachedToVisualTree(e);
+            if (DataConnection.DataSource != null && !DataConnection.EventsWired)
+            {
+                DataConnection.WireEvents(DataConnection.DataSource);
+                InitializeElements(true /*recycleRows*/);
+            }
+        }
+
+
+        protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+        {
+            base.OnDetachedFromVisualTree(e);
+            // When wired to INotifyCollectionChanged, the DataGrid will be cleaned up by GC
+            if (DataConnection.DataSource != null && DataConnection.EventsWired)
+            {
+                DataConnection.UnWireEvents(DataConnection.DataSource);
+            }
+        }
+
+
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            return new DataGridAutomationPeer(this);
+        }
+
+
+        internal void InitializeElements(bool recycleRows)
+        {
+            try
+            {
+                _noCurrentCellChangeCount++;
+
+                // The underlying collection has changed and our editing row (if there is one)
+                // is no longer relevant, so we should force a cancel edit.
+                CancelEdit(DataGridEditingUnit.Row, raiseEvents: false);
+
+                // We want to persist selection throughout a reset, so store away the selected items
+                List<object> selectedItemsCache = new List<object>(_selectedItems.SelectedItemsCache);
+
+                var collapsedGroupsCache = RowGroupHeadersTable
+                    .Where(g => !g.Value.IsVisible)
+                    .Select(g => g.Value.CollectionViewGroup.Key)
+                    .ToArray();
+
+                if (recycleRows)
+                {
+                    RefreshRows(recycleRows, clearRows: true);
+                }
+                else
+                {
+                    RefreshRowsAndColumns(clearRows: true);
+                }
+
+                // collapse previously collapsed groups
+                foreach (var g in collapsedGroupsCache)
+                {
+                    var item = RowGroupHeadersTable.FirstOrDefault(t => t.Value.CollectionViewGroup.Parent.GroupBy.KeysMatch(t.Value.CollectionViewGroup.Key, g));
+                    if (item != null)
+                    {
+                        EnsureRowGroupVisibility(item.Value, false, false);
+                    }
+                }
+
+                // Re-select the old items
+                _selectedItems.SelectedItemsCache = selectedItemsCache;
+                CoerceSelectedItem();
+                if (RowDetailsVisibilityMode != DataGridRowDetailsVisibilityMode.Collapsed)
+                {
+                    UpdateRowDetailsVisibilityMode(RowDetailsVisibilityMode);
+                }
+
+                // The currently displayed rows may have incorrect visual states because of the selection change
+                ApplyDisplayedRowsState(DisplayData.FirstScrollingSlot, DisplayData.LastScrollingSlot);
+            }
+            finally
+            {
+                NoCurrentCellChangeCount--;
+            }
+        }
+
+    }
+}

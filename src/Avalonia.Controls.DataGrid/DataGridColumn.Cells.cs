@@ -1,0 +1,228 @@
+// (c) Copyright Microsoft Corporation.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved.
+
+#nullable disable
+
+using Avalonia.Collections;
+using Avalonia.Controls.Templates;
+using Avalonia.Controls.Utils;
+using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.Layout;
+using Avalonia.Markup.Xaml.MarkupExtensions;
+using Avalonia.Styling;
+using Avalonia.VisualTree;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System;
+
+namespace Avalonia.Controls
+{
+    abstract partial class DataGridColumn
+    {
+        /// <summary>
+        /// Gets the value of a cell according to the specified binding.
+        /// </summary>
+        /// <param name="item">The item associated with a cell.</param>
+        /// <param name="binding">The binding to get the value of.</param>
+        /// <returns>The resultant cell value.</returns>
+        internal object GetCellValue(object item, IBinding binding)
+        {
+            Debug.Assert(OwningGrid != null);
+
+            object content = null;
+            if (binding != null)
+            {
+                OwningGrid.ClipboardContentControl.DataContext = item;
+                var sub = OwningGrid.ClipboardContentControl.Bind(ContentControl.ContentProperty, binding);
+                content = OwningGrid.ClipboardContentControl.GetValue(ContentControl.ContentProperty);
+                sub.Dispose();
+            }
+            return content;
+        }
+
+        public Control GetCellContent(DataGridRow dataGridRow)
+        {
+            dataGridRow = dataGridRow ?? throw new ArgumentNullException(nameof(dataGridRow));
+            if (OwningGrid == null)
+            {
+                throw DataGridError.DataGrid.NoOwningGrid(GetType());
+            }
+            if (dataGridRow.OwningGrid == OwningGrid)
+            {
+                DataGridCell dataGridCell = dataGridRow.Cells[Index];
+                if (dataGridCell != null)
+                {
+                    return dataGridCell.Content as Control;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the column which contains the given element
+        /// </summary>
+        /// <param name="element">element contained in a column</param>
+        /// <returns>Column that contains the element, or null if not found
+        /// </returns>
+        public static DataGridColumn GetColumnContainingElement(Control element)
+        {
+            // Walk up the tree to find the DataGridCell or DataGridColumnHeader that contains the element
+            Visual parent = element;
+            while (parent != null)
+            {
+                if (parent is DataGridCell cell)
+                {
+                    return cell.OwningColumn;
+                }
+                if (parent is DataGridColumnHeader columnHeader)
+                {
+                    return columnHeader.OwningColumn;
+                }
+                parent = parent.GetVisualParent();
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Clears the current sort direction
+        /// </summary>
+        public void ClearSort()
+        {
+            //InvokeProcessSort is already validating if sorting is possible
+            _headerCell?.InvokeProcessSort(KeyboardHelper.GetPlatformCtrlOrCmdKeyModifier(OwningGrid));
+        }
+
+        /// <summary>
+        /// When overridden in a derived class, causes the column cell being edited to revert to the unedited value.
+        /// </summary>
+        /// <param name="editingElement">
+        /// The element that the column displays for a cell in editing mode.
+        /// </param>
+        /// <param name="uneditedValue">
+        /// The previous, unedited value in the cell being edited.
+        /// </param>
+        protected virtual void CancelCellEdit(Control editingElement, object uneditedValue)
+        { }
+
+        internal void CancelCellEditInternal(Control editingElement, object uneditedValue)
+        {
+            CancelCellEdit(editingElement, uneditedValue);
+        }
+
+        /// <summary>
+        /// When overridden in a derived class, called when a cell in the column exits editing mode.
+        /// </summary>
+        protected virtual void EndCellEdit()
+        { }
+
+        internal void EndCellEditInternal()
+        {
+            EndCellEdit();
+        }
+
+        internal virtual DataGridColumnHeader CreateHeader()
+        {
+            var result = new DataGridColumnHeader
+            {
+                OwningColumn = this
+            };
+            result[!ContentControl.ContentProperty] = this[!HeaderProperty];
+            result[!ContentControl.ContentTemplateProperty] = this[!HeaderTemplateProperty];
+            if (OwningGrid.ColumnHeaderTheme is { } columnTheme)
+            {
+                result.SetValue(StyledElement.ThemeProperty, columnTheme, BindingPriority.Template);
+            }
+
+            result.PointerPressed += (s, e) => { HeaderPointerPressed?.Invoke(this, e); };
+            result.PointerReleased += (s, e) => { HeaderPointerReleased?.Invoke(this, e); };
+            return result;
+        }
+
+        internal Control GenerateElementInternal(DataGridCell cell, object dataItem)
+        {
+            return GenerateElement(cell, dataItem);
+        }
+
+        internal object PrepareCellForEditInternal(Control editingElement, RoutedEventArgs editingEventArgs)
+        {
+            var result = PrepareCellForEdit(editingElement, editingEventArgs);
+            editingElement.Focus();
+
+            return result;
+        }
+
+        //TODO Binding
+        internal Control GenerateEditingElementInternal(DataGridCell cell, object dataItem)
+        {
+            if (_editingElement == null)
+            {
+                _editingElement = GenerateEditingElement(cell, dataItem, out _editBinding);
+            }
+
+            return _editingElement;
+        }
+
+        /// <summary>
+        /// Clears the cached editing element.
+        /// </summary>
+        //TODO Binding
+        internal void RemoveEditingElement()
+        {
+            _editingElement = null;
+        }
+
+        /// <summary>
+        /// We get the sort description from the data source.  We don't worry whether we can modify sort -- perhaps the sort description
+        /// describes an unchangeable sort that exists on the data.
+        /// </summary>
+        internal DataGridSortDescription GetSortDescription()
+        {
+            if (OwningGrid != null
+            && OwningGrid.DataConnection != null
+            && OwningGrid.DataConnection.SortDescriptions != null)
+            {
+                if (CustomSortComparer != null)
+                {
+                    return
+                    OwningGrid.DataConnection.SortDescriptions
+                    .OfType<DataGridComparerSortDescription>()
+                    .FirstOrDefault(s => s.SourceComparer == CustomSortComparer);
+                }
+
+                string propertyName = GetSortPropertyName();
+
+                return OwningGrid.DataConnection.SortDescriptions.FirstOrDefault(s => s.HasPropertyPath && s.PropertyPath == propertyName);
+            }
+
+            return null;
+        }
+
+        internal string GetSortPropertyName()
+        {
+            string result = SortMemberPath;
+
+            if (String.IsNullOrEmpty(result))
+            {
+                if (this is DataGridBoundColumn boundColumn)
+                {
+                    if (boundColumn.Binding is Binding binding)
+                    {
+                        result = binding.Path;
+                    }
+                    else if (boundColumn.Binding is CompiledBindingExtension compiledBinding)
+                    {
+                        result = compiledBinding.Path.ToString();
+                    }
+                }
+            }
+
+            return result;
+        }
+
+    }
+}

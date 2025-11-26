@@ -1,0 +1,582 @@
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved.
+
+#nullable disable
+
+using Avalonia.Collections;
+using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
+using Avalonia.Data;
+using Avalonia.Media;
+using Avalonia.Styling;
+using System;
+using System.Collections;
+
+namespace Avalonia.Controls
+{
+    /// <summary>
+    /// Styled and direct properties
+    /// </summary>
+#if !DATAGRID_INTERNAL
+    public
+#endif
+    partial class DataGrid
+    {
+        /// <summary>
+        /// Identifies the CanUserReorderColumns dependency property.
+        /// </summary>
+        public static readonly StyledProperty<bool> CanUserReorderColumnsProperty =
+            AvaloniaProperty.Register<DataGrid, bool>(nameof(CanUserReorderColumns));
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the user can change
+        /// the column display order by dragging column headers with the mouse.
+        /// </summary>
+        public bool CanUserReorderColumns
+        {
+            get { return GetValue(CanUserReorderColumnsProperty); }
+            set { SetValue(CanUserReorderColumnsProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the CanUserResizeColumns dependency property.
+        /// </summary>
+        public static readonly StyledProperty<bool> CanUserResizeColumnsProperty =
+            AvaloniaProperty.Register<DataGrid, bool>(nameof(CanUserResizeColumns));
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the user can adjust column widths using the mouse.
+        /// </summary>
+        public bool CanUserResizeColumns
+        {
+            get { return GetValue(CanUserResizeColumnsProperty); }
+            set { SetValue(CanUserResizeColumnsProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the CanUserSortColumns dependency property.
+        /// </summary>
+        public static readonly StyledProperty<bool> CanUserSortColumnsProperty =
+            AvaloniaProperty.Register<DataGrid, bool>(nameof(CanUserSortColumns), true);
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the user can sort columns by clicking the column header.
+        /// </summary>
+        public bool CanUserSortColumns
+        {
+            get { return GetValue(CanUserSortColumnsProperty); }
+            set { SetValue(CanUserSortColumnsProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the ColumnHeaderHeight dependency property.
+        /// </summary>
+        public static readonly StyledProperty<double> ColumnHeaderHeightProperty =
+            AvaloniaProperty.Register<DataGrid, double>(
+                nameof(ColumnHeaderHeight),
+                defaultValue: double.NaN,
+                validate: IsValidColumnHeaderHeight);
+
+        private static bool IsValidColumnHeaderHeight(double value)
+        {
+            return double.IsNaN(value) ||
+                (value >= DATAGRID_minimumColumnHeaderHeight && value <= DATAGRID_maxHeadersThickness);
+        }
+
+        /// <summary>
+        /// Gets or sets the height of the column headers row.
+        /// </summary>
+        public double ColumnHeaderHeight
+        {
+            get { return GetValue(ColumnHeaderHeightProperty); }
+            set { SetValue(ColumnHeaderHeightProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the ColumnWidth dependency property.
+        /// </summary>
+        public static readonly StyledProperty<DataGridLength> ColumnWidthProperty =
+            AvaloniaProperty.Register<DataGrid, DataGridLength>(nameof(ColumnWidth), defaultValue: DataGridLength.Auto);
+
+        /// <summary>
+        /// Gets or sets the standard width or automatic sizing mode of columns in the control.
+        /// </summary>
+        public DataGridLength ColumnWidth
+        {
+            get { return GetValue(ColumnWidthProperty); }
+            set { SetValue(ColumnWidthProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="RowTheme"/> dependency property.
+        /// </summary>
+        public static readonly StyledProperty<ControlTheme> RowThemeProperty =
+            AvaloniaProperty.Register<DataGrid, ControlTheme>(nameof(RowTheme));
+
+        /// <summary>
+        /// Gets or sets the theme applied to all rows.
+        /// </summary>
+        public ControlTheme RowTheme
+        {
+            get { return GetValue(RowThemeProperty); }
+            set { SetValue(RowThemeProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="CellTheme"/> dependency property.
+        /// </summary>
+        public static readonly StyledProperty<ControlTheme> CellThemeProperty =
+            AvaloniaProperty.Register<DataGrid, ControlTheme>(nameof(CellTheme));
+
+        /// <summary>
+        /// Gets or sets the theme applied to all cells.
+        /// </summary>
+        public ControlTheme CellTheme
+        {
+            get { return GetValue(CellThemeProperty); }
+            set { SetValue(CellThemeProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="ColumnHeaderTheme"/> dependency property.
+        /// </summary>
+        public static readonly StyledProperty<ControlTheme> ColumnHeaderThemeProperty =
+            AvaloniaProperty.Register<DataGrid, ControlTheme>(nameof(ColumnHeaderTheme));
+
+        /// <summary>
+        /// Gets or sets the theme applied to all column headers.
+        /// </summary>
+        public ControlTheme ColumnHeaderTheme
+        {
+            get { return GetValue(ColumnHeaderThemeProperty); }
+            set { SetValue(ColumnHeaderThemeProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="RowGroupTheme"/> dependency property.
+        /// </summary>
+        public static readonly StyledProperty<ControlTheme> RowGroupThemeProperty =
+            AvaloniaProperty.Register<DataGrid, ControlTheme>(nameof(RowGroupTheme));
+
+        /// <summary>
+        /// Gets or sets the theme applied to all row groups.
+        /// </summary>
+        public ControlTheme RowGroupTheme
+        {
+            get { return GetValue(RowGroupThemeProperty); }
+            set { SetValue(RowGroupThemeProperty, value); }
+        }
+
+        public static readonly StyledProperty<int> FrozenColumnCountProperty =
+            AvaloniaProperty.Register<DataGrid, int>(
+                nameof(FrozenColumnCount),
+                validate: ValidateFrozenColumnCount);
+
+        /// <summary>
+        /// Gets or sets the number of columns that the user cannot scroll horizontally.
+        /// </summary>
+        public int FrozenColumnCount
+        {
+            get { return GetValue(FrozenColumnCountProperty); }
+            set { SetValue(FrozenColumnCountProperty, value); }
+        }
+
+        private static bool ValidateFrozenColumnCount(int value) => value >= 0;
+
+        public static readonly StyledProperty<DataGridGridLinesVisibility> GridLinesVisibilityProperty =
+            AvaloniaProperty.Register<DataGrid, DataGridGridLinesVisibility>(nameof(GridLinesVisibility));
+
+        /// <summary>
+        /// Gets or sets a value that indicates which grid lines separating inner cells are shown.
+        /// </summary>
+        public DataGridGridLinesVisibility GridLinesVisibility
+        {
+            get { return GetValue(GridLinesVisibilityProperty); }
+            set { SetValue(GridLinesVisibilityProperty, value); }
+        }
+
+        public static readonly StyledProperty<DataGridHeadersVisibility> HeadersVisibilityProperty =
+            AvaloniaProperty.Register<DataGrid, DataGridHeadersVisibility>(nameof(HeadersVisibility));
+
+        /// <summary>
+        /// Gets or sets a value that indicates the visibility of row and column headers.
+        /// </summary>
+        public DataGridHeadersVisibility HeadersVisibility
+        {
+            get { return GetValue(HeadersVisibilityProperty); }
+            set { SetValue(HeadersVisibilityProperty, value); }
+        }
+
+        public static readonly StyledProperty<IBrush> HorizontalGridLinesBrushProperty =
+            AvaloniaProperty.Register<DataGrid, IBrush>(nameof(HorizontalGridLinesBrush));
+
+        /// <summary>
+        /// Gets or sets the <see cref="T:System.Windows.Media.Brush" /> that is used to paint grid lines separating rows.
+        /// </summary>
+        public IBrush HorizontalGridLinesBrush
+        {
+            get { return GetValue(HorizontalGridLinesBrushProperty); }
+            set { SetValue(HorizontalGridLinesBrushProperty, value); }
+        }
+
+        public static readonly StyledProperty<ScrollBarVisibility> HorizontalScrollBarVisibilityProperty =
+            AvaloniaProperty.Register<DataGrid, ScrollBarVisibility>(nameof(HorizontalScrollBarVisibility));
+
+        /// <summary>
+        /// Gets or sets a value that indicates how the horizontal scroll bar is displayed.
+        /// </summary>
+        public ScrollBarVisibility HorizontalScrollBarVisibility
+        {
+            get { return GetValue(HorizontalScrollBarVisibilityProperty); }
+            set { SetValue(HorizontalScrollBarVisibilityProperty, value); }
+        }
+
+        public static readonly StyledProperty<bool> IsReadOnlyProperty =
+            AvaloniaProperty.Register<DataGrid, bool>(nameof(IsReadOnly));
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the user can edit the values in the control.
+        /// </summary>
+        public bool IsReadOnly
+        {
+            get { return GetValue(IsReadOnlyProperty); }
+            set { SetValue(IsReadOnlyProperty, value); }
+        }
+
+        public static readonly StyledProperty<bool> AreRowGroupHeadersFrozenProperty =
+            AvaloniaProperty.Register<DataGrid, bool>(
+                nameof(AreRowGroupHeadersFrozen),
+                defaultValue: true);
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the row group header sections
+        /// remain fixed at the width of the display area or can scroll horizontally.
+        /// </summary>
+        public bool AreRowGroupHeadersFrozen
+        {
+            get { return GetValue(AreRowGroupHeadersFrozenProperty); }
+            set { SetValue(AreRowGroupHeadersFrozenProperty, value); }
+        }
+
+        /// <summary>
+        /// Defines the <see cref="IsScrollInertiaEnabled"/> property.
+        /// </summary>
+        public static readonly AttachedProperty<bool> IsScrollInertiaEnabledProperty =
+            ScrollViewer.IsScrollInertiaEnabledProperty.AddOwner<DataGrid>();
+
+        /// <summary>
+        /// Gets or sets whether scroll gestures should include inertia in their behavior and value.
+        /// </summary>
+        public bool IsScrollInertiaEnabled
+        {
+            get => GetValue(IsScrollInertiaEnabledProperty);
+            set => SetValue(IsScrollInertiaEnabledProperty, value);
+        }
+
+        public static readonly DirectProperty<DataGrid, bool> IsValidProperty =
+            AvaloniaProperty.RegisterDirect<DataGrid, bool>(
+                nameof(IsValid),
+                o => o.IsValid);
+
+        public static readonly StyledProperty<double> MaxColumnWidthProperty =
+            AvaloniaProperty.Register<DataGrid, double>(
+                nameof(MaxColumnWidth),
+                defaultValue: DATAGRID_defaultMaxColumnWidth,
+                validate: IsValidColumnWidth);
+
+        private static bool IsValidColumnWidth(double value)
+        {
+            return !double.IsNaN(value) && value > 0;
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum width of columns in the <see cref="T:Avalonia.Controls.DataGrid" /> .
+        /// </summary>
+        public double MaxColumnWidth
+        {
+            get { return GetValue(MaxColumnWidthProperty); }
+            set { SetValue(MaxColumnWidthProperty, value); }
+        }
+
+        public static readonly StyledProperty<double> MinColumnWidthProperty =
+            AvaloniaProperty.Register<DataGrid, double>(
+                nameof(MinColumnWidth),
+                defaultValue: DATAGRID_defaultMinColumnWidth,
+                validate: IsValidMinColumnWidth);
+
+        private static bool IsValidMinColumnWidth(double value)
+        {
+            return !double.IsNaN(value) && !double.IsPositiveInfinity(value) && value >= 0;
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum width of columns in the <see cref="T:Avalonia.Controls.DataGrid" />.
+        /// </summary>
+        public double MinColumnWidth
+        {
+            get { return GetValue(MinColumnWidthProperty); }
+            set { SetValue(MinColumnWidthProperty, value); }
+        }
+
+        public static readonly StyledProperty<IBrush> RowBackgroundProperty =
+            AvaloniaProperty.Register<DataGrid, IBrush>(nameof(RowBackground));
+
+        /// <summary>
+        /// Gets or sets the <see cref="T:System.Windows.Media.Brush" /> that is used to paint row backgrounds.
+        /// </summary>
+        public IBrush RowBackground
+        {
+            get { return GetValue(RowBackgroundProperty); }
+            set { SetValue(RowBackgroundProperty, value); }
+        }
+
+        public static readonly StyledProperty<double> RowHeightProperty =
+            AvaloniaProperty.Register<DataGrid, double>(
+                nameof(RowHeight),
+                defaultValue: double.NaN,
+                validate: IsValidRowHeight);
+
+        private static bool IsValidRowHeight(double value)
+        {
+            return double.IsNaN(value) ||
+                (value >= DataGridRow.DATAGRIDROW_minimumHeight &&
+                 value <= DataGridRow.DATAGRIDROW_maximumHeight);
+        }
+
+        /// <summary>
+        /// Gets or sets the standard height of rows in the control.
+        /// </summary>
+        public double RowHeight
+        {
+            get { return GetValue(RowHeightProperty); }
+            set { SetValue(RowHeightProperty, value); }
+        }
+
+        public static readonly StyledProperty<double> RowHeaderWidthProperty =
+            AvaloniaProperty.Register<DataGrid, double>(
+                nameof(RowHeaderWidth),
+                defaultValue: double.NaN,
+                validate: IsValidRowHeaderWidth);
+
+        private static bool IsValidRowHeaderWidth(double value)
+        {
+            return double.IsNaN(value) ||
+                (value >= DATAGRID_minimumRowHeaderWidth &&
+                 value <= DATAGRID_maxHeadersThickness);
+        }
+
+        /// <summary>
+        /// Gets or sets the width of the row header column.
+        /// </summary>
+        public double RowHeaderWidth
+        {
+            get { return GetValue(RowHeaderWidthProperty); }
+            set { SetValue(RowHeaderWidthProperty, value); }
+        }
+
+        public static readonly StyledProperty<DataGridSelectionMode> SelectionModeProperty =
+            AvaloniaProperty.Register<DataGrid, DataGridSelectionMode>(nameof(SelectionMode));
+
+        /// <summary>
+        /// Gets or sets the selection behavior of the data grid.
+        /// </summary>
+        public DataGridSelectionMode SelectionMode
+        {
+            get { return GetValue(SelectionModeProperty); }
+            set { SetValue(SelectionModeProperty, value); }
+        }
+
+        public static readonly StyledProperty<IBrush> VerticalGridLinesBrushProperty =
+            AvaloniaProperty.Register<DataGrid, IBrush>(nameof(VerticalGridLinesBrush));
+
+        /// <summary>
+        /// Gets or sets the <see cref="T:System.Windows.Media.Brush" /> that is used to paint grid lines separating columns.
+        /// </summary>
+        public IBrush VerticalGridLinesBrush
+        {
+            get { return GetValue(VerticalGridLinesBrushProperty); }
+            set { SetValue(VerticalGridLinesBrushProperty, value); }
+        }
+
+        public static readonly StyledProperty<ScrollBarVisibility> VerticalScrollBarVisibilityProperty =
+            AvaloniaProperty.Register<DataGrid, ScrollBarVisibility>(nameof(VerticalScrollBarVisibility));
+
+        /// <summary>
+        /// Gets or sets a value that indicates how the vertical scroll bar is displayed.
+        /// </summary>
+        public ScrollBarVisibility VerticalScrollBarVisibility
+        {
+            get { return GetValue(VerticalScrollBarVisibilityProperty); }
+            set { SetValue(VerticalScrollBarVisibilityProperty, value); }
+        }
+
+        /// <summary>
+        /// Defines the <see cref="UseLogicalScrollable"/> property.
+        /// </summary>
+        public static readonly StyledProperty<bool> UseLogicalScrollableProperty =
+            AvaloniaProperty.Register<DataGrid, bool>(
+                nameof(UseLogicalScrollable),
+                defaultValue: false);
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the DataGrid should use the new ILogicalScrollable
+        /// implementation for scrolling. When true, the DataGridRowsPresenter participates in Avalonia's
+        /// standard scroll contract. When false (default), uses the legacy custom ScrollBar handling.
+        /// </summary>
+        /// <remarks>
+        /// This property is a feature flag for gradual migration to the new scrolling architecture.
+        /// Setting this to true enables:
+        /// - Standard ScrollViewer integration via ILogicalScrollable
+        /// - Improved scroll chaining support
+        /// - Better touch/inertia scrolling behavior
+        /// - Potential future support for scroll anchoring
+        /// 
+        /// Note: Theme updates may be required for full ScrollViewer integration.
+        /// </remarks>
+        public bool UseLogicalScrollable
+        {
+            get { return GetValue(UseLogicalScrollableProperty); }
+            set { SetValue(UseLogicalScrollableProperty, value); }
+        }
+
+        public static readonly StyledProperty<ITemplate<Control>> DropLocationIndicatorTemplateProperty =
+            AvaloniaProperty.Register<DataGrid, ITemplate<Control>>(nameof(DropLocationIndicatorTemplate));
+
+        /// <summary>
+        /// Gets or sets the template that is used when rendering the column headers.
+        /// </summary>
+        public ITemplate<Control> DropLocationIndicatorTemplate
+        {
+            get { return GetValue(DropLocationIndicatorTemplateProperty); }
+            set { SetValue(DropLocationIndicatorTemplateProperty, value); }
+        }
+
+        private int _selectedIndex = -1;
+        private object _selectedItem;
+
+        public static readonly DirectProperty<DataGrid, int> SelectedIndexProperty =
+            AvaloniaProperty.RegisterDirect<DataGrid, int>(
+                nameof(SelectedIndex),
+                o => o.SelectedIndex,
+                (o, v) => o.SelectedIndex = v,
+                defaultBindingMode: BindingMode.TwoWay);
+
+        /// <summary>
+        /// Gets or sets the index of the current selection.
+        /// </summary>
+        /// <returns>
+        /// The index of the current selection, or -1 if the selection is empty.
+        /// </returns>
+        public int SelectedIndex
+        {
+            get { return _selectedIndex; }
+            set { SetAndRaise(SelectedIndexProperty, ref _selectedIndex, value); }
+        }
+
+        public static readonly DirectProperty<DataGrid, object> SelectedItemProperty =
+            AvaloniaProperty.RegisterDirect<DataGrid, object>(
+                nameof(SelectedItem),
+                o => o.SelectedItem,
+                (o, v) => o.SelectedItem = v,
+                defaultBindingMode: BindingMode.TwoWay);
+
+        /// <summary>
+        /// Gets or sets the data item corresponding to the selected row.
+        /// </summary>
+        public object SelectedItem
+        {
+            get { return _selectedItem; }
+            set { SetAndRaise(SelectedItemProperty, ref _selectedItem, value); }
+        }
+
+        public static readonly StyledProperty<DataGridClipboardCopyMode> ClipboardCopyModeProperty =
+            AvaloniaProperty.Register<DataGrid, DataGridClipboardCopyMode>(
+                nameof(ClipboardCopyMode),
+                defaultValue: DataGridClipboardCopyMode.ExcludeHeader);
+
+        /// <summary>
+        /// The property which determines how DataGrid content is copied to the Clipboard.
+        /// </summary>
+        public DataGridClipboardCopyMode ClipboardCopyMode
+        {
+            get { return GetValue(ClipboardCopyModeProperty); }
+            set { SetValue(ClipboardCopyModeProperty, value); }
+        }
+
+        public static readonly StyledProperty<bool> AutoGenerateColumnsProperty =
+            AvaloniaProperty.Register<DataGrid, bool>(nameof(AutoGenerateColumns));
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether columns are created
+        /// automatically when the <see cref="P:Avalonia.Controls.DataGrid.ItemsSource" /> property is set.
+        /// </summary>
+        public bool AutoGenerateColumns
+        {
+            get { return GetValue(AutoGenerateColumnsProperty); }
+            set { SetValue(AutoGenerateColumnsProperty, value); }
+        }
+
+        /// <summary>
+        /// Identifies the ItemsSource property.
+        /// </summary>
+        public static readonly StyledProperty<IEnumerable> ItemsSourceProperty =
+            AvaloniaProperty.Register<DataGrid, IEnumerable>(nameof(ItemsSource));
+
+        /// <summary>
+        /// Gets or sets a collection that is used to generate the content of the control.
+        /// </summary>
+        public IEnumerable ItemsSource
+        {
+            get => GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
+        }
+
+        public static readonly StyledProperty<bool> AreRowDetailsFrozenProperty =
+            AvaloniaProperty.Register<DataGrid, bool>(nameof(AreRowDetailsFrozen));
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the row details sections remain
+        /// fixed at the width of the display area or can scroll horizontally.
+        /// </summary>
+        public bool AreRowDetailsFrozen
+        {
+            get { return GetValue(AreRowDetailsFrozenProperty); }
+            set { SetValue(AreRowDetailsFrozenProperty, value); }
+        }
+
+        public static readonly StyledProperty<IDataTemplate> RowDetailsTemplateProperty =
+            AvaloniaProperty.Register<DataGrid, IDataTemplate>(nameof(RowDetailsTemplate));
+
+        /// <summary>
+        /// Gets or sets the template that is used to display the content of the details section of rows.
+        /// </summary>
+        public IDataTemplate RowDetailsTemplate
+        {
+            get { return GetValue(RowDetailsTemplateProperty); }
+            set { SetValue(RowDetailsTemplateProperty, value); }
+        }
+
+        public static readonly StyledProperty<DataGridRowDetailsVisibilityMode> RowDetailsVisibilityModeProperty =
+            AvaloniaProperty.Register<DataGrid, DataGridRowDetailsVisibilityMode>(nameof(RowDetailsVisibilityMode));
+
+        /// <summary>
+        /// Gets or sets a value that indicates when the details sections of rows are displayed.
+        /// </summary>
+        public DataGridRowDetailsVisibilityMode RowDetailsVisibilityMode
+        {
+            get { return GetValue(RowDetailsVisibilityModeProperty); }
+            set { SetValue(RowDetailsVisibilityModeProperty, value); }
+        }
+
+        public static readonly DirectProperty<DataGrid, IDataGridCollectionView> CollectionViewProperty =
+            AvaloniaProperty.RegisterDirect<DataGrid, IDataGridCollectionView>(nameof(CollectionView),
+                o => o.CollectionView);
+
+        /// <summary>
+        /// Gets current <see cref="IDataGridCollectionView"/>.
+        /// </summary>
+        public IDataGridCollectionView CollectionView =>
+            DataConnection.CollectionView;
+    }
+}

@@ -35,7 +35,7 @@ namespace Avalonia.Controls
 #if !DATAGRID_INTERNAL
     public
 #endif
-    class DataGridRow : TemplatedControl
+    partial class DataGridRow : TemplatedControl
     {
 
         private const byte DATAGRIDROW_defaultMinHeight = 0;
@@ -471,96 +471,7 @@ namespace Avalonia.Controls
             return row;
         }
 
-        /// <summary>
-        /// Arranges the content of the <see cref="T:Avalonia.Controls.DataGridRow" />.
-        /// </summary>
-        /// <returns>
-        /// The actual size used by the <see cref="T:Avalonia.Controls.DataGridRow" />.
-        /// </returns>
-        /// <param name="finalSize">
-        /// The final area within the parent that this element should use to arrange itself and its children.
-        /// </param>
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            if (OwningGrid == null)
-            {
-                return base.ArrangeOverride(finalSize);
-            }
 
-            // If the DataGrid was scrolled horizontally after our last Arrange, we need to make sure
-            // the Cells and Details are Arranged again
-            if (_lastHorizontalOffset != OwningGrid.HorizontalOffset)
-            {
-                _lastHorizontalOffset = OwningGrid.HorizontalOffset;
-                InvalidateHorizontalArrange();
-            }
-
-            Size size = base.ArrangeOverride(finalSize);
-
-            if (_checkDetailsContentHeight)
-            {
-                _checkDetailsContentHeight = false;
-                EnsureDetailsContentHeight();
-            }
-
-            if (RootElement != null)
-            {
-                foreach (Control child in RootElement.Children)
-                {
-                    if (DataGridFrozenGrid.GetIsFrozen(child))
-                    {
-                        TranslateTransform transform = new TranslateTransform();
-                        // Automatic layout rounding doesn't apply to transforms so we need to Round this
-                        transform.X = Math.Round(OwningGrid.HorizontalOffset);
-                        child.RenderTransform = transform;
-                    }
-                }
-            }
-
-            if (_bottomGridLine != null)
-            {
-                RectangleGeometry gridlineClipGeometry = new RectangleGeometry();
-                gridlineClipGeometry.Rect = new Rect(OwningGrid.HorizontalOffset, 0, Math.Max(0, DesiredSize.Width - OwningGrid.HorizontalOffset), _bottomGridLine.DesiredSize.Height);
-                _bottomGridLine.Clip = gridlineClipGeometry;
-            }
-
-            return size;
-        }
-
-        /// <summary>
-        /// Measures the children of a <see cref="T:Avalonia.Controls.DataGridRow" /> to
-        /// prepare for arranging them during the <see cref="M:System.Windows.FrameworkElement.ArrangeOverride(System.Windows.Size)" /> pass.
-        /// </summary>
-        /// <param name="availableSize">
-        /// The available size that this element can give to child elements. Indicates an upper limit that child elements should not exceed.
-        /// </param>
-        /// <returns>
-        /// The size that the <see cref="T:Avalonia.Controls.Primitives.DataGridRow" /> determines it needs during layout, based on its calculations of child object allocated sizes.
-        /// </returns>
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            if (OwningGrid == null)
-            {
-                return base.MeasureOverride(availableSize);
-            }
-
-            //Allow the DataGrid specific components to adjust themselves based on new values
-            if (_headerElement != null)
-            {
-                _headerElement.InvalidateMeasure();
-            }
-            if (_cellsElement != null)
-            {
-                _cellsElement.InvalidateMeasure();
-            }
-            if (_detailsElement != null)
-            {
-                _detailsElement.InvalidateMeasure();
-            }
-
-            Size desiredSize = base.MeasureOverride(availableSize);
-            return desiredSize.WithWidth(Math.Max(desiredSize.Width, OwningGrid.CellsWidth));
-        }
 
         /// <summary>
         /// Builds the visual tree for the column header when a new template is applied.
@@ -640,135 +551,17 @@ namespace Avalonia.Controls
             base.OnPointerExited(e);
         }
 
-        internal void ApplyCellsState()
-        {
-            foreach (DataGridCell dataGridCell in Cells)
-            {
-                dataGridCell.UpdatePseudoClasses();
-            }
-        }
 
-        internal void ApplyHeaderStatus()
-        {
-            if (_headerElement != null && OwningGrid.AreRowHeadersVisible)
-            {
-                _headerElement.UpdatePseudoClasses();
-            }
-        }
 
-        internal void ApplyState()
-        {
-            if (RootElement != null && OwningGrid != null && IsVisible)
-            {
-                var isSelected = Slot != -1 && OwningGrid.GetRowSelection(Slot);
-                IsSelected = isSelected;
-                PseudoClasses.Set(":editing", IsEditing);
-                PseudoClasses.Set(":invalid", !IsValid);
-                ApplyHeaderStatus();
-            }
-        }
 
-        //TODO Animation
-        internal void DetachFromDataGrid(bool recycle)
-        {
-            UnloadDetailsTemplate(recycle);
 
-            if (recycle)
-            {
-                IsRecycled = true;
 
-                if (_cellsElement != null)
-                {
-                    _cellsElement.Recycle();
-                }
 
-                _checkDetailsContentHeight = false;
 
-                // Clear out the old Details cache so it won't be reused for other data
-                //_detailsDesiredHeight = double.NaN;
-                if (_detailsElement != null)
-                {
-                    _detailsElement.ClearValue(DataGridDetailsPresenter.ContentHeightProperty);
-                }
-            }
 
-            Slot = -1;
-        }
 
-        internal void InvalidateCellsIndex()
-        {
-            _cellsElement?.InvalidateChildIndex();
-        }
 
-        internal void EnsureFillerVisibility()
-        {
-            if (_cellsElement != null)
-            {
-                _cellsElement.EnsureFillerVisibility();
-            }
-        }
 
-        internal void EnsureGridLines()
-        {
-            if (OwningGrid != null)
-            {
-                if (_bottomGridLine != null)
-                {
-                    // It looks like setting Visibility sometimes has side effects so make sure the value is actually
-                    // different before setting it
-                    bool newVisibility = OwningGrid.GridLinesVisibility == DataGridGridLinesVisibility.Horizontal || OwningGrid.GridLinesVisibility == DataGridGridLinesVisibility.All;
-
-                    if (newVisibility != _bottomGridLine.IsVisible)
-                    {
-                        _bottomGridLine.IsVisible = newVisibility;
-                    }
-                    _bottomGridLine.Fill = OwningGrid.HorizontalGridLinesBrush;
-                }
-
-                foreach (DataGridCell cell in Cells)
-                {
-                    cell.EnsureGridLine(OwningGrid.ColumnsInternal.LastVisibleColumn);
-                }
-            }
-        }
-
-        internal void EnsureHeaderStyleAndVisibility(Styling.Style previousStyle)
-        {
-            if (_headerElement != null && OwningGrid != null)
-            {
-                _headerElement.IsVisible = OwningGrid.AreRowHeadersVisible;
-            }
-        }
-
-        internal void EnsureHeaderVisibility()
-        {
-            if (_headerElement != null && OwningGrid != null)
-            {
-                _headerElement.IsVisible = OwningGrid.AreRowHeadersVisible;
-            }
-        }
-
-        internal void InvalidateHorizontalArrange()
-        {
-            if (_cellsElement != null)
-            {
-                _cellsElement.InvalidateArrange();
-            }
-            if (_detailsElement != null)
-            {
-                _detailsElement.InvalidateArrange();
-            }
-        }
-
-        internal void InvalidateDesiredHeight()
-        {
-            _cellsElement?.InvalidateDesiredHeight();
-        }
-
-        internal void ResetGridLine()
-        {
-            _bottomGridLine = null;
-        }
 
         private void DataGridCellCollection_CellAdded(object sender, DataGridCellEventArgs e)
         {
@@ -793,10 +586,6 @@ namespace Avalonia.Controls
             }
         }
 
-        private void OnRowDetailsChanged()
-        {
-            OwningGrid?.OnRowDetailsChanged();
-        }
 
         // Returns the actual template that should be sued for Details: either explicity set on this row
         // or inherited from the DataGrid
@@ -825,254 +614,15 @@ namespace Avalonia.Controls
             }
         }
 
-        private void UnloadDetailsTemplate(bool recycle)
-        {
-            if (_detailsElement != null)
-            {
-                if (_detailsContent != null)
-                {
-                    if (_detailsLoaded)
-                    {
-                        OwningGrid.OnUnloadingRowDetails(this, _detailsContent);
-                    }
-                    _detailsContent.DataContext = null;
-                    if (!recycle)
-                    {
-                        _detailsContentSizeSubscription?.Dispose();
-                        _detailsContentSizeSubscription = null;
-                        _detailsContent = null;
-                    }
-                }
 
-                if (!recycle)
-                {
-                    _detailsElement.Children.Clear();
-                }
-                _detailsElement.ContentHeight = 0;
-            }
-            if (!recycle)
-            {
-                _appliedDetailsTemplate = null;
-                SetValueNoCallback(DetailsTemplateProperty, null);
-            }
 
-            _detailsLoaded = false;
-            _appliedDetailsVisibility = null;
-            SetValueNoCallback(AreDetailsVisibleProperty, false);
-        }
-
-        //TODO Animation
-        internal void EnsureDetailsContentHeight()
-        {
-            if ((_detailsElement != null)
-                && (_detailsContent != null)
-                && (double.IsNaN(_detailsContent.Height))
-                && (AreDetailsVisible)
-                && (!double.IsNaN(_detailsDesiredHeight))
-                && !MathUtilities.AreClose(_detailsContent.Bounds.Inflate(_detailsContent.Margin).Height, _detailsDesiredHeight)
-                && Slot != -1)
-            {
-                _detailsDesiredHeight = _detailsContent.Bounds.Inflate(_detailsContent.Margin).Height;
-
-                if (true)
-                {
-                    _detailsElement.ContentHeight = _detailsDesiredHeight;
-                }
-            }
-        }
-
-        // Makes sure the _detailsDesiredHeight is initialized.  We need to measure it to know what
-        // height we want to animate to.  Subsequently, we just update that height in response to SizeChanged
-        private void EnsureDetailsDesiredHeight()
-        {
-            Debug.Assert(_detailsElement != null && OwningGrid != null);
-
-            if (_detailsContent != null)
-            {
-                Debug.Assert(_detailsElement.Children.Contains(_detailsContent));
-
-                _detailsContent.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                _detailsDesiredHeight = _detailsContent.DesiredSize.Height;
-            }
-            else
-            {
-                _detailsDesiredHeight = 0;
-            }
-        }
 
         //TODO Cleanup
         double? _previousDetailsHeight = null;
 
-        //TODO Animation
-        private void DetailsContent_HeightChanged(double newValue)
-        {
-            if (_previousDetailsHeight.HasValue)
-            {
-                var oldValue = _previousDetailsHeight.Value;
-                _previousDetailsHeight = newValue;
-                if (newValue != oldValue && newValue != _detailsDesiredHeight)
-                {
-
-                    if (AreDetailsVisible && _appliedDetailsTemplate != null)
-                    {
-                        // Update the new desired height for RowDetails
-                        _detailsDesiredHeight = newValue;
-
-                        _detailsElement.ContentHeight = newValue;
-
-                        // Calling this when details are not visible invalidates during layout when we have no work
-                        // to do.  In certain scenarios, this could cause a layout cycle
-                        OnRowDetailsChanged();
-                    }
-                }
-            }
-            else
-            {
-                _previousDetailsHeight = newValue;
-            }
-        }
-
-        private void DetailsContent_SizeChanged(Rect newValue)
-        {
-            DetailsContent_HeightChanged(newValue.Height);
-        }
-        private void DetailsContent_MarginChanged(Thickness newValue)
-        {
-            if (_detailsContent != null)
-                DetailsContent_SizeChanged(_detailsContent.Bounds.Inflate(newValue));
-        }
-        private void DetailsContent_LayoutUpdated(object sender, EventArgs e)
-        {
-            if (_detailsContent != null)
-            {
-                var margin = _detailsContent.Margin;
-                var height = _detailsContent.DesiredSize.Height + margin.Top + margin.Bottom;
-
-                DetailsContent_HeightChanged(height);
-            }
-        }
-
-        //TODO Animation
-        // Sets AreDetailsVisible on the row and animates if necessary
-        internal void SetDetailsVisibilityInternal(bool isVisible, bool raiseNotification, bool animate)
-        {
-            Debug.Assert(OwningGrid != null);
-            Debug.Assert(Index != -1);
-
-            if (_appliedDetailsVisibility != isVisible)
-            {
-                if (_detailsElement == null)
-                {
-                    if (raiseNotification)
-                    {
-                        _detailsVisibilityNotificationPending = true;
-                    }
-                    return;
-                }
-
-                _appliedDetailsVisibility = isVisible;
-                SetValueNoCallback(AreDetailsVisibleProperty, isVisible);
-
-                // Applies a new DetailsTemplate only if it has changed either here or at the DataGrid level
-                ApplyDetailsTemplate(initializeDetailsPreferredHeight: true);
-
-                // no template to show
-                if (_appliedDetailsTemplate == null)
-                {
-                    if (_detailsElement.ContentHeight > 0)
-                    {
-                        _detailsElement.ContentHeight = 0;
-                    }
-                    return;
-                }
-
-                if (AreDetailsVisible)
-                {
-                    // Set the details height directly
-                    _detailsElement.ContentHeight = _detailsDesiredHeight;
-                    _checkDetailsContentHeight = true;
-                }
-                else
-                {
-                    _detailsElement.ContentHeight = 0;
-                }
-
-                OnRowDetailsChanged();
-
-                if (raiseNotification)
-                {
-                    OwningGrid.OnRowDetailsVisibilityChanged(new DataGridRowDetailsEventArgs(this, _detailsContent));
-                }
-            }
-        }
-
-        internal void ApplyDetailsTemplate(bool initializeDetailsPreferredHeight)
-        {
-            if (_detailsElement != null && AreDetailsVisible)
-            {
-                IDataTemplate oldDetailsTemplate = _appliedDetailsTemplate;
-                if (ActualDetailsTemplate != null && ActualDetailsTemplate != _appliedDetailsTemplate)
-                {
-                    if (_detailsContent != null)
-                    {
-                        _detailsContentSizeSubscription?.Dispose();
-                        _detailsContentSizeSubscription = null;
-                        if (_detailsLoaded)
-                        {
-                            OwningGrid.OnUnloadingRowDetails(this, _detailsContent);
-                            _detailsLoaded = false;
-                        }
-                    }
-                    _detailsElement.Children.Clear();
-
-                    _detailsContent = ActualDetailsTemplate.Build(DataContext);
-                    _appliedDetailsTemplate = ActualDetailsTemplate;
-
-                    if (_detailsContent != null)
-                    {
-                        if (_detailsContent is Layout.Layoutable layoutableContent)
-                        {
-                            layoutableContent.LayoutUpdated += DetailsContent_LayoutUpdated;
-
-                            _detailsContentSizeSubscription = new CompositeDisposable(2)
-                            {
-                                Disposable.Create(() => layoutableContent.LayoutUpdated -= DetailsContent_LayoutUpdated),
-                                _detailsContent.GetObservable(MarginProperty).Subscribe(DetailsContent_MarginChanged)
-                            };
 
 
-                        }
-                        else
-                        {
-                            _detailsContentSizeSubscription =
-                                _detailsContent.GetObservable(MarginProperty)
-                                               .Subscribe(DetailsContent_MarginChanged);
 
-                        }
-
-                        _detailsElement.Children.Add(_detailsContent);
-                    }
-                }
-
-                if (_detailsContent != null && !_detailsLoaded)
-                {
-                    _detailsLoaded = true;
-                    _detailsContent.DataContext = DataContext;
-                    OwningGrid.OnLoadingRowDetails(this, _detailsContent);
-                }
-                if (initializeDetailsPreferredHeight && double.IsNaN(_detailsDesiredHeight) &&
-                    _appliedDetailsTemplate != null && _detailsElement.Children.Count > 0)
-                {
-                    EnsureDetailsDesiredHeight();
-                }
-                else if (oldDetailsTemplate == null)
-                {
-                    _detailsDesiredHeight = double.NaN;
-                    EnsureDetailsDesiredHeight();
-                    _detailsElement.ContentHeight = _detailsDesiredHeight;
-                }
-            }
-        }
 
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {

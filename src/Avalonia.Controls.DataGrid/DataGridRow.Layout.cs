@@ -1,0 +1,250 @@
+// (c) Copyright Microsoft Corporation.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved.
+
+#nullable disable
+
+using Avalonia.Automation.Peers;
+using Avalonia.Automation;
+using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Shapes;
+using Avalonia.Controls.Templates;
+using Avalonia.Controls.Utils;
+using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Media;
+using Avalonia.Reactive;
+using Avalonia.Utilities;
+using Avalonia.VisualTree;
+using System.Diagnostics;
+using System;
+
+namespace Avalonia.Controls
+{
+    partial class DataGridRow
+    {
+        /// <summary>
+        /// Arranges the content of the <see cref="T:Avalonia.Controls.DataGridRow" />.
+        /// </summary>
+        /// <returns>
+        /// The actual size used by the <see cref="T:Avalonia.Controls.DataGridRow" />.
+        /// </returns>
+        /// <param name="finalSize">
+        /// The final area within the parent that this element should use to arrange itself and its children.
+        /// </param>
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            if (OwningGrid == null)
+            {
+                return base.ArrangeOverride(finalSize);
+            }
+
+            // If the DataGrid was scrolled horizontally after our last Arrange, we need to make sure
+            // the Cells and Details are Arranged again
+            if (_lastHorizontalOffset != OwningGrid.HorizontalOffset)
+            {
+                _lastHorizontalOffset = OwningGrid.HorizontalOffset;
+                InvalidateHorizontalArrange();
+            }
+
+            Size size = base.ArrangeOverride(finalSize);
+
+            if (_checkDetailsContentHeight)
+            {
+                _checkDetailsContentHeight = false;
+                EnsureDetailsContentHeight();
+            }
+
+            if (RootElement != null)
+            {
+                foreach (Control child in RootElement.Children)
+                {
+                    if (DataGridFrozenGrid.GetIsFrozen(child))
+                    {
+                        TranslateTransform transform = new TranslateTransform();
+                        // Automatic layout rounding doesn't apply to transforms so we need to Round this
+                        transform.X = Math.Round(OwningGrid.HorizontalOffset);
+                        child.RenderTransform = transform;
+                    }
+                }
+            }
+
+            if (_bottomGridLine != null)
+            {
+                RectangleGeometry gridlineClipGeometry = new RectangleGeometry();
+                gridlineClipGeometry.Rect = new Rect(OwningGrid.HorizontalOffset, 0, Math.Max(0, DesiredSize.Width - OwningGrid.HorizontalOffset), _bottomGridLine.DesiredSize.Height);
+                _bottomGridLine.Clip = gridlineClipGeometry;
+            }
+
+            return size;
+        }
+
+        /// <summary>
+        /// Measures the children of a <see cref="T:Avalonia.Controls.DataGridRow" /> to
+        /// prepare for arranging them during the <see cref="M:System.Windows.FrameworkElement.ArrangeOverride(System.Windows.Size)" /> pass.
+        /// </summary>
+        /// <param name="availableSize">
+        /// The available size that this element can give to child elements. Indicates an upper limit that child elements should not exceed.
+        /// </param>
+        /// <returns>
+        /// The size that the <see cref="T:Avalonia.Controls.Primitives.DataGridRow" /> determines it needs during layout, based on its calculations of child object allocated sizes.
+        /// </returns>
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            if (OwningGrid == null)
+            {
+                return base.MeasureOverride(availableSize);
+            }
+
+            //Allow the DataGrid specific components to adjust themselves based on new values
+            if (_headerElement != null)
+            {
+                _headerElement.InvalidateMeasure();
+            }
+            if (_cellsElement != null)
+            {
+                _cellsElement.InvalidateMeasure();
+            }
+            if (_detailsElement != null)
+            {
+                _detailsElement.InvalidateMeasure();
+            }
+
+            Size desiredSize = base.MeasureOverride(availableSize);
+            return desiredSize.WithWidth(Math.Max(desiredSize.Width, OwningGrid.CellsWidth));
+        }
+
+        internal void ApplyCellsState()
+        {
+            foreach (DataGridCell dataGridCell in Cells)
+            {
+                dataGridCell.UpdatePseudoClasses();
+            }
+        }
+
+        internal void ApplyHeaderStatus()
+        {
+            if (_headerElement != null && OwningGrid.AreRowHeadersVisible)
+            {
+                _headerElement.UpdatePseudoClasses();
+            }
+        }
+
+        internal void ApplyState()
+        {
+            if (RootElement != null && OwningGrid != null && IsVisible)
+            {
+                var isSelected = Slot != -1 && OwningGrid.GetRowSelection(Slot);
+                IsSelected = isSelected;
+                PseudoClasses.Set(":editing", IsEditing);
+                PseudoClasses.Set(":invalid", !IsValid);
+                ApplyHeaderStatus();
+            }
+        }
+
+        //TODO Animation
+        internal void DetachFromDataGrid(bool recycle)
+        {
+            UnloadDetailsTemplate(recycle);
+
+            if (recycle)
+            {
+                IsRecycled = true;
+
+                if (_cellsElement != null)
+                {
+                    _cellsElement.Recycle();
+                }
+
+                _checkDetailsContentHeight = false;
+
+                // Clear out the old Details cache so it won't be reused for other data
+                //_detailsDesiredHeight = double.NaN;
+                if (_detailsElement != null)
+                {
+                    _detailsElement.ClearValue(DataGridDetailsPresenter.ContentHeightProperty);
+                }
+            }
+
+            Slot = -1;
+        }
+
+        internal void InvalidateCellsIndex()
+        {
+            _cellsElement?.InvalidateChildIndex();
+        }
+
+        internal void EnsureFillerVisibility()
+        {
+            if (_cellsElement != null)
+            {
+                _cellsElement.EnsureFillerVisibility();
+            }
+        }
+
+        internal void EnsureGridLines()
+        {
+            if (OwningGrid != null)
+            {
+                if (_bottomGridLine != null)
+                {
+                    // It looks like setting Visibility sometimes has side effects so make sure the value is actually
+                    // different before setting it
+                    bool newVisibility = OwningGrid.GridLinesVisibility == DataGridGridLinesVisibility.Horizontal || OwningGrid.GridLinesVisibility == DataGridGridLinesVisibility.All;
+
+                    if (newVisibility != _bottomGridLine.IsVisible)
+                    {
+                        _bottomGridLine.IsVisible = newVisibility;
+                    }
+                    _bottomGridLine.Fill = OwningGrid.HorizontalGridLinesBrush;
+                }
+
+                foreach (DataGridCell cell in Cells)
+                {
+                    cell.EnsureGridLine(OwningGrid.ColumnsInternal.LastVisibleColumn);
+                }
+            }
+        }
+
+        internal void EnsureHeaderStyleAndVisibility(Styling.Style previousStyle)
+        {
+            if (_headerElement != null && OwningGrid != null)
+            {
+                _headerElement.IsVisible = OwningGrid.AreRowHeadersVisible;
+            }
+        }
+
+        internal void EnsureHeaderVisibility()
+        {
+            if (_headerElement != null && OwningGrid != null)
+            {
+                _headerElement.IsVisible = OwningGrid.AreRowHeadersVisible;
+            }
+        }
+
+        internal void InvalidateHorizontalArrange()
+        {
+            if (_cellsElement != null)
+            {
+                _cellsElement.InvalidateArrange();
+            }
+            if (_detailsElement != null)
+            {
+                _detailsElement.InvalidateArrange();
+            }
+        }
+
+        internal void InvalidateDesiredHeight()
+        {
+            _cellsElement?.InvalidateDesiredHeight();
+        }
+
+        internal void ResetGridLine()
+        {
+            _bottomGridLine = null;
+        }
+
+    }
+}

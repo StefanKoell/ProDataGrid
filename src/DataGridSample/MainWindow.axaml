@@ -23,6 +23,9 @@
     <TabItem Header="Large Variable Height">
       <local:LargeVariableHeightPage />
     </TabItem>
+    <TabItem Header="Large Uniform Rows">
+      <local:LargeUniformPage />
+    </TabItem>
     <TabItem Header="Pixel Columns">
       <local:PixelColumnsPage />
     </TabItem>

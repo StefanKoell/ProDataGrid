@@ -1,6 +1,7 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:DataGridSample"
+        xmlns:pages="clr-namespace:DataGridSample.Pages"
         x:Class="DataGridSample.MainWindow"
         Title="ProDataGrid for Avalonia"
         Width="1000"
@@ -10,6 +11,9 @@
   <TabControl Margin="8">
     <TabItem Header="DataGrid">
       <local:BasicPage />
+    </TabItem>
+    <TabItem Header="Collection Changes">
+      <pages:CollectionChangesPage />
     </TabItem>
     <TabItem Header="Grouping">
       <local:GroupingPage />

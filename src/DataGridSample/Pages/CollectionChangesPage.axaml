@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.CollectionChangesPage"
+             x:DataType="viewModels:CollectionChangesViewModel">
+  <UserControl.DataContext>
+    <viewModels:CollectionChangesViewModel/>
+  </UserControl.DataContext>
+
+  <Grid RowDefinitions="Auto,*,Auto" ColumnDefinitions="2*,*"
+        Margin="12" ColumnSpacing="12" RowSpacing="8">
+    <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Spacing="4">
+      <TextBlock Classes="h2">DataGridCollectionView live changes</TextBlock>
+      <TextBlock Text="Trigger every NotifyCollectionChangedAction against an ObservableCollection wrapped in DataGridCollectionView. Watch the grid and the event log respond in real time."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1" Grid.Column="0" Spacing="8">
+      <StackPanel Orientation="Horizontal" Spacing="6">
+        <Button Content="Add" Command="{Binding AddCommand}" />
+        <Button Content="Remove Selected" Command="{Binding RemoveCommand}" />
+        <Button Content="Replace Selected" Command="{Binding ReplaceCommand}" />
+        <Button Content="Move Up" Command="{Binding MoveUpCommand}" />
+        <Button Content="Move Down" Command="{Binding MoveDownCommand}" />
+        <Button Content="Reset" Command="{Binding ResetCommand}" />
+      </StackPanel>
+
+      <DataGrid ItemsSource="{Binding View}"
+                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                CanUserReorderColumns="True"
+                CanUserResizeColumns="True"
+                HeadersVisibility="All"
+                Height="420"
+                IsReadOnly="True">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="80" />
+          <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="2*" />
+          <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*" />
+        </DataGrid.Columns>
+      </DataGrid>
+    </StackPanel>
+
+    <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6">
+      <TextBlock Classes="h3" Text="CollectionChanged log" />
+      <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+              BorderThickness="1" CornerRadius="4" Padding="4">
+        <ListBox ItemsSource="{Binding Events}" Height="420" />
+      </Border>
+    </StackPanel>
+  </Grid>
+</UserControl>

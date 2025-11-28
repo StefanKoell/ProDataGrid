@@ -187,7 +187,11 @@ namespace Avalonia.Controls
             int currentColumnIndex = CurrentColumnIndex;
 
             // Raise the BeginningEdit event
-            DataGridCell dataGridCell = dataGridRow.Cells[CurrentColumnIndex];
+            DataGridCell dataGridCell = TryGetCell(dataGridRow, CurrentColumnIndex);
+            if (dataGridCell == null)
+            {
+                return false;
+            }
             DataGridBeginningEditEventArgs e = new DataGridBeginningEditEventArgs(CurrentColumn, dataGridRow, editingEventArgs);
             OnBeginningEdit(e);
             if (e.Cancel
@@ -206,7 +210,7 @@ namespace Avalonia.Controls
             // Finally, we can prepare the cell for editing
             _editingColumnIndex = CurrentColumnIndex;
             _editingEventArgs = editingEventArgs;
-            EditingRow.Cells[CurrentColumnIndex].UpdatePseudoClasses();
+            dataGridCell.UpdatePseudoClasses();
             PopulateCellContent(
                 isCellEdited: true,
                 dataGridColumn: CurrentColumn,
@@ -260,7 +264,13 @@ namespace Avalonia.Controls
             int currentColumnIndex = CurrentColumnIndex;
 
             // We're ready to start ending, so raise the event
-            DataGridCell editingCell = editingRow.Cells[_editingColumnIndex];
+            DataGridCell editingCell = TryGetCell(editingRow, _editingColumnIndex);
+            if (editingCell == null)
+            {
+                _editingColumnIndex = -1;
+                ResetEditingRow();
+                return true;
+            }
             var editingElement = editingCell.Content as Control;
             if (editingElement == null)
             {
@@ -590,7 +600,7 @@ namespace Avalonia.Controls
                 Debug.Assert(EditingRow != null && EditingRow.Slot == CurrentSlot);
 
                 _editingColumnIndex = -1;
-                EditingRow.Cells[CurrentColumnIndex].UpdatePseudoClasses();
+                TryGetCell(EditingRow, CurrentColumnIndex)?.UpdatePseudoClasses();
             }
             //IsTabStop = true;
             if (IsSlotVisible(EditingRow.Slot))
@@ -602,6 +612,21 @@ namespace Avalonia.Controls
             {
                 Focus();
             }
+        }
+
+        private static DataGridCell TryGetCell(DataGridRow dataGridRow, int columnIndex)
+        {
+            if (dataGridRow == null)
+            {
+                return null;
+            }
+
+            if (columnIndex < 0 || columnIndex >= dataGridRow.Cells.Count)
+            {
+                return null;
+            }
+
+            return dataGridRow.Cells[columnIndex];
         }
 
 
@@ -623,7 +648,7 @@ namespace Avalonia.Controls
         {
             if (_editingColumnIndex == -1 ||
                 CurrentColumnIndex == -1 ||
-                EditingRow.Cells[CurrentColumnIndex].Content != editingElement)
+                TryGetCell(EditingRow, CurrentColumnIndex)?.Content != editingElement)
             {
                 // The current cell has changed since the call to BeginCellEdit, so the fact
                 // that this element has loaded is no longer relevant
@@ -700,7 +725,11 @@ namespace Avalonia.Controls
             _focusEditingControl = false;
 
             bool success = false;
-            DataGridCell dataGridCell = EditingRow.Cells[_editingColumnIndex];
+            DataGridCell dataGridCell = TryGetCell(EditingRow, _editingColumnIndex);
+            if (dataGridCell == null)
+            {
+                return false;
+            }
             if (setFocus)
             {
                 if (dataGridCell.ContainsFocusedElement())

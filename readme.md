@@ -23,6 +23,7 @@ It displays repeating data in a customizable grid with enhanced features and imp
 | Editing & navigation | In-place editing, commit/cancel, keyboard navigation, clipboard copy modes, current cell tracking. |
 | Data operations | Sorting, grouping, paging, currency management via `DataGridCollectionView` family. |
 | Styling & theming | Fluent/Simple v2 ScrollViewer templates, row/cell styling, template overrides, theme resources, focus/selection visuals. |
+| Data binding | Auto-generates columns from `DataTable.DefaultView` and binds cells via TypeDescriptor (no manual indexers), `SelectedItems` two-way binding support, `DataGridCollectionView` for sorting/grouping/editing. |
 
 ## Supported targets
 
@@ -157,7 +158,7 @@ Override the estimator per grid:
 ## Samples
 
 - The sample app (`src/DataGridSample`) includes pages for pixel-perfect columns, frozen columns, large datasets, and variable-height scenarios (`Pages/*Page.axaml`).
-- Run it locally with `dotnet run --project src/DataGridSample/DataGridSample.csproj` to see templates and estimators in action.
+- Run it locally with `dotnet run --project src/DataGridSample/DataGridSample.csproj` to see templates, estimators, `SelectedItems` binding, and the `DataTable.DefaultView` page that demonstrates the TypeDescriptor-based column binding.
 
 ## License
 

@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.SelectionModelStabilityPage"
+             x:DataType="viewModels:SelectionModelStabilityViewModel">
+  <UserControl.DataContext>
+    <viewModels:SelectionModelStabilityViewModel/>
+  </UserControl.DataContext>
+
+  <Grid ColumnDefinitions="2*,*" RowDefinitions="Auto,*" Margin="12" ColumnSpacing="12" RowSpacing="8">
+    <StackPanel Grid.ColumnSpan="2" Spacing="4">
+      <TextBlock Classes="h2">Selection model stability</TextBlock>
+      <TextBlock Text="This grid uses the new SelectionModel-backed selection. Add, remove, shuffle, or sort rows — selection stays with the items across changes."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1" Grid.Column="0" Spacing="8">
+      <WrapPanel>
+        <Button Content="Shuffle rows" Command="{Binding ShuffleCommand}" Margin="0 0 8 8" />
+        <Button Content="Sort by name" Command="{Binding SortByNameCommand}" Margin="0 0 8 8" />
+        <Button Content="Insert at top" Command="{Binding AddAtTopCommand}" Margin="0 0 8 8" />
+        <Button Content="Remove first" Command="{Binding RemoveFirstCommand}" Margin="0 0 8 8" />
+        <Button Content="Clear selection" Command="{Binding ClearSelectionCommand}" Margin="0 0 8 8" />
+      </WrapPanel>
+
+      <DataGrid ItemsSource="{Binding Items}"
+                SelectedItems="{Binding SelectedItems, Mode=TwoWay}"
+                SelectionMode="Extended"
+                AutoGenerateColumns="True"
+                HeadersVisibility="All"
+                Height="420" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1" Grid.Column="1" Spacing="8">
+      <TextBlock Classes="h3" Text="Selection log" />
+      <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+              BorderThickness="1" CornerRadius="4" Padding="4">
+        <ListBox ItemsSource="{Binding SelectionLog}" Height="260" />
+      </Border>
+
+      <TextBlock Text="Try selecting some rows, then insert/shuffle/sort. The log tracks added/removed selection entries as the data mutates." TextWrapping="Wrap" />
+    </StackPanel>
+  </Grid>
+</UserControl>

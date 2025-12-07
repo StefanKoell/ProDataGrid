@@ -1,0 +1,54 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.CustomSelectionModelPage"
+             x:DataType="viewModels:CustomSelectionModelViewModel">
+  <UserControl.DataContext>
+    <viewModels:CustomSelectionModelViewModel/>
+  </UserControl.DataContext>
+
+  <Grid ColumnDefinitions="2*,*" RowDefinitions="Auto,*" Margin="12" ColumnSpacing="12" RowSpacing="8">
+    <StackPanel Grid.ColumnSpan="2" Spacing="4">
+      <TextBlock Classes="h2">Custom SelectionModel bridge</TextBlock>
+      <TextBlock Text="This page plugs a custom SelectionModel&lt;Country&gt; into DataGrid via the Selection property. Mutate the collection and selection stays in sync."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1" Grid.Column="0" Spacing="8">
+      <WrapPanel>
+        <Button Content="Select even rows (SelectionModel)" Command="{Binding SelectEvenCommand}" Margin="0 0 8 8" />
+        <Button Content="Clear selection (SelectionModel)" Command="{Binding ClearCommand}" Margin="0 0 8 8" />
+        <Button Content="Add dynamic" Command="{Binding AddDynamicCommand}" Margin="0 0 8 8" />
+        <Button Content="Remove last" Command="{Binding RemoveLastCommand}" Margin="0 0 8 8" />
+        <Button Content="Shuffle" Command="{Binding ShuffleCommand}" Margin="0 0 8 8" />
+      </WrapPanel>
+
+      <DataGrid ItemsSource="{Binding Items}"
+                Selection="{Binding SelectionModel}"
+                SelectionMode="Extended"
+                AutoGenerateColumns="True"
+                HeadersVisibility="All"
+                Height="420" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1" Grid.Column="1" Spacing="8">
+      <TextBlock Classes="h3" Text="SelectionModel state" />
+      <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+              BorderThickness="1" CornerRadius="4" Padding="4">
+        <StackPanel Spacing="4">
+          <TextBlock Text="{Binding SelectionModel.SelectedIndex, StringFormat='SelectedIndex: {0}'}" />
+          <TextBlock Text="{Binding SelectionModel.AnchorIndex, StringFormat='AnchorIndex: {0}'}" />
+          <ItemsControl ItemsSource="{Binding SelectionModel.SelectedItems}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding Name}" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+
+      <TextBlock Text="Use the buttons to mutate the backing collection while the SelectionModel tracks the rows. Selection is shared through the Selection property, so you can reuse the model elsewhere." TextWrapping="Wrap" />
+    </StackPanel>
+  </Grid>
+</UserControl>

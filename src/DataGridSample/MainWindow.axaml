@@ -24,6 +24,9 @@
     <TabItem Header="Editable">
       <local:EditablePage />
     </TabItem>
+    <TabItem Header="Add/Delete Rows">
+      <local:AddDeleteRowsPage />
+    </TabItem>
     <TabItem Header="Variable Height Scrolling">
       <local:VariableHeightPage />
     </TabItem>

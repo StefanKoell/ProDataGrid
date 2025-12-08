@@ -13,17 +13,18 @@ using System.Linq;
 
 namespace Avalonia.Controls.DataGridSelection
 {
-    public class SelectedItemsView : IList, INotifyCollectionChanged, INotifyPropertyChanged
+    public class SelectedItemsView : IList, INotifyCollectionChanged, INotifyPropertyChanged, IDisposable
     {
         private readonly ISelectionModel _model;
         private readonly List<object> _pending = new();
         private int _suppressNotifications;
+        private bool _isDisposed;
 
         public SelectedItemsView(ISelectionModel model)
         {
             _model = model ?? throw new ArgumentNullException(nameof(model));
             _model.SelectionChanged += OnSelectionChanged;
-            _model.SourceReset += (_, __) => RaiseReset();
+            _model.SourceReset += OnSourceReset;
             _model.PropertyChanged += OnModelPropertyChanged;
         }
 
@@ -71,7 +72,12 @@ namespace Avalonia.Controls.DataGridSelection
             {
                 if (_model.SingleSelect)
                 {
-                    _pending.Clear();
+                    if (_pending.Count > 0)
+                    {
+                        var removed = _pending.ToArray();
+                        _pending.Clear();
+                        RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed, 0));
+                    }
                 }
 
                 _pending.Add(value);
@@ -405,6 +411,25 @@ namespace Avalonia.Controls.DataGridSelection
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
+        }
+
+        public void Dispose()
+        {
+            if (_isDisposed)
+            {
+                return;
+            }
+
+            _model.SelectionChanged -= OnSelectionChanged;
+            _model.PropertyChanged -= OnModelPropertyChanged;
+            _model.SourceReset -= OnSourceReset;
+
+            _isDisposed = true;
+        }
+
+        private void OnSourceReset(object sender, EventArgs e)
+        {
+            RaiseReset();
         }
 
         private sealed class ActionDisposable : IDisposable

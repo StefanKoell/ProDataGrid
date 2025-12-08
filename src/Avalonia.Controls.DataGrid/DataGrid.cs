@@ -969,6 +969,8 @@ namespace Avalonia.Controls
                 _selectionModelAdapter.Model.IndexesChanged -= SelectionModel_IndexesChanged;
                 _selectionModelAdapter.Model.PropertyChanged -= SelectionModel_PropertyChanged;
                 _selectionModelAdapter.Model.SourceReset -= SelectionModel_SourceReset;
+                _selectionModelAdapter.Dispose();
+                _selectionModelAdapter = null;
             }
 
             _selectionModelSnapshot = null;

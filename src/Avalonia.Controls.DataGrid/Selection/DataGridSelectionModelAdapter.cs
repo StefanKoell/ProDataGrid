@@ -20,7 +20,7 @@ namespace Avalonia.Controls.DataGridSelection
     /// <summary>
     /// Default adapter around ISelectionModel that DataGrid will use to manage selection.
     /// </summary>
-    public class DataGridSelectionModelAdapter
+    public class DataGridSelectionModelAdapter : IDisposable
     {
         public DataGridSelectionModelAdapter(ISelectionModel model)
         {
@@ -57,6 +57,11 @@ namespace Avalonia.Controls.DataGridSelection
         public void Clear()
         {
             Model.Clear();
+        }
+
+        public void Dispose()
+        {
+            SelectedItemsView.Dispose();
         }
     }
 }

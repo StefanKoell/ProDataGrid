@@ -983,11 +983,20 @@ namespace Avalonia.Controls
         /// <returns>Adapter that will bridge the model to the collection view and grid.</returns>
         protected virtual DataGridSortingAdapter CreateSortingAdapter(ISortingModel model)
         {
-            return _sortingAdapterFactory?.Create(this, model) ?? new DataGridSortingAdapter(
-                model,
-                () => ColumnsItemsInternal,
-                OnSortingAdapterApplying,
-                OnSortingAdapterApplied);
+            var adapter = _sortingAdapterFactory?.Create(this, model)
+                ?? new DataGridSortingAdapter(
+                    model,
+                    () => ColumnsItemsInternal,
+                    OnSortingAdapterApplying,
+                    OnSortingAdapterApplied);
+
+            if (adapter == null)
+            {
+                throw new InvalidOperationException("Sorting adapter factory returned null.");
+            }
+
+            adapter.AttachLifecycle(OnSortingAdapterApplying, OnSortingAdapterApplied);
+            return adapter;
         }
 
         private void SetSelectionModel(ISelectionModel model, bool initializing = false)
@@ -1064,6 +1073,8 @@ namespace Avalonia.Controls
             if (DataConnection?.CollectionView != null)
             {
                 RefreshRowsAndColumns(clearRows: false);
+                RestoreSelectionFromSnapshot();
+                RefreshSelectionFromModel();
                 RefreshColumnSortStates();
             }
         }

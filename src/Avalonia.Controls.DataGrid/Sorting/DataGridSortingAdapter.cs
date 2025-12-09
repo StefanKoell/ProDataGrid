@@ -28,8 +28,8 @@ namespace Avalonia.Controls.DataGridSorting
         private IDataGridCollectionView _view;
         private bool _suppressViewSync;
         private bool _suppressModelSync;
-        private readonly Action _beforeViewRefresh;
-        private readonly Action _afterViewRefresh;
+        private Action _beforeViewRefresh;
+        private Action _afterViewRefresh;
 
         public DataGridSortingAdapter(
             ISortingModel model,
@@ -43,6 +43,12 @@ namespace Avalonia.Controls.DataGridSorting
             _afterViewRefresh = afterViewRefresh;
 
             _model.SortingChanged += OnModelSortingChanged;
+        }
+
+        internal void AttachLifecycle(Action beforeViewRefresh, Action afterViewRefresh)
+        {
+            _beforeViewRefresh = beforeViewRefresh;
+            _afterViewRefresh = afterViewRefresh;
         }
 
         public IDataGridCollectionView View => _view;
@@ -161,6 +167,18 @@ namespace Avalonia.Controls.DataGridSorting
                 return false;
             }
 
+            var beforeInvoked = false;
+            void EnsureBeforeViewRefresh()
+            {
+                if (!beforeInvoked)
+                {
+                    _beforeViewRefresh?.Invoke();
+                    beforeInvoked = true;
+                }
+            }
+
+            EnsureBeforeViewRefresh();
+
             if (TryApplyModelToView(descriptors, previousDescriptors, out var handledChanged))
             {
                 if (handledChanged)
@@ -181,7 +199,7 @@ namespace Avalonia.Controls.DataGridSorting
                     return false;
                 }
 
-                _beforeViewRefresh?.Invoke();
+                EnsureBeforeViewRefresh();
 
                 var rollback = BuildSortDescriptions(previousDescriptors) ?? _view.SortDescriptions.ToList();
 

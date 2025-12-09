@@ -217,9 +217,7 @@ namespace Avalonia.Controls
             _showDetailsTable = new IndexToValueTable<bool>();
             _collapsedSlotsTable = new IndexToValueTable<bool>();
 
-            _sortingModel = CreateSortingModel();
-            _sortingModel.SortingChanged += SortingModel_SortingChanged;
-            _sortingAdapter = CreateSortingAdapter(_sortingModel);
+            SetSortingModel(CreateSortingModel(), initializing: true);
 
             AnchorSlot = -1;
             _lastEstimatedRow = -1;
@@ -958,7 +956,14 @@ namespace Avalonia.Controls
             }
         }
 
-        internal ISortingModel SortingModel => _sortingModel;
+        /// <summary>
+        /// Gets or sets the sorting model that drives column sorting.
+        /// </summary>
+        public ISortingModel SortingModel
+        {
+            get => _sortingModel;
+            set => SetSortingModel(value);
+        }
 
         /// <summary>
         /// Creates the adapter that connects the sorting model to the grid.
@@ -1069,6 +1074,44 @@ namespace Avalonia.Controls
             {
                 column?.HeaderCell?.UpdatePseudoClasses();
             }
+        }
+
+        private void SetSortingModel(ISortingModel model, bool initializing = false)
+        {
+            var oldModel = _sortingModel;
+            var newModel = model ?? CreateSortingModel();
+
+            if (ReferenceEquals(_sortingModel, newModel))
+            {
+                return;
+            }
+
+            bool ownsViewSorts = oldModel?.OwnsViewSorts ?? newModel.OwnsViewSorts;
+            bool multiSort = oldModel?.MultiSort ?? newModel.MultiSort;
+            var cycleMode = oldModel?.CycleMode ?? newModel.CycleMode;
+
+            _sortingAdapter?.Dispose();
+            _sortingAdapter = null;
+
+            if (oldModel != null)
+            {
+                oldModel.SortingChanged -= SortingModel_SortingChanged;
+            }
+
+            _sortingModel = newModel;
+            _sortingModel.MultiSort = multiSort;
+            _sortingModel.CycleMode = cycleMode;
+            _sortingModel.OwnsViewSorts = ownsViewSorts;
+            _sortingModel.SortingChanged += SortingModel_SortingChanged;
+
+            _sortingAdapter = CreateSortingAdapter(_sortingModel);
+
+            if (!initializing)
+            {
+                UpdateSortingAdapterView();
+            }
+
+            RaisePropertyChanged(SortingModelProperty, oldModel, _sortingModel);
         }
 
         internal SortingDescriptor GetSortingDescriptorForColumn(DataGridColumn column)

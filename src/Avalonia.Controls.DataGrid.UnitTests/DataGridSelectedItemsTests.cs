@@ -216,7 +216,7 @@ public class DataGridSelectedItemsTests
     }
 
     [AvaloniaFact]
-    public void Selection_Preserved_When_SortingModel_Reorders_Items()
+    public void Selection_Preserved_When_Sorting_Model_Reorders_Items()
     {
         var items = new ObservableCollection<SortableItem>
         {
@@ -233,7 +233,7 @@ public class DataGridSelectedItemsTests
         grid.UpdateLayout();
 
         var selected = Assert.IsType<SortableItem>(grid.SelectedItem);
-        var model = GetSortingModel(grid);
+        var model = grid.SortingModel;
         var column = grid.Columns[0];
 
         model.Toggle(new SortingDescriptor(column, ListSortDirection.Ascending, column.SortMemberPath, culture: view.Culture));
@@ -391,11 +391,7 @@ public class DataGridSelectedItemsTests
         return grid.GetSelfAndVisualDescendants().OfType<DataGridRow>().ToList();
     }
 
-    private static ISortingModel GetSortingModel(DataGrid grid)
-    {
-        var property = typeof(DataGrid).GetProperty("SortingModel", BindingFlags.Instance | BindingFlags.NonPublic);
-        return Assert.IsAssignableFrom<ISortingModel>(property?.GetValue(grid));
-    }
+    private static ISortingModel GetSortingModel(DataGrid grid) => grid.SortingModel;
 
     private static void ReorderWithSelectionPreserve(IList<string> items, IList<string> ordered, DataGrid grid)
     {

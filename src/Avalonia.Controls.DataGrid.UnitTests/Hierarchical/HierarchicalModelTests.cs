@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -633,16 +634,20 @@ namespace Avalonia.Controls.DataGridTests.Hierarchical;
         model.Expand(model.Root!);
 
         FlattenedChangedEventArgs? args = null;
+        HierarchyChangedEventArgs? hierarchyArgs = null;
         model.FlattenedChanged += (_, e) => args = e;
+        model.HierarchyChanged += (_, e) => hierarchyArgs = e;
 
         root.Children[1] = new Item("c3"); // Replace action
 
         var change = Assert.Single(args!.Changes);
-        Assert.Equal(1, change.Index);
-        Assert.Equal(2, change.OldCount);
-        Assert.Equal(2, change.NewCount);
+        Assert.Equal(2, change.Index);
+        Assert.Equal(1, change.OldCount);
+        Assert.Equal(1, change.NewCount);
         Assert.Equal("c1", ((Item)model.GetItem(1)!).Name);
         Assert.Equal("c3", ((Item)model.GetItem(2)!).Name);
+        Assert.NotNull(hierarchyArgs);
+        Assert.Equal(NotifyCollectionChangedAction.Replace, hierarchyArgs!.Action);
     }
 
     [Fact]
@@ -657,17 +662,71 @@ namespace Avalonia.Controls.DataGridTests.Hierarchical;
         model.Expand(model.Root!);
 
         FlattenedChangedEventArgs? args = null;
+        HierarchyChangedEventArgs? hierarchyArgs = null;
+        model.FlattenedChanged += (_, e) => args = e;
+        model.HierarchyChanged += (_, e) => hierarchyArgs = e;
+
+        root.Children.Move(0, 2);
+
+        var changes = args!.Changes;
+        Assert.Equal(2, changes.Count);
+        Assert.Equal(1, changes[0].Index);
+        Assert.Equal(1, changes[0].OldCount);
+        Assert.Equal(0, changes[0].NewCount);
+        Assert.Equal(3, changes[1].Index);
+        Assert.Equal(0, changes[1].OldCount);
+        Assert.Equal(1, changes[1].NewCount);
+        Assert.Equal("b", ((Item)model.GetItem(1)!).Name);
+        Assert.Equal("c", ((Item)model.GetItem(2)!).Name);
+        Assert.Equal("a", ((Item)model.GetItem(3)!).Name);
+        Assert.NotNull(hierarchyArgs);
+        Assert.Equal(NotifyCollectionChangedAction.Move, hierarchyArgs!.Action);
+    }
+
+    [Fact]
+    public void FlattenedIndexMap_TracksMove()
+    {
+        var root = new Item("root");
+        root.Children.Add(new Item("a"));
+        root.Children.Add(new Item("b"));
+        root.Children.Add(new Item("c"));
+        var model = CreateModel();
+        model.SetRoot(root);
+        model.Expand(model.Root!);
+
+        FlattenedChangedEventArgs? args = null;
         model.FlattenedChanged += (_, e) => args = e;
 
         root.Children.Move(0, 2);
 
-        var change = Assert.Single(args!.Changes);
-        Assert.Equal(1, change.Index);
-        Assert.Equal(3, change.OldCount);
-        Assert.Equal(3, change.NewCount);
-        Assert.Equal("b", ((Item)model.GetItem(1)!).Name);
-        Assert.Equal("c", ((Item)model.GetItem(2)!).Name);
-        Assert.Equal("a", ((Item)model.GetItem(3)!).Name);
+        var map = args!.IndexMap;
+        Assert.Equal(4, map.OldCount);
+        Assert.Equal(4, map.NewCount);
+        Assert.Equal(3, map.MapOldIndexToNew(1)); // a moves to the end
+        Assert.Equal(1, map.MapOldIndexToNew(2)); // b moves up
+        Assert.Equal(2, map.MapOldIndexToNew(3)); // c moves up
+    }
+
+    [Fact]
+    public void FlattenedIndexMap_MarksReplacedItemAsRemoved()
+    {
+        var root = new Item("root");
+        root.Children.Add(new Item("a"));
+        root.Children.Add(new Item("b"));
+        var model = CreateModel();
+        model.SetRoot(root);
+        model.Expand(model.Root!);
+
+        FlattenedChangedEventArgs? args = null;
+        model.FlattenedChanged += (_, e) => args = e;
+
+        root.Children[1] = new Item("c");
+
+        var map = args!.IndexMap;
+        Assert.Equal(3, map.OldCount);
+        Assert.Equal(3, map.NewCount);
+        Assert.Equal(1, map.MapOldIndexToNew(1)); // first child unchanged
+        Assert.Equal(-1, map.MapOldIndexToNew(2)); // replaced item removed
     }
 
     [Fact]

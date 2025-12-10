@@ -87,6 +87,10 @@ namespace Avalonia.Controls
 
                 case Key.Delete:
                     return ProcessDeleteKey();
+
+                case Key.Multiply:
+                    focusDataGrid = ProcessMultiplyKey(e);
+                    break;
             }
             if (focusDataGrid)
             {
@@ -293,6 +297,28 @@ namespace Avalonia.Controls
                 NoSelectionChangeCount--;
             }
             return _successfullyUpdatedSelection;
+        }
+
+        private bool ProcessMultiplyKey(KeyEventArgs e)
+        {
+            if (!_hierarchicalRowsEnabled || _hierarchicalAdapter == null)
+            {
+                return false;
+            }
+
+            if (TryHandleGroupSlotAsNode(CurrentSlot, GroupSlotAction.Expand, subtree: true))
+            {
+                return true;
+            }
+
+            if (!TryGetHierarchicalIndexFromSlot(CurrentSlot, out var hierarchicalIndex))
+            {
+                return false;
+            }
+
+            var node = _hierarchicalAdapter.NodeAt(hierarchicalIndex);
+            RunHierarchicalAction(() => _hierarchicalAdapter.ExpandAll(node));
+            return true;
         }
 
 

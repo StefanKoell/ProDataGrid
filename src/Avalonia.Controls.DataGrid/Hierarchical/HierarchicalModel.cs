@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,12 +46,88 @@ namespace Avalonia.Controls.DataGridHierarchical
         public int NewCount { get; }
     }
 
+    /// <summary>
+    /// Represents a mapping between the previous flattened list and the current one.
+    /// </summary>
+    public sealed class FlattenedIndexMap
+    {
+        private readonly IReadOnlyList<FlattenedChange> _changes;
+        private readonly IReadOnlyDictionary<int, int>? _explicitMap;
+
+        internal FlattenedIndexMap(int oldCount, int newCount, IReadOnlyList<FlattenedChange> changes, IReadOnlyDictionary<int, int>? explicitMap = null)
+        {
+            OldCount = oldCount;
+            NewCount = newCount;
+            _changes = changes ?? Array.Empty<FlattenedChange>();
+            _explicitMap = explicitMap;
+        }
+
+        /// <summary>
+        /// Gets the number of items in the flattened list prior to the change.
+        /// </summary>
+        public int OldCount { get; }
+
+        /// <summary>
+        /// Gets the number of items in the flattened list after the change.
+        /// </summary>
+        public int NewCount { get; }
+
+        /// <summary>
+        /// Maps an index from the previous flattened view to the current view. Returns -1 when the
+        /// index was removed or when counts are unavailable.
+        /// </summary>
+        public int MapOldIndexToNew(int oldIndex)
+        {
+            if (_explicitMap != null && _explicitMap.TryGetValue(oldIndex, out var mapped))
+            {
+                return mapped >= 0 && mapped < NewCount ? mapped : -1;
+            }
+
+            if (OldCount < 0 || NewCount < 0)
+            {
+                return -1;
+            }
+
+            if (oldIndex < 0 || oldIndex >= OldCount)
+            {
+                return -1;
+            }
+
+            var current = oldIndex;
+
+            foreach (var change in _changes)
+            {
+                if (current < change.Index)
+                {
+                    continue;
+                }
+
+                if (current < change.Index + change.OldCount)
+                {
+                    return -1;
+                }
+
+                current += change.NewCount - change.OldCount;
+            }
+
+            return current >= 0 && current < NewCount ? current : -1;
+        }
+    }
+
     public class FlattenedChangedEventArgs : EventArgs
     {
-        public FlattenedChangedEventArgs(IReadOnlyList<FlattenedChange> changes, int version = 0)
+        public FlattenedChangedEventArgs(
+            IReadOnlyList<FlattenedChange> changes,
+            int version = 0,
+            int currentCount = -1,
+            IReadOnlyDictionary<int, int>? indexMapOverride = null)
         {
             Changes = changes ?? throw new ArgumentNullException(nameof(changes));
             Version = version;
+            var delta = changes.Sum(x => x.NewCount - x.OldCount);
+            var newCount = currentCount;
+            var oldCount = currentCount >= 0 ? currentCount - delta : -1;
+            IndexMap = new FlattenedIndexMap(oldCount, newCount, changes, indexMapOverride);
         }
 
         public IReadOnlyList<FlattenedChange> Changes { get; }
@@ -59,6 +136,11 @@ namespace Avalonia.Controls.DataGridHierarchical
         /// Monotonically increasing version number for the flattened list.
         /// </summary>
         public int Version { get; }
+
+        /// <summary>
+        /// Provides a mapping from the previous flattened list to the current one.
+        /// </summary>
+        public FlattenedIndexMap IndexMap { get; }
     }
 
     public class HierarchicalNodeEventArgs : EventArgs
@@ -80,6 +162,17 @@ namespace Avalonia.Controls.DataGridHierarchical
         }
 
         public Exception Error { get; }
+    }
+
+    public class HierarchyChangedEventArgs : HierarchicalNodeEventArgs
+    {
+        public HierarchyChangedEventArgs(HierarchicalNode node, NotifyCollectionChangedAction action)
+            : base(node)
+        {
+            Action = action;
+        }
+
+        public NotifyCollectionChangedAction Action { get; }
     }
 
     /// <summary>
@@ -129,6 +222,11 @@ namespace Avalonia.Controls.DataGridHierarchical
         event EventHandler<HierarchicalNodeEventArgs>? NodeLoaded;
 
         event EventHandler<HierarchicalNodeLoadFailedEventArgs>? NodeLoadFailed;
+
+        /// <summary>
+        /// Raised when the hierarchy mutates (structure changes), independent from visible flattening changes.
+        /// </summary>
+        event EventHandler<HierarchyChangedEventArgs>? HierarchyChanged;
 
         /// <summary>
         /// Retrieves the item at the given visible index.
@@ -289,6 +387,8 @@ namespace Avalonia.Controls.DataGridHierarchical
         public event EventHandler<HierarchicalNodeEventArgs>? NodeLoaded;
 
         public event EventHandler<HierarchicalNodeLoadFailedEventArgs>? NodeLoadFailed;
+
+        public event EventHandler<HierarchyChangedEventArgs>? HierarchyChanged;
 
         public void SetRoot(object rootItem)
         {
@@ -630,10 +730,12 @@ namespace Avalonia.Controls.DataGridHierarchical
             }
         }
 
-        protected virtual void OnFlattenedChanged(IReadOnlyList<FlattenedChange> changes)
+        protected virtual void OnFlattenedChanged(
+            IReadOnlyList<FlattenedChange> changes,
+            IReadOnlyDictionary<int, int>? indexMapOverride = null)
         {
             var version = ++FlattenedVersion;
-            FlattenedChanged?.Invoke(this, new FlattenedChangedEventArgs(changes, version));
+            FlattenedChanged?.Invoke(this, new FlattenedChangedEventArgs(changes, version, _flattened.Count, indexMapOverride));
         }
 
         protected virtual void OnNodeExpanded(HierarchicalNode node)
@@ -659,6 +761,11 @@ namespace Avalonia.Controls.DataGridHierarchical
         protected virtual void OnNodeLoadFailed(HierarchicalNode node, Exception error)
         {
             NodeLoadFailed?.Invoke(this, new HierarchicalNodeLoadFailedEventArgs(node, error));
+        }
+
+        protected virtual void OnHierarchyChanged(HierarchicalNode node, NotifyCollectionChangedAction action)
+        {
+            HierarchyChanged?.Invoke(this, new HierarchyChangedEventArgs(node, action));
         }
 
         internal void SetRoot(HierarchicalNode root, bool rebuildFlattened = true)
@@ -760,6 +867,11 @@ namespace Avalonia.Controls.DataGridHierarchical
             return count;
         }
 
+        private int GetVisibleVisibleCount(HierarchicalNode node)
+        {
+            return 1 + (node.IsExpanded ? node.ExpandedCount : 0);
+        }
+
         private int CountVisibleDescendantsInFlattened(HierarchicalNode node, int parentIndex)
         {
             int count = 0;
@@ -834,8 +946,10 @@ namespace Avalonia.Controls.DataGridHierarchical
                     Refresh(parent);
                     break;
                 case NotifyCollectionChangedAction.Replace:
+                    HandleChildrenReplaced(parent, e);
+                    break;
                 case NotifyCollectionChangedAction.Move:
-                    Refresh(parent);
+                    HandleChildrenMoved(parent, e);
                     break;
             }
         }
@@ -901,6 +1015,7 @@ namespace Avalonia.Controls.DataGridHierarchical
             }
 
             RecalculateExpandedCountsFrom(parent);
+            OnHierarchyChanged(parent, NotifyCollectionChangedAction.Add);
         }
 
         private void HandleChildrenRemoved(HierarchicalNode parent, NotifyCollectionChangedEventArgs e)
@@ -973,6 +1088,173 @@ namespace Avalonia.Controls.DataGridHierarchical
             }
 
             RecalculateExpandedCountsFrom(parent);
+            OnHierarchyChanged(parent, NotifyCollectionChangedAction.Remove);
+        }
+
+        private void HandleChildrenReplaced(HierarchicalNode parent, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems == null || e.OldItems == null || e.NewItems.Count == 0 || e.OldItems.Count == 0)
+            {
+                Refresh(parent);
+                return;
+            }
+
+            var replaceIndex = e.OldStartingIndex >= 0 ? e.OldStartingIndex : 0;
+            replaceIndex = Math.Min(replaceIndex, parent.MutableChildren.Count);
+            var replaceCount = Math.Min(Math.Min(e.NewItems.Count, e.OldItems.Count), parent.MutableChildren.Count - replaceIndex);
+            if (replaceCount <= 0)
+            {
+                return;
+            }
+
+            var parentIndex = _flattened.IndexOf(parent);
+            var visibleOffset = GetVisibleOffsetForChildIndex(parent, replaceIndex);
+            var removedNodes = new List<HierarchicalNode>();
+
+            for (int i = 0; i < replaceCount; i++)
+            {
+                if (replaceIndex < parent.MutableChildren.Count)
+                {
+                    var old = parent.MutableChildren[replaceIndex];
+                    removedNodes.Add(old);
+                    parent.MutableChildren.RemoveAt(replaceIndex);
+                    DetachHierarchy(old);
+                }
+            }
+
+            var removedVisible = removedNodes.Sum(GetVisibleVisibleCount);
+
+            var newNodes = new List<HierarchicalNode>();
+            foreach (var item in e.NewItems.Cast<object>().Take(replaceCount))
+            {
+                if (item == null)
+                {
+                    continue;
+                }
+
+                var node = new HierarchicalNode(item, parent, parent.Level + 1, isLeaf: DetermineInitialLeaf(item));
+                newNodes.Add(node);
+            }
+
+            parent.MutableChildren.InsertRange(replaceIndex, newNodes);
+            parent.IsLeaf = parent.MutableChildren.Count == 0;
+
+            if (parent.IsExpanded && parentIndex >= 0)
+            {
+                var flattenedIndex = parentIndex + 1 + visibleOffset;
+                if (removedVisible > 0)
+                {
+                    _flattened.RemoveRange(flattenedIndex, removedVisible);
+                }
+
+                var visibleNodes = new List<HierarchicalNode>();
+                foreach (var node in newNodes)
+                {
+                    visibleNodes.Add(node);
+                    if (node.IsExpanded)
+                    {
+                        EnsureChildrenMaterialized(node);
+                        CollectVisibleChildren(node, visibleNodes);
+                    }
+                }
+
+                if (visibleNodes.Count > 0)
+                {
+                    _flattened.InsertRange(flattenedIndex, visibleNodes);
+                }
+
+                var insertedVisible = parent.IsExpanded ? visibleNodes.Count : 0;
+                OnFlattenedChanged(new[] { new FlattenedChange(flattenedIndex, removedVisible, insertedVisible) });
+            }
+
+            RecalculateExpandedCountsFrom(parent);
+            OnHierarchyChanged(parent, NotifyCollectionChangedAction.Replace);
+        }
+
+        private void HandleChildrenMoved(HierarchicalNode parent, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems == null || e.NewItems.Count == 0)
+            {
+                return;
+            }
+
+            var moveIndex = e.OldStartingIndex >= 0 ? e.OldStartingIndex : 0;
+            moveIndex = Math.Min(moveIndex, parent.MutableChildren.Count);
+            var moveCount = Math.Min(e.NewItems.Count, parent.MutableChildren.Count - moveIndex);
+            if (moveCount <= 0)
+            {
+                return;
+            }
+
+            var targetIndex = e.NewStartingIndex >= 0 ? e.NewStartingIndex : parent.MutableChildren.Count - moveCount;
+            targetIndex = Math.Max(0, targetIndex);
+            targetIndex = Math.Min(targetIndex, parent.MutableChildren.Count - moveCount);
+            if (targetIndex == moveIndex)
+            {
+                return;
+            }
+
+            var parentIndex = _flattened.IndexOf(parent);
+            var expandedAndVisible = parent.IsExpanded && parentIndex >= 0;
+
+            var removeOffset = GetVisibleOffsetForChildIndex(parent, moveIndex);
+            var movedNodes = new List<HierarchicalNode>();
+
+            for (int i = 0; i < moveCount; i++)
+            {
+                var node = parent.MutableChildren[moveIndex];
+                movedNodes.Add(node);
+                parent.MutableChildren.RemoveAt(moveIndex);
+            }
+
+            var removedVisible = expandedAndVisible ? movedNodes.Sum(GetVisibleVisibleCount) : 0;
+
+            var insertIndex = Math.Min(Math.Max(0, targetIndex), parent.MutableChildren.Count);
+            parent.MutableChildren.InsertRange(insertIndex, movedNodes);
+
+            if (expandedAndVisible)
+            {
+                var removedAt = parentIndex + 1 + removeOffset;
+                if (removedVisible > 0)
+                {
+                    _flattened.RemoveRange(removedAt, removedVisible);
+                }
+
+                var visibleNodes = new List<HierarchicalNode>();
+                foreach (var node in movedNodes)
+                {
+                    visibleNodes.Add(node);
+                    if (node.IsExpanded)
+                    {
+                        EnsureChildrenMaterialized(node);
+                        CollectVisibleChildren(node, visibleNodes);
+                    }
+                }
+
+                var insertOffset = GetVisibleOffsetForChildIndex(parent, insertIndex);
+                var insertAt = parentIndex + 1 + insertOffset;
+                if (visibleNodes.Count > 0)
+                {
+                    _flattened.InsertRange(insertAt, visibleNodes);
+                }
+
+                var insertedVisible = expandedAndVisible ? visibleNodes.Count : 0;
+                var indexMap = new Dictionary<int, int>();
+
+                for (int i = 0; i < visibleNodes.Count; i++)
+                {
+                    indexMap[removedAt + i] = insertAt + i;
+                }
+
+                OnFlattenedChanged(new[]
+                {
+                    new FlattenedChange(removedAt, removedVisible, 0),
+                    new FlattenedChange(insertAt, 0, insertedVisible)
+                }, indexMap.Count > 0 ? indexMap : null);
+            }
+
+            RecalculateExpandedCountsFrom(parent);
+            OnHierarchyChanged(parent, NotifyCollectionChangedAction.Move);
         }
 
         private void AttachChildrenNotifier(HierarchicalNode node, IEnumerable children)

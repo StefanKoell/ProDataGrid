@@ -92,6 +92,64 @@ public class HierarchicalHeadlessTests
         Assert.Equal(3, model.Count);
     }
 
+    [AvaloniaFact]
+    public void NumpadMultiply_ExpandsEntireSubtree()
+    {
+        var root = new Item("root");
+        var childA = new Item("a");
+        childA.Children.Add(new Item("a1"));
+        var childB = new Item("b");
+        root.Children.Add(childA);
+        root.Children.Add(childB);
+
+        var model = new HierarchicalModel(new HierarchicalOptions
+        {
+            ChildrenSelector = o => ((Item)o).Children
+        });
+        model.SetRoot(root);
+
+        var grid = new DataGrid
+        {
+            HierarchicalModel = model,
+            HierarchicalRowsEnabled = true,
+            AutoGenerateColumns = false,
+            ItemsSource = model.Flattened
+        };
+
+        grid.Columns.Add(new DataGridHierarchicalColumn
+        {
+            Header = "Name",
+            Binding = new Avalonia.Data.Binding("Item.Name")
+        });
+
+        grid.ApplyTemplate();
+        grid.UpdateLayout();
+
+        var setCurrent = typeof(DataGrid).GetMethod(
+            "SetCurrentCellCore",
+            BindingFlags.Instance | BindingFlags.NonPublic,
+            new[] { typeof(int), typeof(int) });
+
+        Assert.True((bool)setCurrent!.Invoke(grid, new object[] { 0, 0 })!);
+
+        var processMultiply = typeof(DataGrid).GetMethod(
+            "ProcessMultiplyKey",
+            BindingFlags.Instance | BindingFlags.NonPublic);
+
+        var args = new KeyEventArgs
+        {
+            Key = Key.Multiply,
+            RoutedEvent = InputElement.KeyDownEvent,
+            Source = grid
+        };
+
+        Assert.True((bool)processMultiply!.Invoke(grid, new object[] { args })!);
+
+        Assert.True(model.Root!.IsExpanded);
+        Assert.True(model.GetNode(1).IsExpanded);
+        Assert.Equal(4, model.Count);
+    }
+
     private static void RunSortScenario(string sortMemberPath)
     {
         var root = new Item("root");

@@ -1282,6 +1282,90 @@ public class DataGridScrollingTests
         }
     }
 
+    [AvaloniaFact]
+    public void Collapsed_Group_Does_Not_Cause_Scroll_Jump_With_Logical_Scrollable()
+    {
+        // Arrange
+        var items = Enumerable.Range(0, 60)
+            .Select(x => new GroupableTestModel($"Item {x}", $"Group {x / 10}"))
+            .ToList();
+        var target = CreateGroupedTarget(items, height: 300, useLogicalScrollable: true);
+        target.UpdateLayout();
+
+        var presenter = GetRowsPresenter(target);
+        var headers = GetGroupHeaders(target)
+            .OrderBy(h => h.RowGroupInfo?.Slot ?? int.MaxValue)
+            .ToList();
+
+        Assert.True(headers.Count >= 2, "Expected at least two group headers to exercise scrolling across groups.");
+
+        // Collapse the first group so that its rows are hidden but its header stays visible.
+        headers[0].ToggleExpandCollapse(isVisible: false, setCurrent: true);
+        target.UpdateLayout();
+
+        var offsets = new List<double> { presenter.Offset.Y };
+
+        // Scroll in small increments until we move past the collapsed group's content.
+        for (int i = 0; i < 3; i++)
+        {
+            Assert.True(target.UpdateScroll(new Vector(0, -30)), "Scroll request should be handled.");
+            target.UpdateLayout();
+            offsets.Add(presenter.Offset.Y);
+        }
+
+        // We should end up with the next group's header as the first visible slot.
+        Assert.True(target.DisplayData.FirstScrollingSlot >= headers[1].RowGroupInfo!.Slot,
+            "Expected to reach the second group after scrolling.");
+
+        var deltas = offsets.Zip(offsets.Skip(1), (previous, current) => current - previous).ToList();
+
+        // Offsets should increase smoothly without a large jump when collapsed rows are skipped.
+        Assert.All(deltas, delta => Assert.True(delta >= 0, $"Offset decreased unexpectedly by {delta}"));
+
+        var maxAllowedDelta = target.RowHeightEstimate * 3;
+        var maxDelta = deltas.Max();
+        Assert.True(maxDelta < maxAllowedDelta,
+            $"Scroll jump detected when collapsed groups are in view. Max delta {maxDelta} exceeded threshold {maxAllowedDelta}.");
+    }
+
+    [AvaloniaFact]
+    public void Collapsed_Group_Offset_Reflects_Only_Visible_Content()
+    {
+        // Arrange
+        var items = Enumerable.Range(0, 60)
+            .Select(x => new GroupableTestModel($"Item {x}", $"Group {x / 10}"))
+            .ToList();
+        var target = CreateGroupedTarget(items, height: 300, useLogicalScrollable: true);
+        target.UpdateLayout();
+
+        var presenter = GetRowsPresenter(target);
+        var headers = GetGroupHeaders(target)
+            .OrderBy(h => h.RowGroupInfo?.Slot ?? int.MaxValue)
+            .ToList();
+
+        Assert.True(headers.Count >= 2, "Expected at least two group headers to test offset calculation.");
+
+        var firstHeader = headers[0];
+        var secondHeader = headers[1];
+
+        firstHeader.ToggleExpandCollapse(isVisible: false, setCurrent: true);
+        target.UpdateLayout();
+
+        // Scroll just past the first header so that the second header becomes the first visible slot.
+        var scrollAmount = -(firstHeader.Bounds.Height + 10);
+        Assert.True(target.UpdateScroll(new Vector(0, scrollAmount)), "Scroll request should be handled.");
+        target.UpdateLayout();
+
+        Assert.Equal(secondHeader.RowGroupInfo!.Slot, target.DisplayData.FirstScrollingSlot);
+
+        // The vertical offset should only account for the visible header above plus the partial scroll into the next header.
+        var offset = presenter.Offset.Y;
+        var lowerBound = Math.Max(0, firstHeader.Bounds.Height - 1);
+        var upperBound = firstHeader.Bounds.Height + secondHeader.Bounds.Height + target.RowHeightEstimate;
+
+        Assert.InRange(offset, lowerBound, upperBound);
+    }
+
     #endregion
 
     #region Test Model

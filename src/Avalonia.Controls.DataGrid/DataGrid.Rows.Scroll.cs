@@ -218,7 +218,7 @@ namespace Avalonia.Controls
                 var firstRowEstimator = RowHeightEstimator;
                 if (firstRowEstimator != null)
                 {
-                    double baseOffset = firstRowEstimator.EstimateOffsetToSlot(DisplayData.FirstScrollingSlot);
+                    double baseOffset = EstimateOffsetToVisibleSlot(DisplayData.FirstScrollingSlot, firstRowEstimator);
                     if (!double.IsNaN(baseOffset) && !double.IsInfinity(baseOffset))
                     {
                         double desiredNeg = Math.Max(0, newVerticalOffset - baseOffset);
@@ -297,7 +297,7 @@ namespace Avalonia.Controls
                 var offsetEstimator = RowHeightEstimator;
                 if (offsetEstimator != null && DisplayData.FirstScrollingSlot >= 0)
                 {
-                    double baseOffset = offsetEstimator.EstimateOffsetToSlot(DisplayData.FirstScrollingSlot);
+                    double baseOffset = EstimateOffsetToVisibleSlot(DisplayData.FirstScrollingSlot, offsetEstimator);
                     double alignedVerticalOffset = baseOffset + NegVerticalOffset;
                     if (!double.IsNaN(alignedVerticalOffset) && !double.IsInfinity(alignedVerticalOffset))
                     {
@@ -347,6 +347,29 @@ namespace Avalonia.Controls
             {
                 _scrollingByHeight = false;
             }
+        }
+
+        private double EstimateOffsetToVisibleSlot(int slot, IDataGridRowHeightEstimator estimator)
+        {
+            if (slot <= 0 || estimator == null)
+            {
+                return 0;
+            }
+
+            double offset = estimator.EstimateOffsetToSlot(slot);
+
+            int collapsedSlot = _collapsedSlotsTable.GetNextIndex(-1);
+            while (collapsedSlot != -1 && collapsedSlot < slot)
+            {
+                var rowGroupInfo = RowGroupHeadersTable.GetValueAt(collapsedSlot);
+                bool isHeader = rowGroupInfo != null;
+                int level = isHeader ? rowGroupInfo.Level : 0;
+
+                offset -= estimator.GetEstimatedHeight(collapsedSlot, isHeader, level);
+                collapsedSlot = _collapsedSlotsTable.GetNextIndex(collapsedSlot);
+            }
+
+            return Math.Max(0, offset);
         }
 
 

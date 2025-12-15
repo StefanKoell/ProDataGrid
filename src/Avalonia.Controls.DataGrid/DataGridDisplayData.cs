@@ -3,6 +3,7 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using System;
 using System.Collections.Generic;
@@ -61,6 +62,23 @@ namespace Avalonia.Controls
         internal DataGridRow? GetRecycledRow()
         {
             return PopFromRecyclePool(_recycledRows, RestoreElementVisibility);
+        }
+
+        internal void TrimRecycledPools(DataGridRowsPresenter owner, int maxRecycledRows, int maxRecycledGroupHeaders)
+        {
+            while (_recycledRows.Count > maxRecycledRows)
+            {
+                var row = _recycledRows.Pop();
+                owner.UnregisterAnchorCandidate(row);
+                owner.Children.Remove(row);
+            }
+
+            while (_recycledGroupHeaders.Count > maxRecycledGroupHeaders)
+            {
+                var header = _recycledGroupHeaders.Pop();
+                owner.UnregisterAnchorCandidate(header);
+                owner.Children.Remove(header);
+            }
         }
 
         #endregion
@@ -255,12 +273,9 @@ namespace Avalonia.Controls
 
         #region Private Helpers
 
-        private static void HideElement(Control element)
+        private void HideElement(Control element)
         {
-            element.SetCurrentValue(Visual.IsVisibleProperty, false);
-            // Move hidden elements off-screen immediately to avoid stale bounds being picked up
-            // by layout-sensitive logic (e.g., tests that inspect all rows).
-            element.Arrange(new Rect(-10000, -10000, 0, 0));
+            _owner?.HideRecycledElement(element);
         }
 
         private static void RestoreElementVisibility(Control element)

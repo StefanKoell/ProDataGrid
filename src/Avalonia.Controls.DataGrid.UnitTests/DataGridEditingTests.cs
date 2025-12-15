@@ -5,11 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Headless.XUnit;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -153,6 +155,58 @@ public class DataGridEditingTests
         }
     }
 
+    [AvaloniaFact]
+    public void Double_Click_On_ReadOnly_Cell_Does_Not_Begin_Edit()
+    {
+        var (grid, root, items) = CreateGrid();
+        try
+        {
+            var slot = grid.SlotFromRowIndex(0);
+            var readOnlyColumn = grid.ColumnsInternal[0];
+
+            InvokePrivateUpdateStateOnMouseLeftButtonDown(grid, CreatePointerArgs(grid), readOnlyColumn.Index, slot, allowEdit: true);
+            grid.UpdateLayout();
+
+            InvokePrivateUpdateStateOnMouseLeftButtonDown(grid, CreatePointerArgs(grid), readOnlyColumn.Index, slot, allowEdit: true);
+            grid.UpdateLayout();
+
+            Assert.Equal(-1, grid.EditingColumnIndex);
+
+            var readOnlyCell = FindCell(grid, items[0], readOnlyColumn.Index);
+            Assert.False(((IPseudoClasses)readOnlyCell.Classes).Contains(":edited"));
+        }
+        finally
+        {
+            root.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Double_Click_On_DisplayOnly_Template_Cell_Does_Not_Begin_Edit()
+    {
+        var (grid, root, items) = CreateTemplateDisplayGrid();
+        try
+        {
+            var slot = grid.SlotFromRowIndex(0);
+            var templateColumn = grid.ColumnsInternal[1];
+
+            InvokePrivateUpdateStateOnMouseLeftButtonDown(grid, CreatePointerArgs(grid), templateColumn.Index, slot, allowEdit: true);
+            grid.UpdateLayout();
+
+            InvokePrivateUpdateStateOnMouseLeftButtonDown(grid, CreatePointerArgs(grid), templateColumn.Index, slot, allowEdit: true);
+            grid.UpdateLayout();
+
+            Assert.Equal(-1, grid.EditingColumnIndex);
+
+            var templateCell = FindCell(grid, items[0], templateColumn.Index);
+            Assert.False(((IPseudoClasses)templateCell.Classes).Contains(":edited"));
+        }
+        finally
+        {
+            root.Close();
+        }
+    }
+
     private static (DataGrid Grid, Window Root, ObservableCollection<EditItem> Items) CreateGrid()
     {
         var items = new ObservableCollection<EditItem>
@@ -163,23 +217,19 @@ public class DataGridEditingTests
         var root = new Window
         {
             Width = 640,
-            Height = 480,
-            Styles =
-            {
-                new FluentTheme(),
-                new StyleInclude((Uri?)null)
-                {
-                    Source = new Uri("avares://Avalonia.Themes.Fluent/FluentTheme.xaml")
-                },
-                new StyleInclude((Uri?)null)
-                {
-                    Source = new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml")
-                },
-            }
+            Height = 480
         };
 
-        AddResourceBackstops(root);
-        root.Styles.Resources["SystemControlTransparentBrush"] = Brushes.Transparent;
+        AddResourceBackstops(root.Styles);
+        root.Styles.Add(new FluentTheme());
+        root.Styles.Add(new StyleInclude((Uri?)null)
+        {
+            Source = new Uri("avares://Avalonia.Themes.Fluent/FluentTheme.xaml")
+        });
+        root.Styles.Add(new StyleInclude((Uri?)null)
+        {
+            Source = new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml")
+        });
 
         var baseTheme = new FluentTheme();
         AddBaseControlTheme(root, baseTheme, typeof(TextBox));
@@ -187,6 +237,7 @@ public class DataGridEditingTests
         AddBaseControlTheme(root, baseTheme, typeof(ComboBox));
         AddBaseControlTheme(root, baseTheme, typeof(HyperlinkButton));
         EnsureFluentFallbackResources(root);
+        EnsureTooltipValidationResource(root, baseTheme);
 
         var grid = new DataGrid
         {
@@ -256,23 +307,19 @@ public class DataGridEditingTests
         var root = new Window
         {
             Width = 320,
-            Height = 240,
-            Styles =
-            {
-                new FluentTheme(),
-                new StyleInclude((Uri?)null)
-                {
-                    Source = new Uri("avares://Avalonia.Themes.Fluent/FluentTheme.xaml")
-                },
-                new StyleInclude((Uri?)null)
-                {
-                    Source = new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml")
-                },
-            }
+            Height = 240
         };
 
-        AddResourceBackstops(root);
-        root.Styles.Resources["SystemControlTransparentBrush"] = Brushes.Transparent;
+        AddResourceBackstops(root.Styles);
+        root.Styles.Add(new FluentTheme());
+        root.Styles.Add(new StyleInclude((Uri?)null)
+        {
+            Source = new Uri("avares://Avalonia.Themes.Fluent/FluentTheme.xaml")
+        });
+        root.Styles.Add(new StyleInclude((Uri?)null)
+        {
+            Source = new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml")
+        });
 
         var baseTheme = new FluentTheme();
         AddBaseControlTheme(root, baseTheme, typeof(TextBox));
@@ -280,6 +327,7 @@ public class DataGridEditingTests
         AddBaseControlTheme(root, baseTheme, typeof(ComboBox));
         AddBaseControlTheme(root, baseTheme, typeof(HyperlinkButton));
         EnsureFluentFallbackResources(root);
+        EnsureTooltipValidationResource(root, baseTheme);
 
         var grid = new DataGrid
         {
@@ -309,33 +357,76 @@ public class DataGridEditingTests
 
     private static void AddBaseControlTheme(Window root, FluentTheme theme, Type controlType)
     {
-        if (!theme.TryGetResource(controlType, ThemeVariant.Default, out var resource))
+        if (!theme.TryGetResource(controlType, ThemeVariant.Default, out var resource) || resource is null)
         {
             resource = new ControlTheme(controlType);
         }
 
-        root.Resources[controlType] = resource;
-        if (controlType.FullName is { } key)
+        SetControlThemeResource(root.Resources, controlType, resource);
+
+        if (Application.Current is { } app)
         {
-            root.Resources[key] = resource;
+            SetControlThemeResource(app.Resources, controlType, resource);
         }
     }
 
     private static void EnsureFluentFallbackResources(Window root)
     {
-        if (!root.Resources.ContainsKey("SystemControlTransparentBrush"))
+        EnsureResource(root.Resources, "SystemControlTransparentBrush", Brushes.Transparent);
+
+        if (Application.Current is { } app)
         {
-            root.Resources["SystemControlTransparentBrush"] = Brushes.Transparent;
+            EnsureResource(app.Resources, "SystemControlTransparentBrush", Brushes.Transparent);
         }
     }
 
-    private static void AddResourceBackstops(Window root)
+    private static void EnsureTooltipValidationResource(Window root, FluentTheme theme)
     {
-        var fallback = new Styles();
-        fallback.Resources["SystemControlTransparentBrush"] = Brushes.Transparent;
-        fallback.Resources["ListAccentLowOpacity"] = 0.15;
-        fallback.Resources["ListAccentMediumOpacity"] = 0.3;
-        root.Styles.Insert(0, fallback);
+        var resource = TryGetResource(theme, "TooltipDataValidationErrors", () => new ControlTheme(typeof(ToolTip)));
+        EnsureResource(root.Resources, "TooltipDataValidationErrors", resource);
+
+        if (Application.Current is { } app)
+        {
+            EnsureResource(app.Resources, "TooltipDataValidationErrors", resource);
+        }
+    }
+
+    private static void AddResourceBackstops(Styles styles)
+    {
+        EnsureResource(styles.Resources, "SystemControlTransparentBrush", Brushes.Transparent);
+        EnsureResource(styles.Resources, "ListAccentLowOpacity", 0.15);
+        EnsureResource(styles.Resources, "ListAccentMediumOpacity", 0.3);
+
+        if (Application.Current is { } app)
+        {
+            EnsureResource(app.Resources, "SystemControlTransparentBrush", Brushes.Transparent);
+            EnsureResource(app.Resources, "ListAccentLowOpacity", 0.15);
+            EnsureResource(app.Resources, "ListAccentMediumOpacity", 0.3);
+        }
+    }
+
+    private static void EnsureResource(IResourceDictionary resources, string key, object value)
+    {
+        if (!resources.ContainsKey(key))
+        {
+            resources[key] = value;
+        }
+    }
+
+    private static object TryGetResource(FluentTheme theme, string key, Func<object> fallback)
+    {
+        return theme.TryGetResource(key, ThemeVariant.Default, out var resource) && resource is { }
+            ? resource
+            : fallback();
+    }
+
+    private static void SetControlThemeResource(IResourceDictionary resources, Type controlType, object resource)
+    {
+        resources[controlType] = resource;
+        if (controlType.FullName is { } key)
+        {
+            resources[key] = resource;
+        }
     }
 
     private static DataGridRow FindRow(EditItem item, DataGrid grid)
@@ -381,6 +472,26 @@ public class DataGridEditingTests
                 Assert.False(classes.Contains(":edited"));
             }
         }
+    }
+
+    private static PointerPressedEventArgs CreatePointerArgs(Control target)
+    {
+        var pointer = new Avalonia.Input.Pointer(Avalonia.Input.Pointer.GetNextFreeId(), PointerType.Mouse, isPrimary: true);
+        var properties = new PointerPointProperties(RawInputModifiers.LeftMouseButton, PointerUpdateKind.LeftButtonPressed);
+        return new PointerPressedEventArgs(target, pointer, target, new Point(0, 0), 0, properties, KeyModifiers.None);
+    }
+
+    private static void InvokePrivateUpdateStateOnMouseLeftButtonDown(DataGrid grid, PointerPressedEventArgs args, int columnIndex, int slot, bool allowEdit)
+    {
+        var method = typeof(DataGrid).GetMethod(
+            "UpdateStateOnMouseLeftButtonDown",
+            BindingFlags.Instance | BindingFlags.NonPublic,
+            binder: null,
+            types: new[] { typeof(PointerPressedEventArgs), typeof(int), typeof(int), typeof(bool) },
+            modifiers: null);
+
+        Assert.NotNull(method);
+        method!.Invoke(grid, new object[] { args, columnIndex, slot, allowEdit });
     }
 
     private class EditItem

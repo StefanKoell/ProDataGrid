@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:columns="clr-namespace:DataGridSample.Columns"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.CustomTextColumnPage"
+             x:DataType="viewModels:CustomTextColumnViewModel">
+  <UserControl.DataContext>
+    <viewModels:CustomTextColumnViewModel />
+  </UserControl.DataContext>
+
+  <UserControl.Resources>
+    <ControlTheme x:Key="DataGridCellTextBoxTheme"
+                  TargetType="TextBox"
+                  BasedOn="{StaticResource {x:Type TextBox}}">
+      <Setter Property="Background" Value="#0F172A" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="SelectionBrush" Value="#F59E0B" />
+      <Setter Property="CaretBrush" Value="White" />
+      <Setter Property="BorderBrush" Value="#3B82F6" />
+      <Setter Property="BorderThickness" Value="1.5" />
+      <Setter Property="Padding" Value="10,6" />
+      <Setter Property="FontWeight" Value="Medium" />
+    </ControlTheme>
+    <ControlTheme x:Key="DataGridCellTextBlockTheme"
+                  TargetType="TextBlock"
+                  BasedOn="{StaticResource {x:Type TextBlock}}">
+      <Setter Property="Foreground" Value="#0B1224" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </ControlTheme>
+  </UserControl.Resources>
+
+  <Grid RowDefinitions="Auto,Auto,*"
+        RowSpacing="12"
+        Margin="12">
+    <StackPanel Spacing="4">
+      <TextBlock Classes="h2">Derived text column themes</TextBlock>
+      <TextBlock Text="A custom text column builds its own text editors and display elements, but reuses the grid's DataGridCellTextBoxTheme and DataGridCellTextBlockTheme via the new protected accessors. Try editing the Notes column to see the themed editor."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1"
+                Orientation="Horizontal"
+                Spacing="8">
+      <Button Content="Add entry"
+              Command="{Binding AddNoteCommand}" />
+      <Button Content="Shuffle statuses"
+              Command="{Binding ShuffleStatusesCommand}" />
+    </StackPanel>
+
+    <DataGrid Grid.Row="2"
+              ItemsSource="{Binding Notes}"
+              AutoGenerateColumns="False"
+              CanUserAddRows="False"
+              HeadersVisibility="All"
+              Height="480"
+              RowDetailsVisibilityMode="VisibleWhenSelected">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Title"
+                            Binding="{Binding Title}"
+                            Width="200" />
+        <columns:AccentTextColumn Header="Notes"
+                                  Binding="{Binding Body}"
+                                  Width="*"
+                                  Watermark="Add details about this row" />
+        <DataGridTextColumn Header="Status"
+                            Binding="{Binding Status}"
+                            Width="150" />
+      </DataGrid.Columns>
+      <DataGrid.RowDetailsTemplate>
+        <DataTemplate>
+          <TextBlock Margin="12,4,12,8"
+                     Text="{Binding Body}"
+                     TextWrapping="Wrap"
+                     Opacity="0.75" />
+        </DataTemplate>
+      </DataGrid.RowDetailsTemplate>
+    </DataGrid>
+  </Grid>
+</UserControl>

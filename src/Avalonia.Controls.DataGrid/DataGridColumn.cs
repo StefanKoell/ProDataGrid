@@ -6,6 +6,7 @@
 #nullable disable
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -778,6 +779,34 @@ namespace Avalonia.Controls
             {
                 _clipboardContentBinding = value;
             }
+        }
+
+        /// <summary>
+        /// Resolves a <see cref="ControlTheme" /> from the owning grid's resources for the given key.
+        /// Returns <c>null</c> when the grid is unavailable, the resource is missing, or the value is not a theme.
+        /// </summary>
+        /// <param name="resourceKey">Resource key to search for.</param>
+        /// <returns>The located <see cref="ControlTheme" /> or <c>null</c>.</returns>
+        protected ControlTheme GetColumnControlTheme(string resourceKey)
+        {
+            if (OwningGrid == null || string.IsNullOrEmpty(resourceKey))
+            {
+                return null;
+            }
+
+            try
+            {
+                if (OwningGrid.TryFindResource(resourceKey, out var resource) && resource is ControlTheme theme)
+                {
+                    return theme;
+                }
+            }
+            catch (KeyNotFoundException)
+            {
+                return null;
+            }
+
+            return null;
         }
 
 

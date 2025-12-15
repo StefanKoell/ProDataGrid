@@ -158,6 +158,12 @@
     <TabItem Header="Current Cell">
       <pages:CurrentCellPage />
     </TabItem>
+    <TabItem Header="Themed Columns">
+      <pages:ColumnThemesPage />
+    </TabItem>
+    <TabItem Header="Derived Text Column">
+      <pages:CustomTextColumnPage />
+    </TabItem>
     <TabItem Header="Styling &amp; Themes">
       <pages:StylingShowcasePage />
     </TabItem>

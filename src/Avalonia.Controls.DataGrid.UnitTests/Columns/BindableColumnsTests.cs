@@ -36,6 +36,63 @@ namespace Avalonia.Controls.DataGridTests.Columns
         }
 
         [Fact]
+        public void Unbound_Columns_Raise_All_INCC_Actions()
+        {
+            var grid = new DataGrid();
+            var actions = new List<NotifyCollectionChangedAction>();
+            ((INotifyCollectionChanged)grid.Columns).CollectionChanged += (_, e) => actions.Add(e.Action);
+
+            var first = new DataGridTextColumn { Header = "One", Binding = new Binding("One") };
+            var second = new DataGridTextColumn { Header = "Two", Binding = new Binding("Two") };
+            var third = new DataGridTextColumn { Header = "Three", Binding = new Binding("Three") };
+
+            var unbound = (ObservableCollection<DataGridColumn>)grid.Columns;
+
+            unbound.Add(first);
+            unbound.Insert(0, second);
+            unbound[0] = third;
+            unbound.Move(0, 1);
+            unbound.RemoveAt(0);
+            unbound.Clear();
+
+            Assert.Contains(NotifyCollectionChangedAction.Add, actions);
+            Assert.Contains(NotifyCollectionChangedAction.Move, actions);
+            Assert.Contains(NotifyCollectionChangedAction.Remove, actions);
+            Assert.Contains(NotifyCollectionChangedAction.Reset, actions);
+        }
+
+        [Fact]
+        public void Bound_Columns_Raise_All_INCC_Actions()
+        {
+            var source = new ObservableCollection<DataGridColumn>();
+            var actions = new List<NotifyCollectionChangedAction>();
+            source.CollectionChanged += (_, e) => actions.Add(e.Action);
+
+            var grid = new DataGrid
+            {
+                Columns = source
+            };
+
+            var first = new DataGridTextColumn { Header = "One", Binding = new Binding("One") };
+            var second = new DataGridTextColumn { Header = "Two", Binding = new Binding("Two") };
+            var third = new DataGridTextColumn { Header = "Three", Binding = new Binding("Three") };
+
+            source.Add(first);
+            source.Insert(0, second);
+            source[0] = third;
+            source.Move(0, 1);
+            source.RemoveAt(0);
+            source.Clear();
+
+            Assert.Contains(NotifyCollectionChangedAction.Add, actions);
+            Assert.Contains(NotifyCollectionChangedAction.Replace, actions);
+            Assert.Contains(NotifyCollectionChangedAction.Move, actions);
+            Assert.Contains(NotifyCollectionChangedAction.Remove, actions);
+            Assert.Contains(NotifyCollectionChangedAction.Reset, actions);
+            Assert.Empty(grid.Columns.Where(c => c is not DataGridFillerColumn));
+        }
+
+        [Fact]
         public void Binding_Columns_Add_Reflects_In_Grid()
         {
             var columns = new ObservableCollection<DataGridColumn>
@@ -51,6 +108,19 @@ namespace Avalonia.Controls.DataGridTests.Columns
             var added = new DataGridTextColumn { Header = "Last", Binding = new Binding("Last") };
             columns.Add(added);
 
+            Assert.Contains(added, grid.ColumnsInternal.ItemsInternal);
+        }
+
+        [Fact]
+        public void Columns_Property_Is_IList_And_Allows_Add_When_Unbound()
+        {
+            var grid = new DataGrid();
+
+            var added = new DataGridTextColumn { Header = "Dynamic", Binding = new Binding("Value") };
+
+            grid.Columns.Add(added);
+
+            Assert.Same(grid.ColumnsInternal, grid.Columns);
             Assert.Contains(added, grid.ColumnsInternal.ItemsInternal);
         }
 
@@ -73,26 +143,6 @@ namespace Avalonia.Controls.DataGridTests.Columns
             Assert.DoesNotContain(second, grid.ColumnsInternal.ItemsInternal);
         }
 
-        [Fact]
-        public void Binding_Enumerable_Applies_Snapshot_When_Not_IList()
-        {
-            var first = new DataGridTextColumn { Header = "First", Binding = new Binding("First") };
-            var source = new EnumerableColumnsSource(first);
-
-            var grid = new DataGrid
-            {
-                Columns = source
-            };
-
-            Assert.Contains(first, grid.ColumnsInternal.ItemsInternal);
-
-            var second = new DataGridTextColumn { Header = "Second", Binding = new Binding("Second") };
-            source.Add(second);
-
-            Assert.DoesNotContain(second, grid.ColumnsInternal.ItemsInternal);
-        }
-
-        [Fact]
         public void Binding_OneWay_To_ObservableCollection_Updates_On_Change()
         {
             var vm = new ColumnsHolder(new ObservableCollection<DataGridColumn>
@@ -187,26 +237,6 @@ namespace Avalonia.Controls.DataGridTests.Columns
             Assert.DoesNotContain(second, grid.ColumnsInternal.ItemsInternal);
         }
 
-        [Fact]
-        public void Binding_OneWay_To_Enumerable_Snapshot_Only()
-        {
-            var first = new DataGridTextColumn { Header = "First", Binding = new Binding("First") };
-            var source = new EnumerableColumnsSource(first);
-            var vm = new ColumnsHolder(source);
-
-            var grid = new DataGrid();
-            grid.Bind(DataGrid.ColumnsProperty, new Binding("Columns"));
-            grid.DataContext = vm;
-
-            Assert.Contains(first, grid.ColumnsInternal.ItemsInternal);
-
-            var second = new DataGridTextColumn { Header = "Second", Binding = new Binding("Second") };
-            source.Add(second);
-
-            Assert.DoesNotContain(second, grid.ColumnsInternal.ItemsInternal);
-        }
-
-        [Fact]
         public void Binding_OneWay_Remove_In_VM_Removes_From_Grid()
         {
             var collection = new ObservableCollection<DataGridColumn>
@@ -667,6 +697,87 @@ namespace Avalonia.Controls.DataGridTests.Columns
             Assert.Contains(columns[0], grid.ColumnsInternal.ItemsInternal);
         }
 
+        [Fact]
+        public void UpdateColumnDisplayIndexesFromCollectionOrder_Reorders_Unbound_Columns()
+        {
+            var grid = new DataGrid();
+            var columns = (ObservableCollection<DataGridColumn>)grid.Columns;
+
+            static DataGridColumn Create(string header) => new DataGridTextColumn
+            {
+                Header = header,
+                Binding = new Binding(header),
+                Width = new DataGridLength(1, DataGridLengthUnitType.Star)
+            };
+
+            void AssertOrder(params string[] headers)
+            {
+                var ordered = grid.ColumnsInternal.GetDisplayedColumns(c => c is not DataGridFillerColumn).ToList();
+                Assert.Equal(headers, ordered.Select(c => c.Header));
+                for (var i = 0; i < ordered.Count; i++)
+                {
+                    Assert.Equal(i, ordered[i].DisplayIndex);
+                }
+            }
+
+            // reset preset
+            columns.Add(Create("First Name"));
+            columns.Add(Create("Last Name"));
+            columns.Add(Create("Age"));
+            grid.UpdateColumnDisplayIndexesFromCollectionOrder();
+            AssertOrder("First Name", "Last Name", "Age");
+
+            // add column
+            columns.Add(Create("Dynamic 1"));
+            grid.UpdateColumnDisplayIndexesFromCollectionOrder();
+            AssertOrder("First Name", "Last Name", "Age", "Dynamic 1");
+
+            // insert at start
+            columns.Insert(0, Create("Inserted 1"));
+            grid.UpdateColumnDisplayIndexesFromCollectionOrder();
+            AssertOrder("Inserted 1", "First Name", "Last Name", "Age", "Dynamic 1");
+
+            // replace first
+            columns[0] = Create("Replaced 1");
+            grid.UpdateColumnDisplayIndexesFromCollectionOrder();
+            AssertOrder("Replaced 1", "First Name", "Last Name", "Age", "Dynamic 1");
+
+            // move last to first (remove + insert)
+            var last = columns[^1];
+            columns.RemoveAt(columns.Count - 1);
+            columns.Insert(0, last);
+            grid.UpdateColumnDisplayIndexesFromCollectionOrder();
+            AssertOrder("Dynamic 1", "Replaced 1", "First Name", "Last Name", "Age");
+
+            // swap first/last (remove both, reinsert)
+            var lastIndex = columns.Count - 1;
+            var first = columns[0];
+            last = columns[lastIndex];
+            columns.RemoveAt(lastIndex);
+            columns.RemoveAt(0);
+            columns.Insert(0, last);
+            columns.Insert(columns.Count, first);
+            grid.UpdateColumnDisplayIndexesFromCollectionOrder();
+            AssertOrder("Age", "Replaced 1", "First Name", "Last Name", "Dynamic 1");
+
+            // remove last
+            columns.RemoveAt(columns.Count - 1);
+            grid.UpdateColumnDisplayIndexesFromCollectionOrder();
+            AssertOrder("Age", "Replaced 1", "First Name", "Last Name");
+
+            // clear all
+            columns.Clear();
+            grid.UpdateColumnDisplayIndexesFromCollectionOrder();
+            Assert.Empty(grid.ColumnsInternal.GetDisplayedColumns(c => c is not DataGridFillerColumn));
+
+            // reset preset
+            columns.Add(Create("First Name"));
+            columns.Add(Create("Last Name"));
+            columns.Add(Create("Age"));
+            grid.UpdateColumnDisplayIndexesFromCollectionOrder();
+            AssertOrder("First Name", "Last Name", "Age");
+        }
+
         private static DataGrid CreateMeasuredGrid()
         {
             var grid = new DataGrid();
@@ -731,22 +842,6 @@ namespace Avalonia.Controls.DataGridTests.Columns
                     }
                 });
             }
-        }
-
-        private sealed class EnumerableColumnsSource : IEnumerable<DataGridColumn>
-        {
-            private readonly List<DataGridColumn> _inner;
-
-            public EnumerableColumnsSource(params DataGridColumn[] columns)
-            {
-                _inner = new List<DataGridColumn>(columns);
-            }
-
-            public void Add(DataGridColumn column) => _inner.Add(column);
-
-            public IEnumerator<DataGridColumn> GetEnumerator() => _inner.GetEnumerator();
-
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
         private sealed class ColumnsHolder : INotifyPropertyChanged

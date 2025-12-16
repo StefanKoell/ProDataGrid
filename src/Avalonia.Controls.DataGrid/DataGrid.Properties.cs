@@ -869,8 +869,8 @@ namespace Avalonia.Controls
         /// <summary>
         /// Identifies the Columns direct property; bindings to Columns are fully supported.
         /// </summary>
-        public static readonly DirectProperty<DataGrid, IEnumerable<DataGridColumn>> ColumnsProperty =
-            AvaloniaProperty.RegisterDirect<DataGrid, IEnumerable<DataGridColumn>>(
+        public static readonly DirectProperty<DataGrid, IList<DataGridColumn>> ColumnsProperty =
+            AvaloniaProperty.RegisterDirect<DataGrid, IList<DataGridColumn>>(
                 nameof(Columns),
                 o => o.Columns,
                 (o, v) => o.Columns = v,

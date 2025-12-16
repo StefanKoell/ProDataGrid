@@ -19,7 +19,7 @@ namespace Avalonia.Controls
 #endif
     partial class DataGrid
     {
-        private void SetColumnsBindingValue(IEnumerable<DataGridColumn> value)
+        private void SetColumnsBindingValue(IList<DataGridColumn> value)
         {
             if (_areHandlersSuspended)
             {
@@ -41,8 +41,8 @@ namespace Avalonia.Controls
                 return;
             }
 
-            var oldValue = (IEnumerable<DataGridColumn>)e.OldValue;
-            var newValue = (IEnumerable<DataGridColumn>)e.NewValue;
+            var oldValue = (IList<DataGridColumn>)e.OldValue;
+            var newValue = (IList<DataGridColumn>)e.NewValue;
 
             if (ReferenceEquals(oldValue, newValue))
             {
@@ -135,7 +135,7 @@ namespace Avalonia.Controls
             }
         }
 
-        private void AttachBoundColumns(IEnumerable<DataGridColumn> collection)
+        private void AttachBoundColumns(IList<DataGridColumn> collection)
         {
             _boundColumnsList = collection as IList<DataGridColumn>;
             _boundColumnsNotifications = collection as INotifyCollectionChanged;
@@ -160,7 +160,7 @@ namespace Avalonia.Controls
             }
         }
 
-        private void DetachBoundColumns(IEnumerable<DataGridColumn> collection)
+        private void DetachBoundColumns(IList<DataGridColumn> collection)
         {
             if (_boundColumnsNotifications != null && collection != null)
             {

@@ -119,6 +119,9 @@
     <TabItem Header="Bindable Columns">
       <pages:BindableColumnsPage />
     </TabItem>
+    <TabItem Header="Programmatic Columns">
+      <pages:DynamicColumnsPage />
+    </TabItem>
     <TabItem Header="Combo &amp; Hyperlink Columns">
       <pages:ComboHyperlinkColumnsPage />
     </TabItem>

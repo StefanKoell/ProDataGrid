@@ -48,12 +48,29 @@ namespace Avalonia.Controls
             var item = new DataTransferItem();
             var added = false;
 
+            var plainText = DataGridClipboardFormatting.BuildDelimitedText(context.Rows, '\t', quoteAlways: true);
+            var hasPlainText = !string.IsNullOrEmpty(plainText);
+
             foreach (var exporter in _exporters)
             {
                 if (exporter.TryExport(context, item))
                 {
                     added = true;
+                    break;
                 }
+            }
+
+            if (hasPlainText)
+            {
+                item.Set(TextClipboardFormatExporter.PlainTextFormat, plainText);
+
+                if (context.Formats == DataGridClipboardExportFormat.Text ||
+                    item.TryGetRaw(DataFormat.Text) is null)
+                {
+                    item.Set(DataFormat.Text, plainText);
+                }
+
+                added = true;
             }
 
             if (!added)

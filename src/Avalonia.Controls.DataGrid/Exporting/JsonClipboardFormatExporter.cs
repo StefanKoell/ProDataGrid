@@ -11,7 +11,7 @@ namespace Avalonia.Controls
 
         public bool TryExport(DataGridClipboardExportContext context, DataTransferItem item)
         {
-            if (!context.Formats.HasFlag(DataGridClipboardExportFormat.Json))
+            if (context.Formats != DataGridClipboardExportFormat.Json)
             {
                 return false;
             }
@@ -23,7 +23,6 @@ namespace Avalonia.Controls
             }
 
             item.Set(DataFormat.Text, json);
-            item.Set(TextClipboardFormatExporter.PlainTextFormat, json);
             item.Set(JsonFormat, json);
             return true;
         }

@@ -11,7 +11,7 @@ namespace Avalonia.Controls
 
         public bool TryExport(DataGridClipboardExportContext context, DataTransferItem item)
         {
-            if (!context.Formats.HasFlag(DataGridClipboardExportFormat.Csv))
+            if (context.Formats != DataGridClipboardExportFormat.Csv)
             {
                 return false;
             }
@@ -23,8 +23,6 @@ namespace Avalonia.Controls
             }
 
             item.Set(DataFormat.Text, csv);
-            item.Set(TextClipboardFormatExporter.PlainTextFormat, csv);
-
             item.Set(CsvFormat, csv);
             return true;
         }

@@ -11,7 +11,7 @@ namespace Avalonia.Controls
 
         public bool TryExport(DataGridClipboardExportContext context, DataTransferItem item)
         {
-            if (!context.Formats.HasFlag(DataGridClipboardExportFormat.Yaml))
+            if (context.Formats != DataGridClipboardExportFormat.Yaml)
             {
                 return false;
             }
@@ -23,8 +23,6 @@ namespace Avalonia.Controls
             }
 
             item.Set(DataFormat.Text, yaml);
-            item.Set(TextClipboardFormatExporter.PlainTextFormat, yaml);
-
             item.Set(YamlFormat, yaml);
             return true;
         }

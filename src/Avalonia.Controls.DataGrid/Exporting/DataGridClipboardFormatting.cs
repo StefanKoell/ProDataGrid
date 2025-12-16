@@ -342,8 +342,25 @@ namespace Avalonia.Controls
                 return string.Empty;
             }
 
-            return value.Replace("\\", "\\\\", StringComparison.Ordinal)
-                        .Replace("\"", "\\\"", StringComparison.Ordinal);
+            var builder = StringBuilderCache.Acquire();
+
+            foreach (var ch in value)
+            {
+                switch (ch)
+                {
+                    case '\\':
+                        builder.Append("\\\\");
+                        break;
+                    case '"':
+                        builder.Append("\\\"");
+                        break;
+                    default:
+                        builder.Append(ch);
+                        break;
+                }
+            }
+
+            return StringBuilderCache.GetStringAndRelease(builder);
         }
 
         private static void AppendMarkdownSeparator(int cellCount, StringBuilder builder)
@@ -442,7 +459,7 @@ namespace Avalonia.Controls
             }
 
             if (value.IndexOfAny(new[] { ':', '-', '#', '{', '}', '[', ']', ',', '&', '*', '!', '|', '>', '\'', '"', '%', '@', '`' }) >= 0 ||
-                value.Contains("\n", StringComparison.Ordinal))
+                value.IndexOf('\n') >= 0)
             {
                 return "\"" + value.Replace("\"", "\\\"") + "\"";
             }

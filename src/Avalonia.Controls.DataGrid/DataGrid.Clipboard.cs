@@ -68,7 +68,7 @@ namespace Avalonia.Controls
 #endif
         bool CopySelectionToClipboard()
         {
-            return CopySelectionToClipboard(ClipboardExportFormats, ClipboardExporter);
+            return CopySelectionToClipboard(ClipboardExportFormat, ClipboardExporter);
         }
 
         /// <summary>
@@ -205,29 +205,18 @@ namespace Avalonia.Controls
 
         private static DataGridClipboardExportFormat NormalizeClipboardFormats(DataGridClipboardExportFormat formats)
         {
-            if (formats == DataGridClipboardExportFormat.None)
+            return formats switch
             {
-                return DataGridClipboardExportFormat.Text;
-            }
-
-            foreach (var format in new[]
-                     {
-                         DataGridClipboardExportFormat.Text,
-                         DataGridClipboardExportFormat.Csv,
-                         DataGridClipboardExportFormat.Html,
-                         DataGridClipboardExportFormat.Markdown,
-                         DataGridClipboardExportFormat.Xml,
-                         DataGridClipboardExportFormat.Yaml,
-                         DataGridClipboardExportFormat.Json
-                     })
-            {
-                if (formats.HasFlag(format))
-                {
-                    return format;
-                }
-            }
-
-            return DataGridClipboardExportFormat.Text;
+                DataGridClipboardExportFormat.None => DataGridClipboardExportFormat.Text,
+                DataGridClipboardExportFormat.Text => DataGridClipboardExportFormat.Text,
+                DataGridClipboardExportFormat.Csv => DataGridClipboardExportFormat.Csv,
+                DataGridClipboardExportFormat.Html => DataGridClipboardExportFormat.Html,
+                DataGridClipboardExportFormat.Markdown => DataGridClipboardExportFormat.Markdown,
+                DataGridClipboardExportFormat.Xml => DataGridClipboardExportFormat.Xml,
+                DataGridClipboardExportFormat.Yaml => DataGridClipboardExportFormat.Yaml,
+                DataGridClipboardExportFormat.Json => DataGridClipboardExportFormat.Json,
+                _ => DataGridClipboardExportFormat.Text
+            };
         }
 
 

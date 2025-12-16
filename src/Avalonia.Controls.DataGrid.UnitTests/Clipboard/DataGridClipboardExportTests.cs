@@ -54,7 +54,7 @@ public class DataGridClipboardExportTests
         try
         {
             grid.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
-            grid.ClipboardExportFormats = DataGridClipboardExportFormat.Html;
+            grid.ClipboardExportFormat = DataGridClipboardExportFormat.Html;
             grid.SelectedItems.Add(items[0]);
             grid.SelectedItems.Add(items[1]);
 
@@ -91,7 +91,7 @@ public class DataGridClipboardExportTests
         try
         {
             grid.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
-            grid.ClipboardExportFormats = DataGridClipboardExportFormat.Text | DataGridClipboardExportFormat.Html;
+            grid.ClipboardExportFormat = DataGridClipboardExportFormat.Html;
             grid.SelectedItems.Add(items[0]);
 
             Assert.True(grid.CopySelectionToClipboard(DataGridClipboardExportFormat.Csv));
@@ -306,7 +306,7 @@ public class DataGridClipboardExportTests
         {
             var exporter = new RecordingExporter();
             grid.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
-            grid.ClipboardExportFormats = DataGridClipboardExportFormat.None;
+            grid.ClipboardExportFormat = DataGridClipboardExportFormat.None;
             grid.ClipboardExporter = exporter;
             grid.SelectedItems.Add(items[0]);
 

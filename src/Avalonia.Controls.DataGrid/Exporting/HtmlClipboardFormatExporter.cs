@@ -11,7 +11,7 @@ namespace Avalonia.Controls
 
         public bool TryExport(DataGridClipboardExportContext context, DataTransferItem item)
         {
-            if (!context.Formats.HasFlag(DataGridClipboardExportFormat.Html))
+            if (context.Formats != DataGridClipboardExportFormat.Html)
             {
                 return false;
             }
@@ -25,8 +25,6 @@ namespace Avalonia.Controls
             }
 
             item.Set(DataFormat.Text, html);
-            item.Set(TextClipboardFormatExporter.PlainTextFormat, html);
-
             item.Set(HtmlFormat, cfHtml);
             return true;
         }

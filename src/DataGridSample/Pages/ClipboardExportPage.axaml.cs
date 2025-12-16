@@ -50,7 +50,7 @@ public partial class ClipboardExportPage : UserControl
 
     private void UpdateExportSettings(object? sender, RoutedEventArgs? e)
     {
-        var formats = sender switch
+        var format = sender switch
         {
             RadioButton { IsChecked: true } radio when ReferenceEquals(radio, TextFormatRadioButton) => DataGridClipboardExportFormat.Text,
             RadioButton { IsChecked: true } radio when ReferenceEquals(radio, CsvFormatRadioButton) => DataGridClipboardExportFormat.Csv,
@@ -62,7 +62,7 @@ public partial class ClipboardExportPage : UserControl
             _ => SelectActiveFormat()
         };
 
-        ItemsGrid.ClipboardExportFormats = formats;
+        ItemsGrid.ClipboardExportFormat = format;
     }
 
     private DataGridClipboardExportFormat SelectActiveFormat()

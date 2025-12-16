@@ -20,6 +20,7 @@ namespace Avalonia.Controls
         Html = 4,
         Markdown = 8,
         Xml = 16,
-        Yaml = 32
+        Yaml = 32,
+        Json = 64
     }
 }

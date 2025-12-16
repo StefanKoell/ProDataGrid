@@ -100,10 +100,7 @@ namespace Avalonia.Controls
                 return false;
             }
 
-            if (formats != DataGridClipboardExportFormat.None && !formats.HasFlag(DataGridClipboardExportFormat.Text))
-            {
-                formats |= DataGridClipboardExportFormat.Text;
-            }
+            var normalizedFormat = NormalizeClipboardFormats(formats);
 
             var rows = BuildClipboardRows();
             if (rows.Count == 0)
@@ -117,7 +114,7 @@ namespace Avalonia.Controls
                     this,
                     rows,
                     ClipboardCopyMode,
-                    formats,
+                    normalizedFormat,
                     SelectionUnit));
 
             if (data == null)
@@ -204,6 +201,33 @@ namespace Avalonia.Controls
             }
 
             return rows;
+        }
+
+        private static DataGridClipboardExportFormat NormalizeClipboardFormats(DataGridClipboardExportFormat formats)
+        {
+            if (formats == DataGridClipboardExportFormat.None)
+            {
+                return DataGridClipboardExportFormat.Text;
+            }
+
+            foreach (var format in new[]
+                     {
+                         DataGridClipboardExportFormat.Text,
+                         DataGridClipboardExportFormat.Csv,
+                         DataGridClipboardExportFormat.Html,
+                         DataGridClipboardExportFormat.Markdown,
+                         DataGridClipboardExportFormat.Xml,
+                         DataGridClipboardExportFormat.Yaml,
+                         DataGridClipboardExportFormat.Json
+                     })
+            {
+                if (formats.HasFlag(format))
+                {
+                    return format;
+                }
+            }
+
+            return DataGridClipboardExportFormat.Text;
         }
 
 

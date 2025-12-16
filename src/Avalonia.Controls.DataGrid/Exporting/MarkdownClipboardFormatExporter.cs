@@ -22,6 +22,9 @@ namespace Avalonia.Controls
                 return false;
             }
 
+            item.Set(DataFormat.Text, markdown);
+            item.Set(TextClipboardFormatExporter.PlainTextFormat, markdown);
+
             item.Set(MarkdownFormat, markdown);
             return true;
         }

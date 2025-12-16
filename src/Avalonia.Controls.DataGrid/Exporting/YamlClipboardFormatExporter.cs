@@ -7,7 +7,7 @@ namespace Avalonia.Controls
 {
     internal sealed class YamlClipboardFormatExporter : IDataGridClipboardFormatExporter
     {
-        internal static readonly DataFormat<string> YamlFormat = DataFormat.CreateStringPlatformFormat("text/yaml");
+        internal static readonly DataFormat<string> YamlFormat = DataFormat.CreateStringPlatformFormat("application/x-yaml");
 
         public bool TryExport(DataGridClipboardExportContext context, DataTransferItem item)
         {
@@ -21,6 +21,9 @@ namespace Avalonia.Controls
             {
                 return false;
             }
+
+            item.Set(DataFormat.Text, yaml);
+            item.Set(TextClipboardFormatExporter.PlainTextFormat, yaml);
 
             item.Set(YamlFormat, yaml);
             return true;

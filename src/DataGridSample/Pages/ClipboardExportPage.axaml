@@ -13,7 +13,7 @@
                 Grid.ColumnSpan="2"
                 Spacing="4">
       <TextBlock Classes="h2">Clipboard export formats</TextBlock>
-      <TextBlock Text="Toggle the formats ProDataGrid publishes when you press Ctrl+C. Enable HTML for a clipboard-friendly table (CF_HTML), or attach a custom exporter that adds Markdown alongside the built-in text payload."
+      <TextBlock Text="Choose the format ProDataGrid publishes when you press Ctrl+C. Enable HTML for a clipboard-friendly table (CF_HTML), or attach a custom exporter that adds a JSON payload alongside the built-in text."
                  TextWrapping="Wrap" />
     </StackPanel>
 
@@ -27,37 +27,40 @@
         <StackPanel Spacing="6">
           <TextBlock Text="Built-in formats"
                      FontWeight="SemiBold" />
-          <TextBlock Text="The default exporter always emits text; optionally add CSV and HTML (CF_HTML + text/html) formats. Copy with Ctrl+C on the grid."
+          <TextBlock Text="Choose which additional format the grid emits with the always-on plain text payload. Copy with Ctrl+C on the grid."
                      TextWrapping="Wrap"
                      Opacity="0.86" />
           <StackPanel Orientation="Vertical"
                       Spacing="4">
-            <CheckBox x:Name="TextFormatCheckBox"
-                      Content="Text (tab separated)"
-                      IsChecked="True"
-                      Checked="UpdateExportSettings"
-                      Unchecked="UpdateExportSettings" />
-            <CheckBox x:Name="CsvFormatCheckBox"
-                      Content="CSV (text/csv)"
-                      Checked="UpdateExportSettings"
-                      Unchecked="UpdateExportSettings" />
-            <CheckBox x:Name="HtmlFormatCheckBox"
-                      Content="HTML table (CF_HTML + text/html)"
-                      IsChecked="True"
-                      Checked="UpdateExportSettings"
-                      Unchecked="UpdateExportSettings" />
-            <CheckBox x:Name="MarkdownFormatCheckBox"
-                      Content="Markdown (text/markdown)"
-                      Checked="UpdateExportSettings"
-                      Unchecked="UpdateExportSettings" />
-            <CheckBox x:Name="XmlFormatCheckBox"
-                      Content="XML (text/xml)"
-                      Checked="UpdateExportSettings"
-                      Unchecked="UpdateExportSettings" />
-            <CheckBox x:Name="YamlFormatCheckBox"
-                      Content="YAML (text/yaml)"
-                      Checked="UpdateExportSettings"
-                      Unchecked="UpdateExportSettings" />
+            <RadioButton x:Name="TextFormatRadioButton"
+                         GroupName="ClipboardFormat"
+                         Content="Text (tab separated)"
+                         IsChecked="True"
+                         Checked="UpdateExportSettings" />
+            <RadioButton x:Name="CsvFormatRadioButton"
+                         GroupName="ClipboardFormat"
+                         Content="CSV (text/csv)"
+                         Checked="UpdateExportSettings" />
+            <RadioButton x:Name="HtmlFormatRadioButton"
+                         GroupName="ClipboardFormat"
+                         Content="HTML table (CF_HTML + text/html)"
+                         Checked="UpdateExportSettings" />
+            <RadioButton x:Name="MarkdownFormatRadioButton"
+                         GroupName="ClipboardFormat"
+                         Content="Markdown (text/markdown)"
+                         Checked="UpdateExportSettings" />
+            <RadioButton x:Name="XmlFormatRadioButton"
+                         GroupName="ClipboardFormat"
+                         Content="XML (text/xml)"
+                         Checked="UpdateExportSettings" />
+            <RadioButton x:Name="YamlFormatRadioButton"
+                         GroupName="ClipboardFormat"
+                         Content="YAML (text/yaml)"
+                         Checked="UpdateExportSettings" />
+            <RadioButton x:Name="JsonFormatRadioButton"
+                         GroupName="ClipboardFormat"
+                         Content="JSON (application/json)"
+                         Checked="UpdateExportSettings" />
           </StackPanel>
         </StackPanel>
       </Border>
@@ -69,11 +72,11 @@
         <StackPanel Spacing="6">
           <TextBlock Text="Custom exporter"
                      FontWeight="SemiBold" />
-          <TextBlock Text="The sample exporter adds a JSON payload while still emitting plain text. Use this as a starting point for bespoke clipboard payloads (CSV variants, binary app formats, etc.)."
+          <TextBlock Text="The sample exporter adds a structured JSON payload (application/vnd.avalonia.datagrid.sample+json) including meta, columns, and cell values, while still emitting plain text. Use this as a starting point for bespoke clipboard payloads (CSV variants, binary app formats, etc.)."
                      TextWrapping="Wrap"
                      Opacity="0.86" />
           <CheckBox x:Name="CustomExporterCheckBox"
-                    Content="Add JSON format via custom exporter"
+                    Content="Add sample JSON format via custom exporter (in addition to the built-in format)"
                     Checked="UpdateExportSettings"
                     Unchecked="UpdateExportSettings" />
           <Border Background="#f6f8fb"
@@ -87,7 +90,7 @@
                          TextWrapping="Wrap"
                          Opacity="0.86" />
             </StackPanel>
-                  </Border>
+          </Border>
         </StackPanel>
       </Border>
 
@@ -122,6 +125,9 @@
             <Button Content="Copy YAML"
                     Margin="0 0 6 6"
                     Click="CopyYamlFormat" />
+            <Button Content="Copy JSON"
+                    Margin="0 0 6 6"
+                    Click="CopyJsonFormat" />
           </WrapPanel>
         </StackPanel>
       </Border>

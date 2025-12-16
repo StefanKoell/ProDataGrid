@@ -7,7 +7,7 @@ namespace Avalonia.Controls
 {
     internal sealed class XmlClipboardFormatExporter : IDataGridClipboardFormatExporter
     {
-        internal static readonly DataFormat<string> XmlFormat = DataFormat.CreateStringPlatformFormat("text/xml");
+        internal static readonly DataFormat<string> XmlFormat = DataFormat.CreateStringPlatformFormat("application/xml");
 
         public bool TryExport(DataGridClipboardExportContext context, DataTransferItem item)
         {
@@ -21,6 +21,9 @@ namespace Avalonia.Controls
             {
                 return false;
             }
+
+            item.Set(DataFormat.Text, xml);
+            item.Set(TextClipboardFormatExporter.PlainTextFormat, xml);
 
             item.Set(XmlFormat, xml);
             return true;

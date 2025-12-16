@@ -131,7 +131,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-nuget-packages
-          path: artifacts/packages/*.nupkg
+          path: |
+            artifacts/packages/*.nupkg
+            artifacts/packages/*.snupkg
           if-no-files-found: error
           retention-days: 90
 
@@ -154,7 +156,8 @@ jobs:
 
       - name: Publish to NuGet
         run: |
-          for package in packages/*.nupkg; do
+          shopt -s nullglob
+          for package in packages/*.nupkg packages/*.snupkg; do
             echo "Publishing $package..."
             dotnet nuget push "$package" \
               --api-key ${{ secrets.NUGET_API_KEY }} \
@@ -188,5 +191,6 @@ jobs:
           generate_release_notes: true
           files: |
             packages/*.nupkg
+            packages/*.snupkg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

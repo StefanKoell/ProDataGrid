@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Product>ProDataGrid</Product>
     <VersionPrefix>11.3.9</VersionPrefix>
-    <VersionSuffix>preview.5</VersionSuffix>
+    <VersionSuffix>preview.6</VersionSuffix>
     <Authors>Wiesław Šoltés</Authors>
     <Copyright>Copyright $([System.DateTime]::Now.ToString(`yyyy`)) &#169; Wiesław Šoltés</Copyright>
     <PackageProjectUrl>https://github.com/wieslawsoltes/ProDataGrid</PackageProjectUrl>
@@ -17,6 +17,10 @@
     <PackageReleaseNotes>https://github.com/wieslawsoltes/ProDataGrid/releases</PackageReleaseNotes>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)/avalonia.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

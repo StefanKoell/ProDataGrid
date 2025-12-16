@@ -22,6 +22,11 @@
     <PackageVersion Include="System.Reactive" Version="6.0.1" />
   </ItemGroup>
 
+  <!-- Build tooling -->
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
+
   <!-- Test packages -->
   <ItemGroup>
     <PackageVersion Include="JetBrains.dotMemoryUnit" Version="3.2.20220510" />

@@ -1,0 +1,113 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.DynamicColumnsPage"
+             x:DataType="viewModels:DynamicColumnsViewModel">
+  <UserControl.DataContext>
+    <viewModels:DynamicColumnsViewModel/>
+  </UserControl.DataContext>
+
+  <Grid RowDefinitions="Auto,*"
+        Margin="12"
+        RowSpacing="10">
+    <StackPanel Spacing="4">
+      <TextBlock Classes="h2">Programmatic Columns</TextBlock>
+      <TextBlock Text="Trigger every INotifyCollectionChanged action by adding, inserting, moving, swapping, replacing, and clearing columns. The left grid uses the default Columns collection (no binding); the right grid uses an ObservableCollection binding."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="12">
+      <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+              BorderThickness="1"
+              CornerRadius="4"
+              Padding="10">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="h3" Text="Default Columns (no binding)" />
+          <WrapPanel>
+            <Button Content="Add column" Click="OnAddUnboundColumn" Margin="0,0,8,8" />
+            <Button Content="Insert at start" Click="OnInsertUnboundColumn" Margin="0,0,8,8" />
+            <Button Content="Replace first" Click="OnReplaceUnboundColumn" Margin="0,0,8,8" />
+            <Button Content="Move last to first" Click="OnMoveUnboundColumn" Margin="0,0,8,8" />
+            <Button Content="Swap first/last" Click="OnSwapUnboundColumns" Margin="0,0,8,8" />
+            <Button Content="Remove last" Click="OnRemoveUnboundColumn" Margin="0,0,8,8" />
+            <Button Content="Clear all" Click="OnClearUnboundColumns" Margin="0,0,8,8" />
+            <Button Content="Reset preset" Click="OnResetUnboundColumns" Margin="0,0,8,8" />
+          </WrapPanel>
+
+          <DataGrid x:Name="UnboundGrid"
+                    ItemsSource="{Binding Items}"
+                    AutoGenerateColumns="False"
+                    HeadersVisibility="All"
+                    CanUserResizeColumns="True"
+                    CanUserReorderColumns="True"
+                    Height="320" />
+
+          <StackPanel Spacing="4">
+            <TextBlock Classes="h3" Text="Unbound column events" />
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="6">
+              <ScrollViewer VerticalScrollBarVisibility="Auto" Height="180">
+                <ItemsControl ItemsSource="{Binding UnboundEvents}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </Border>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Column="1"
+              BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+              BorderThickness="1"
+              CornerRadius="4"
+              Padding="10">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="h3" Text="ObservableCollection binding" />
+          <WrapPanel>
+            <Button Content="Add column" Command="{Binding AddColumnCommand}" Margin="0,0,8,8" />
+            <Button Content="Insert at start" Command="{Binding InsertColumnCommand}" Margin="0,0,8,8" />
+            <Button Content="Replace first" Command="{Binding ReplaceFirstCommand}" Margin="0,0,8,8" />
+            <Button Content="Move last to first" Command="{Binding MoveLastToFirstCommand}" Margin="0,0,8,8" />
+            <Button Content="Swap first/last" Command="{Binding SwapFirstLastCommand}" Margin="0,0,8,8" />
+            <Button Content="Remove last" Command="{Binding RemoveLastColumnCommand}" Margin="0,0,8,8" />
+            <Button Content="Clear all" Command="{Binding ClearColumnsCommand}" Margin="0,0,8,8" />
+            <Button Content="Reset preset" Command="{Binding ResetColumnsCommand}" Margin="0,0,8,8" />
+          </WrapPanel>
+
+          <DataGrid ItemsSource="{Binding Items}"
+                    Columns="{Binding Columns}"
+                    ColumnsSynchronizationMode="TwoWay"
+                    AutoGenerateColumns="False"
+                    HeadersVisibility="All"
+                    CanUserResizeColumns="True"
+                    CanUserReorderColumns="True"
+                    Height="320" />
+
+          <StackPanel Spacing="4">
+            <TextBlock Classes="h3" Text="Bound column events" />
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="6">
+              <ScrollViewer VerticalScrollBarVisibility="Auto" Height="180">
+                <ItemsControl ItemsSource="{Binding BoundEvents}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </Border>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </Grid>
+  </Grid>
+</UserControl>

@@ -123,6 +123,43 @@ namespace Avalonia.Controls
                    (dataGridColumn != ColumnsInternal.LastVisibleColumn || (includeLastRightGridLineWhenPresent && ColumnsInternal.FillerColumn.IsActive));
         }
 
+        /// <summary>
+        /// Re-applies sequential <see cref="DataGridColumn.DisplayIndex"/> values based on the current order
+        /// of the <see cref="Columns"/> collection, skipping filler/spacer columns. Useful when columns have
+        /// been reordered via collection operations instead of setting <see cref="DataGridColumn.DisplayIndex"/>.
+        /// </summary>
+        public void UpdateColumnDisplayIndexesFromCollectionOrder()
+        {
+            if (_areHandlersSuspended)
+            {
+                return;
+            }
+
+            _areHandlersSuspended = true;
+            try
+            {
+                var displayIndex = 0;
+                foreach (var column in ColumnsInternal.ItemsInternal)
+                {
+                    if (column is DataGridFillerColumn)
+                    {
+                        continue;
+                    }
+
+                    if (column.DisplayIndex != displayIndex)
+                    {
+                        column.DisplayIndex = displayIndex;
+                    }
+
+                    displayIndex++;
+                }
+            }
+            finally
+            {
+                _areHandlersSuspended = false;
+            }
+        }
+
         internal DataGridColumnCollection CreateColumnsInstance()
         {
             return new DataGridColumnCollection(this);

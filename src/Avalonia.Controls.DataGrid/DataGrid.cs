@@ -200,7 +200,7 @@ namespace Avalonia.Controls
         private IDataGridRowDragDropController _rowDragDropController;
         private IDataGridRowDragDropControllerFactory _rowDragDropControllerFactory;
         private DataGridRowDragDropOptions _rowDragDropOptions;
-        private IEnumerable<DataGridColumn> _boundColumns;
+        private IList<DataGridColumn> _boundColumns;
         private IList<DataGridColumn> _boundColumnsList;
         private bool _pendingBoundColumnsApply;
         private INotifyCollectionChanged _boundColumnsNotifications;
@@ -436,9 +436,9 @@ namespace Avalonia.Controls
         }
 
         /// <summary>
-        /// Gets or sets the bound columns source (supports IEnumerable; IList + INotifyCollectionChanged enables TwoWay sync).
+        /// Gets or sets the bound columns source (IList + INotifyCollectionChanged enables TwoWay sync).
         /// </summary>
-        public IEnumerable<DataGridColumn> Columns
+        public IList<DataGridColumn> Columns
         {
             get => _boundColumns ?? ColumnsInternal;
             set => SetColumnsBindingValue(value);

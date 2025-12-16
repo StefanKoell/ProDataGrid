@@ -1,0 +1,164 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DataGridSample.Pages.ClipboardExportPage"
+             x:Name="Root">
+
+  <Grid ColumnDefinitions="320,*"
+        RowDefinitions="Auto,*"
+        Margin="12"
+        ColumnSpacing="16"
+        RowSpacing="12">
+
+    <StackPanel Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Spacing="4">
+      <TextBlock Classes="h2">Clipboard export formats</TextBlock>
+      <TextBlock Text="Toggle the formats ProDataGrid publishes when you press Ctrl+C. Enable HTML for a clipboard-friendly table (CF_HTML), or attach a custom exporter that adds Markdown alongside the built-in text payload."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1"
+                Grid.Column="0"
+                Spacing="12">
+      <Border BorderBrush="#d9e2ef"
+              Background="#f6f8fb"
+              CornerRadius="8"
+              Padding="12">
+        <StackPanel Spacing="6">
+          <TextBlock Text="Built-in formats"
+                     FontWeight="SemiBold" />
+          <TextBlock Text="The default exporter always emits text; optionally add CSV and HTML (CF_HTML + text/html) formats. Copy with Ctrl+C on the grid."
+                     TextWrapping="Wrap"
+                     Opacity="0.86" />
+          <StackPanel Orientation="Vertical"
+                      Spacing="4">
+            <CheckBox x:Name="TextFormatCheckBox"
+                      Content="Text (tab separated)"
+                      IsChecked="True"
+                      Checked="UpdateExportSettings"
+                      Unchecked="UpdateExportSettings" />
+            <CheckBox x:Name="CsvFormatCheckBox"
+                      Content="CSV (text/csv)"
+                      Checked="UpdateExportSettings"
+                      Unchecked="UpdateExportSettings" />
+            <CheckBox x:Name="HtmlFormatCheckBox"
+                      Content="HTML table (CF_HTML + text/html)"
+                      IsChecked="True"
+                      Checked="UpdateExportSettings"
+                      Unchecked="UpdateExportSettings" />
+            <CheckBox x:Name="MarkdownFormatCheckBox"
+                      Content="Markdown (text/markdown)"
+                      Checked="UpdateExportSettings"
+                      Unchecked="UpdateExportSettings" />
+            <CheckBox x:Name="XmlFormatCheckBox"
+                      Content="XML (text/xml)"
+                      Checked="UpdateExportSettings"
+                      Unchecked="UpdateExportSettings" />
+            <CheckBox x:Name="YamlFormatCheckBox"
+                      Content="YAML (text/yaml)"
+                      Checked="UpdateExportSettings"
+                      Unchecked="UpdateExportSettings" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <Border BorderBrush="#d9e2ef"
+              Background="#ffffff"
+              CornerRadius="8"
+              Padding="12">
+        <StackPanel Spacing="6">
+          <TextBlock Text="Custom exporter"
+                     FontWeight="SemiBold" />
+          <TextBlock Text="The sample exporter adds a JSON payload while still emitting plain text. Use this as a starting point for bespoke clipboard payloads (CSV variants, binary app formats, etc.)."
+                     TextWrapping="Wrap"
+                     Opacity="0.86" />
+          <CheckBox x:Name="CustomExporterCheckBox"
+                    Content="Add JSON format via custom exporter"
+                    Checked="UpdateExportSettings"
+                    Unchecked="UpdateExportSettings" />
+          <Border Background="#f6f8fb"
+                  BorderBrush="#d9e2ef"
+                  CornerRadius="4"
+                  Padding="8">
+            <StackPanel Spacing="2">
+              <TextBlock Text="Tip"
+                         FontWeight="SemiBold" />
+              <TextBlock Text="Select a few rows or cells, press Ctrl+C, and paste into a Markdown editor to see the plugin output."
+                         TextWrapping="Wrap"
+                         Opacity="0.86" />
+            </StackPanel>
+                  </Border>
+        </StackPanel>
+      </Border>
+
+      <Border BorderBrush="#d9e2ef"
+              Background="#ffffff"
+              CornerRadius="8"
+              Padding="12">
+        <StackPanel Spacing="6">
+          <TextBlock Text="Copy selection"
+                     FontWeight="SemiBold" />
+          <TextBlock Text="Use these quick actions to copy only one format without changing the toggles above. Make a selection in the grid first."
+                     TextWrapping="Wrap"
+                     Opacity="0.86" />
+          <WrapPanel>
+            <Button Content="Copy Text"
+                    Margin="0 0 6 6"
+                    Click="CopyTextFormat" />
+            <Button Content="Copy CSV"
+                    Margin="0 0 6 6"
+                    Click="CopyCsvFormat" />
+            <Button Content="Copy HTML"
+                    Margin="0 0 6 6"
+                    Click="CopyHtmlFormat" />
+          </WrapPanel>
+          <WrapPanel>
+            <Button Content="Copy Markdown"
+                    Margin="0 0 6 6"
+                    Click="CopyMarkdownFormat" />
+            <Button Content="Copy XML"
+                    Margin="0 0 6 6"
+                    Click="CopyXmlFormat" />
+            <Button Content="Copy YAML"
+                    Margin="0 0 6 6"
+                    Click="CopyYamlFormat" />
+          </WrapPanel>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+
+    <Border Grid.Row="1"
+            Grid.Column="1"
+            Background="#ffffff"
+            BorderBrush="#d9e2ef"
+            CornerRadius="10"
+            Padding="10">
+      <DataGrid x:Name="ItemsGrid"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                HeadersVisibility="All"
+                GridLinesVisibility="All"
+                RowHeight="36"
+                ClipboardCopyMode="IncludeHeader"
+                SelectionMode="Extended"
+                SelectionUnit="CellOrRowHeader"
+                MinHeight="520">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="Item"
+                              Width="2*"
+                              Binding="{Binding Name}" />
+          <DataGridTextColumn Header="Category"
+                              Width="2*"
+                              Binding="{Binding Category}" />
+          <DataGridTextColumn Header="Price"
+                              Width="*"
+                              Binding="{Binding Price, StringFormat='{}{0:C}'}" />
+          <DataGridTextColumn Header="Last ordered"
+                              Width="*"
+                              Binding="{Binding LastOrder, StringFormat='{}{0:yyyy-MM-dd}'}" />
+        </DataGrid.Columns>
+      </DataGrid>
+    </Border>
+  </Grid>
+</UserControl>

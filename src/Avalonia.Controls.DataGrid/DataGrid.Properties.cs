@@ -817,6 +817,55 @@ namespace Avalonia.Controls
         }
 
         /// <summary>
+        /// Identifies the <see cref="ClipboardExportFormats"/> styled property.
+        /// </summary>
+        public static readonly StyledProperty<DataGridClipboardExportFormat> ClipboardExportFormatsProperty =
+            AvaloniaProperty.Register<DataGrid, DataGridClipboardExportFormat>(
+                nameof(ClipboardExportFormats),
+                defaultValue: DataGridClipboardExportFormat.Text);
+
+        /// <summary>
+        /// Gets or sets the clipboard formats emitted by the grid's default exporter.
+        /// </summary>
+        public DataGridClipboardExportFormat ClipboardExportFormats
+        {
+            get => GetValue(ClipboardExportFormatsProperty);
+            set => SetValue(ClipboardExportFormatsProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="ClipboardExporter"/> styled property.
+        /// </summary>
+        public static readonly StyledProperty<IDataGridClipboardExporter?> ClipboardExporterProperty =
+            AvaloniaProperty.Register<DataGrid, IDataGridClipboardExporter?>(
+                nameof(ClipboardExporter));
+
+        /// <summary>
+        /// Gets or sets the clipboard exporter responsible for building the clipboard payload.
+        /// </summary>
+        public IDataGridClipboardExporter? ClipboardExporter
+        {
+            get => GetValue(ClipboardExporterProperty);
+            set => SetValue(ClipboardExporterProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="ClipboardFormatExporters"/> styled property.
+        /// </summary>
+        public static readonly StyledProperty<IReadOnlyList<IDataGridClipboardFormatExporter>?> ClipboardFormatExportersProperty =
+            AvaloniaProperty.Register<DataGrid, IReadOnlyList<IDataGridClipboardFormatExporter>?>(nameof(ClipboardFormatExporters));
+
+        /// <summary>
+        /// Gets or sets the per-format exporters used by the default clipboard exporter.
+        /// If unset, built-in exporters (text, CSV, HTML) are used.
+        /// </summary>
+        public IReadOnlyList<IDataGridClipboardFormatExporter>? ClipboardFormatExporters
+        {
+            get => GetValue(ClipboardFormatExportersProperty);
+            set => SetValue(ClipboardFormatExportersProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the Columns direct property; bindings to Columns are fully supported.
         /// </summary>
         public static readonly DirectProperty<DataGrid, IEnumerable<DataGridColumn>> ColumnsProperty =

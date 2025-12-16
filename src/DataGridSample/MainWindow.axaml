@@ -164,6 +164,9 @@
     <TabItem Header="Derived Text Column">
       <pages:CustomTextColumnPage />
     </TabItem>
+    <TabItem Header="Clipboard Export">
+      <pages:ClipboardExportPage />
+    </TabItem>
     <TabItem Header="Styling &amp; Themes">
       <pages:StylingShowcasePage />
     </TabItem>

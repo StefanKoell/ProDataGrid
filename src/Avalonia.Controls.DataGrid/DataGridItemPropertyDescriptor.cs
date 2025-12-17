@@ -6,6 +6,8 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Reflection;
 
@@ -14,6 +16,7 @@ namespace Avalonia.Controls
     /// <summary>
     /// Abstraction over a property, supporting both reflection and component model descriptors.
     /// </summary>
+    [RequiresUnreferencedCode("DataGridItemPropertyDescriptor uses reflection and TypeDescriptor to inspect data items and is not compatible with trimming.")]
     internal sealed class DataGridItemPropertyDescriptor
     {
         private DataGridItemPropertyDescriptor(
@@ -56,10 +59,39 @@ namespace Avalonia.Controls
                 }
             }
 
+            // Prefer reflection for simple POCOs when dynamic code is available and no custom provider exists.
+            if (dataType != null)
+            {
+                var provider = TypeDescriptor.GetProvider(dataType);
+                var defaultProviderType = TypeDescriptor.GetProvider(typeof(object)).GetType();
+                var hasProviderAttribute = TypeDescriptor.GetAttributes(dataType).OfType<TypeDescriptionProviderAttribute>().Any();
+                var hasCustomProvider = hasProviderAttribute || (provider != null && provider.GetType() != defaultProviderType);
+                var hasCustomDescriptor = typeof(ICustomTypeDescriptor).IsAssignableFrom(dataType);
+
+                if (!hasCustomProvider && !hasCustomDescriptor)
+                {
+                    var properties = dataType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                    if (properties.Length > 0)
+                    {
+                        return FromPropertyInfos(properties);
+                    }
+                }
+            }
+
+            // On AOT where TypeDescriptor metadata is commonly trimmed, fall back directly to reflection.
+            if (dataType != null && !IsDynamicCodeSupported())
+            {
+                var properties = dataType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                if (properties.Length > 0)
+                {
+                    return FromPropertyInfos(properties);
+                }
+            }
+
             // Fall back to TypeDescriptor for ICustomTypeDescriptor or TypeDescriptionProvider cases.
             if (dataType != null)
             {
-                var descriptors = TypeDescriptor.GetProperties(dataType);
+                var descriptors = GetTypeDescriptorPropertiesSafe(dataType);
                 if (descriptors != null && descriptors.Count > 0)
                 {
                     return FromPropertyDescriptors(descriptors);
@@ -72,7 +104,16 @@ namespace Avalonia.Controls
                 var representative = TryGetFirst(items);
                 if (representative != null)
                 {
-                    var descriptors = TypeDescriptor.GetProperties(representative);
+                    if (!IsDynamicCodeSupported())
+                    {
+                        var properties = representative.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                        if (properties.Length > 0)
+                        {
+                            return FromPropertyInfos(properties);
+                        }
+                    }
+
+                    var descriptors = GetTypeDescriptorPropertiesSafe(representative);
                     if (descriptors != null && descriptors.Count > 0)
                     {
                         return FromPropertyDescriptors(descriptors);
@@ -136,6 +177,29 @@ namespace Avalonia.Controls
             }
 
             return null;
+        }
+
+        private static bool IsDynamicCodeSupported()
+        {
+#if NET6_0_OR_GREATER
+            return RuntimeFeature.IsDynamicCodeSupported;
+#else
+            // RuntimeFeature is unavailable on netstandard2.0; assume dynamic code is supported.
+            return true;
+#endif
+        }
+
+        private static PropertyDescriptorCollection? GetTypeDescriptorPropertiesSafe(object target)
+        {
+            try
+            {
+                return TypeDescriptor.GetProperties(target);
+            }
+            catch
+            {
+                // TypeDescriptor can fail or be trimmed in AOT; fall back to reflection path.
+                return null;
+            }
         }
     }
 }

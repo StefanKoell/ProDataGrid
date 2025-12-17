@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Avalonia.Controls.Utils;
@@ -105,18 +106,19 @@ namespace Avalonia.Collections
                 }
             }
 
-        }
+            }
 
-        private class DataGridPathSortDescription : DataGridSortDescription
-        {
-            private readonly ListSortDirection _direction;
-            private readonly string _propertyPath;
-            private readonly Lazy<CultureSensitiveComparer> _cultureSensitiveComparer;
-            private readonly Lazy<IComparer<object>> _comparer;
-            private Type _propertyType;
-            private IComparer _internalComparer;
-            private IComparer<object> _internalComparerTyped;
-            private IComparer<object> InternalComparer
+            [RequiresUnreferencedCode("Path-based sorting uses reflection and is not compatible with trimming.")]
+            private class DataGridPathSortDescription : DataGridSortDescription
+            {
+                private readonly ListSortDirection _direction;
+                private readonly string _propertyPath;
+                private readonly Lazy<CultureSensitiveComparer> _cultureSensitiveComparer;
+                private readonly Lazy<IComparer<object>> _comparer;
+                private Type _propertyType;
+                private IComparer _internalComparer;
+                private IComparer<object> _internalComparerTyped;
+                private IComparer<object> InternalComparer
             {
                 get
                 {
@@ -276,11 +278,13 @@ namespace Avalonia.Collections
             }
         }
 
+        [RequiresUnreferencedCode("Path-based sorting uses reflection and is not compatible with trimming.")]
         public static DataGridSortDescription FromPath(string propertyPath, ListSortDirection direction = ListSortDirection.Ascending, CultureInfo culture = null)
         {
             return new DataGridPathSortDescription(propertyPath, direction, null, culture);
         }
 
+        [RequiresUnreferencedCode("Path-based sorting uses reflection and is not compatible with trimming.")]
         public static DataGridSortDescription FromPath(string propertyPath, ListSortDirection direction, IComparer comparer)
         {
             return new DataGridPathSortDescription(propertyPath, direction, comparer, null);

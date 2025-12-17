@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using Avalonia.Utilities;
@@ -20,6 +21,7 @@ using Avalonia.Controls.Utils;
 
 namespace Avalonia.Controls
 {
+    [RequiresUnreferencedCode("DataGridDataConnection uses reflection to inspect item properties and is not compatible with trimming.")]
     internal class DataGridDataConnection
     {
 
@@ -177,7 +179,7 @@ namespace Avalonia.Controls
         {
             get
             {
-                return false;
+                return _owner?.AutoGenerateColumns == true;
             }
         }
 

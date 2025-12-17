@@ -9,11 +9,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 
 namespace Avalonia.Controls.Utils
 {
+    [RequiresUnreferencedCode("TypeHelper uses reflection to walk property paths and is not compatible with trimming.")]
     internal static class TypeHelper
     {
         internal const char LeftIndexerToken = '[';

@@ -5,6 +5,7 @@
 using System;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Data;
 using Avalonia.Data.Core.Plugins;
 
@@ -14,6 +15,7 @@ namespace Avalonia.Controls
     /// Registers a binding plugin that uses <see cref="TypeDescriptor"/> to read and write
     /// non-reflection properties (e.g. <see cref="System.Data.DataRowView"/> columns).
     /// </summary>
+    [RequiresUnreferencedCode("DataGridTypeDescriptorPlugin uses TypeDescriptor which is not compatible with trimming.")]
     internal static class DataGridTypeDescriptorPlugin
     {
         private static bool _registered;

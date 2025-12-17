@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Avalonia.Controls.DataGridSorting;
 
@@ -14,6 +15,7 @@ namespace Avalonia.Controls.DataGridHierarchical
     /// <summary>
     /// Sorting adapter that routes sorting descriptors into hierarchical sibling ordering.
     /// </summary>
+    [RequiresUnreferencedCode("HierarchicalSortingAdapter uses reflection to walk property paths and is not compatible with trimming.")]
     public sealed class HierarchicalSortingAdapter : DataGridSortingAdapter
     {
         private readonly IHierarchicalModel _model;
@@ -44,6 +46,7 @@ namespace Avalonia.Controls.DataGridHierarchical
         }
     }
 
+    [RequiresUnreferencedCode("Hierarchical sibling comparison uses reflection to walk property paths and is not compatible with trimming.")]
     internal static class HierarchicalSiblingComparerBuilder
     {
         public static IComparer<object>? Build(IReadOnlyList<SortingDescriptor> descriptors, IComparer<object>? defaultComparer)

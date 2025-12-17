@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -377,6 +378,7 @@ namespace Avalonia.Controls.DataGridHierarchical
     /// <summary>
     /// Default hierarchical model implementation (initial scaffolding).
     /// </summary>
+    [RequiresUnreferencedCode("HierarchicalModel uses reflection to access property paths and is not compatible with trimming.")]
     public class HierarchicalModel : IHierarchicalModel
     {
         private readonly ObservableRangeCollection<HierarchicalNode> _flattened;

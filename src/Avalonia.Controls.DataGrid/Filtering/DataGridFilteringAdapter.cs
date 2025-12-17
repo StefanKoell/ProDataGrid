@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Collections;
 using Avalonia.Controls;
 
@@ -16,6 +17,7 @@ namespace Avalonia.Controls.DataGridFiltering
     /// <summary>
     /// Bridges filtering descriptors to the view's Filter predicate.
     /// </summary>
+    [RequiresUnreferencedCode("DataGridFilteringAdapter uses reflection to access item properties and is not compatible with trimming.")]
     public class DataGridFilteringAdapter : IDisposable
     {
         private static readonly object s_externalFilterColumnId = new();

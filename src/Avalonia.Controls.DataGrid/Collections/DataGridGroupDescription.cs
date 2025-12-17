@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using Avalonia.Controls;
@@ -61,6 +62,7 @@ namespace Avalonia.Collections
         }
     }
 
+    [RequiresUnreferencedCode("Grouping by property path uses reflection and is not compatible with trimming.")]
 #if !DATAGRID_INTERNAL
     public
 #endif

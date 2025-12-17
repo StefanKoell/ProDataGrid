@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -14,6 +15,7 @@ namespace Avalonia.Controls.DataGridHierarchical
     /// <summary>
     /// Represents a single node in the hierarchical data model.
     /// </summary>
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicFields)]
     public class HierarchicalNode : INotifyPropertyChanged
     {
         private readonly List<HierarchicalNode> _children;

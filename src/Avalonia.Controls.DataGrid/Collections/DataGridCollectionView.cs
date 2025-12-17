@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -62,6 +63,7 @@ namespace Avalonia.Collections
     /// <summary>
     /// DataGrid-readable view over an IEnumerable.
     /// </summary>
+    [RequiresUnreferencedCode("DataGridCollectionView uses reflection and TypeDescriptor to inspect data items and is not compatible with trimming.")]
 #if !DATAGRID_INTERNAL
     public
 #endif
@@ -160,6 +162,11 @@ namespace Avalonia.Collections
 
         /// <summary>
         /// ConstructorInfo obtained from reflection for generating new items
+        /// </summary>
+        /// <remarks>
+        /// For trimmed apps, ensure the item type preserves a public parameterless constructor and its public properties,
+        /// e.g. decorate the model with
+        /// [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)].
         /// </summary>
         private ConstructorInfo _itemConstructor;
 

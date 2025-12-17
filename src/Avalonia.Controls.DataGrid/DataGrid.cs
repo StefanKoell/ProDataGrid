@@ -26,6 +26,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Linq;
 using Avalonia.Input.Platform;
@@ -57,6 +58,7 @@ namespace Avalonia.Controls
     [TemplatePart(DATAGRID_elementTopRightCornerHeaderName,        typeof(ContentControl))]
     [TemplatePart(DATAGRID_elementVerticalScrollbarName,           typeof(ScrollBar))]
     [PseudoClasses(":invalid", ":empty-rows", ":empty-columns")]
+    [RequiresUnreferencedCode("DataGrid inspects data items via reflection and is not compatible with trimming.")]
 #if !DATAGRID_INTERNAL
     public
 #endif

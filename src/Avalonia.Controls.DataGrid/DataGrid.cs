@@ -1449,8 +1449,9 @@ namespace Avalonia.Controls
                 DataConnection?.CollectionView != null &&
                 !ReferenceEquals(newModel.Source, DataConnection.CollectionView))
             {
-                throw new InvalidOperationException(
-                    "The supplied ISelectionModel already has an assigned Source but this collection is different to the Items on the control.");
+                // Allow reusing a SelectionModel across DataGrid instances by retargeting its Source
+                // to the new grid's view; selection indexes will remap when Source is reassigned.
+                newModel.Source = null;
             }
 
             var removedItems = oldModel?.SelectedItems?.ToArray() ?? Array.Empty<object>();

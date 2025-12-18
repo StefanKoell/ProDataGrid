@@ -45,7 +45,19 @@ public class DataGridSelectionPropertyTests
     }
 
     [AvaloniaFact]
-    public void Selection_Model_With_Mismatched_Source_Throws()
+    public void OneTime_Selection_Binding_Updates_After_DataContext_Assigned()
+    {
+        var selectionModel = new SelectionModel<string> { SingleSelect = true };
+        var grid = new DataGrid();
+
+        grid.Bind(DataGrid.SelectionProperty, new Binding("Selection") { Mode = BindingMode.OneTime });
+        grid.DataContext = new { Selection = selectionModel };
+
+        Assert.Same(selectionModel, grid.Selection);
+    }
+
+    [AvaloniaFact]
+    public void Selection_Model_With_Mismatched_Source_Is_Retargeted()
     {
         var items = new ObservableCollection<string> { "A", "B", "C" };
         var grid = CreateGrid(items);
@@ -53,7 +65,22 @@ public class DataGridSelectionPropertyTests
         // Source is the raw collection, not the view wrapped by the grid.
         var selectionModel = new SelectionModel<object> { Source = items };
 
-        Assert.Throws<InvalidOperationException>(() => grid.Selection = selectionModel);
+        selectionModel.Select(1);
+
+        grid.Selection = selectionModel;
+        grid.UpdateLayout();
+
+        Assert.Same(grid.CollectionView, selectionModel.Source);
+        Assert.Equal(1, selectionModel.SelectedIndex);
+        Assert.Equal(items[1], selectionModel.SelectedItem);
+        Assert.Equal(items[1], grid.SelectedItem);
+
+        selectionModel.Select(2);
+        grid.UpdateLayout();
+
+        Assert.Equal(new[] { 1, 2 }, selectionModel.SelectedIndexes.OrderBy(x => x));
+        Assert.Contains(items[1], grid.SelectedItems.Cast<object>());
+        Assert.Contains(items[2], grid.SelectedItems.Cast<object>());
     }
 
     [AvaloniaFact]

@@ -207,15 +207,43 @@ namespace Avalonia.Controls
 
         internal List<object> CaptureSelectionSnapshot()
         {
-            // Let selection model track changes itself; snapshots are only needed for legacy selection.
-            if (_selectionModelAdapter != null)
+            // Prefer capturing via the selection model to avoid losing selection when the view
+            // issues a Reset (sorting/filtering/paging).
+            if (_selectionModelAdapter?.Model is { } model)
             {
-                return null;
+                if (_selectionModelSnapshot is { Count: > 0 })
+                {
+                    return new List<object>(_selectionModelSnapshot);
+                }
+
+                if (model.SelectedIndexes is { Count: > 0 } indexes &&
+                    model.Source is IList list &&
+                    list.Count > 0)
+                {
+                    var snapshot = new List<object>();
+                    foreach (var index in indexes)
+                    {
+                        if (index >= 0 && index < list.Count)
+                        {
+                            snapshot.Add(list[index]);
+                        }
+                    }
+
+                    if (snapshot.Count > 0)
+                    {
+                        return snapshot;
+                    }
+                }
+
+                if (_selectionModelSnapshot is { Count: > 0 })
+                {
+                    return new List<object>(_selectionModelSnapshot);
+                }
             }
 
-            if (SelectedItems is { Count: > 0 })
+            if (SelectedItems is { Count: > 0 } selected)
             {
-                return new List<object>(SelectedItems.Cast<object>());
+                return new List<object>(selected.Cast<object>());
             }
 
             return null;
@@ -303,6 +331,8 @@ namespace Avalonia.Controls
                 _selectionModelAdapter.Model.EndBatchUpdate();
                 _syncingSelectionModel = false;
             }
+
+            UpdateSelectionSnapshot();
         }
 
         internal void ResyncSelectionModelFromGridSelection()

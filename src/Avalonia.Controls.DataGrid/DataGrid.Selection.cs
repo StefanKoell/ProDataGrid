@@ -406,8 +406,13 @@ namespace Avalonia.Controls
             }
         }
 
-        private void UpdateSelectionSnapshot()
+        internal void UpdateSelectionSnapshot()
         {
+            if (_suppressSelectionSnapshotUpdates)
+            {
+                return;
+            }
+
             if (_selectionModelAdapter != null)
             {
                 _selectionModelSnapshot = _selectionModelAdapter.SelectedItemsView.Cast<object>().ToList();
@@ -450,6 +455,34 @@ namespace Avalonia.Controls
             finally
             {
                 _syncingSelectionModel = false;
+            }
+        }
+
+        internal IDisposable BeginSelectionSnapshotSuppression()
+        {
+            _suppressSelectionSnapshotUpdates = true;
+            return new SelectionSnapshotSuppression(this);
+        }
+
+        private sealed class SelectionSnapshotSuppression : IDisposable
+        {
+            private readonly DataGrid _owner;
+            private bool _disposed;
+
+            public SelectionSnapshotSuppression(DataGrid owner)
+            {
+                _owner = owner;
+            }
+
+            public void Dispose()
+            {
+                if (_disposed)
+                {
+                    return;
+                }
+
+                _owner._suppressSelectionSnapshotUpdates = false;
+                _disposed = true;
             }
         }
 
@@ -582,6 +615,7 @@ namespace Avalonia.Controls
                 }
 
                 SyncSelectionModelFromGridSelection();
+                UpdateSelectionSnapshot();
             }
         }
 

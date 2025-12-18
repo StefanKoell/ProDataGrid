@@ -377,6 +377,83 @@ public class DataGridSelectedItemsTests
         return grid;
     }
 
+    [AvaloniaFact]
+    public void SelectionSnapshot_Suppressed_During_Changes()
+    {
+        var items = new ObservableCollection<string> { "A", "B", "C" };
+        var grid = CreateGrid(items);
+
+        grid.SelectedItem = items[0];
+        grid.UpdateSelectionSnapshot();
+
+        var initial = GetSelectionSnapshot(grid);
+        Assert.Equal("A", Assert.Single(initial));
+
+        using (grid.BeginSelectionSnapshotSuppression())
+        {
+            grid.SelectedItem = items[1];
+            grid.UpdateLayout();
+            grid.UpdateSelectionSnapshot();
+        }
+
+        var suppressed = GetSelectionSnapshot(grid);
+        Assert.Equal("A", Assert.Single(suppressed));
+
+        grid.SelectedItem = items[2];
+        grid.UpdateLayout();
+        grid.UpdateSelectionSnapshot();
+
+        var updated = GetSelectionSnapshot(grid);
+        Assert.Equal("C", Assert.Single(updated));
+    }
+
+    [AvaloniaFact]
+    public void SelectionSnapshot_Follows_FlushSelectionChanged()
+    {
+        var items = new ObservableCollection<string> { "A", "B", "C" };
+        var grid = CreateGrid(items);
+
+        grid.SelectedItem = items[0];
+        grid.UpdateLayout();
+
+        var initial = GetSelectionSnapshot(grid);
+        Assert.Equal("A", Assert.Single(initial));
+
+        grid.SelectedItem = items[2];
+        grid.UpdateLayout();
+
+        var afterFlush = GetSelectionSnapshot(grid);
+        Assert.Equal("C", Assert.Single(afterFlush));
+    }
+
+    [AvaloniaFact]
+    public void CaptureSelectionSnapshot_Prefers_ModelSnapshot()
+    {
+        var items = new ObservableCollection<string> { "A", "B", "C", "D" };
+        var grid = CreateGrid(items);
+
+        grid.SelectedItems.Add(items[1]);
+        SetSelectionSnapshot(grid, new List<object> { items[3] });
+
+        var snapshot = grid.CaptureSelectionSnapshot();
+        Assert.NotNull(snapshot);
+        Assert.Equal(items[3], Assert.Single(snapshot));
+    }
+
+    private static List<object> GetSelectionSnapshot(DataGrid grid)
+    {
+        var field = typeof(DataGrid).GetField("_selectionModelSnapshot", BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.NotNull(field);
+        return (List<object>)(field!.GetValue(grid) ?? throw new InvalidOperationException("Snapshot not initialized."));
+    }
+
+    private static void SetSelectionSnapshot(DataGrid grid, List<object> snapshot)
+    {
+        var field = typeof(DataGrid).GetField("_selectionModelSnapshot", BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.NotNull(field);
+        field!.SetValue(grid, snapshot);
+    }
+
     private static void ApplyIdSort(DataGridCollectionView view, ListSortDirection direction)
     {
         using (view.DeferRefresh())

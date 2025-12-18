@@ -778,6 +778,7 @@ public class HierarchicalIntegrationTests
         Assert.Equal(-1, indexMap!.MapOldIndexToNew(2)); // replace currently drops the old index
         Assert.DoesNotContain(2, grid.Selection.SelectedIndexes);
         Assert.Null(grid.Selection.SelectedItem);
+        Assert.Null(view.CurrentItem);
         Assert.InRange(lostSelectionCount, 0, 2);
         Assert.InRange(indexesChangedCount, 0, 2);
     }

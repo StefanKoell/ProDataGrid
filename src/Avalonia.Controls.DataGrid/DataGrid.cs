@@ -241,6 +241,7 @@ namespace Avalonia.Controls
         private ISelectionModel _selectionModelProxy;
         private DataGridSelection.DataGridPagedSelectionSource _pagedSelectionSource;
         private List<object> _selectionModelSnapshot;
+        private bool _suppressSelectionSnapshotUpdates;
         private bool _syncingSelectionModel;
         private bool _suppressSelectionUpdatesFromRows;
         private bool _syncingSelectedItems;
@@ -1690,7 +1691,6 @@ namespace Avalonia.Controls
             {
                 if (source != null)
                 {
-                    // Temporarily detach to avoid collection change callbacks while remapping.
                     model.Source = null;
                 }
 
@@ -1707,6 +1707,13 @@ namespace Avalonia.Controls
                 _preferredSelectionIndex = preferredMapped >= 0
                     ? preferredMapped
                     : (mapped.Count > 0 ? mapped[0] : -1);
+
+                if (mapped.Count == 0 && DataConnection?.CollectionView != null)
+                {
+                    DataConnection.CollectionView.MoveCurrentTo(null);
+                }
+
+                UpdateSelectionSnapshot();
             }
             finally
             {
@@ -2315,6 +2322,12 @@ namespace Avalonia.Controls
             private readonly ISelectionModel _inner;
             private readonly Func<object?, object?> _itemSelector;
             private readonly Func<object?, int> _indexResolver;
+            private EventHandler<SelectionModelIndexesChangedEventArgs>? _indexesChanged;
+            private EventHandler<SelectionModelSelectionChangedEventArgs>? _selectionChanged;
+            private EventHandler? _lostSelection;
+            private EventHandler? _sourceReset;
+            private PropertyChangedEventHandler? _propertyChanged;
+            private bool _lastSelectionEmpty;
 
             public HierarchicalSelectionProxy(
                 ISelectionModel inner,
@@ -2324,6 +2337,7 @@ namespace Avalonia.Controls
                 _inner = inner ?? throw new ArgumentNullException(nameof(inner));
                 _itemSelector = itemSelector ?? throw new ArgumentNullException(nameof(itemSelector));
                 _indexResolver = indexResolver ?? throw new ArgumentNullException(nameof(indexResolver));
+                _lastSelectionEmpty = inner.SelectedIndexes.Count == 0;
             }
 
             public IEnumerable? Source
@@ -2378,32 +2392,102 @@ namespace Avalonia.Controls
 
             public event EventHandler<SelectionModelIndexesChangedEventArgs>? IndexesChanged
             {
-                add => _inner.IndexesChanged += value;
-                remove => _inner.IndexesChanged -= value;
+                add
+                {
+                    if (_indexesChanged == null)
+                    {
+                        _inner.IndexesChanged += InnerIndexesChanged;
+                    }
+                    _indexesChanged += value;
+                }
+                remove
+                {
+                    _indexesChanged -= value;
+                    if (_indexesChanged == null)
+                    {
+                        _inner.IndexesChanged -= InnerIndexesChanged;
+                    }
+                }
             }
 
             public event EventHandler<SelectionModelSelectionChangedEventArgs>? SelectionChanged
             {
-                add => _inner.SelectionChanged += value;
-                remove => _inner.SelectionChanged -= value;
+                add
+                {
+                    if (_selectionChanged == null)
+                    {
+                        _inner.SelectionChanged += InnerSelectionChanged;
+                    }
+                    _selectionChanged += value;
+                }
+                remove
+                {
+                    _selectionChanged -= value;
+                    if (_selectionChanged == null)
+                    {
+                        _inner.SelectionChanged -= InnerSelectionChanged;
+                    }
+                }
             }
 
             public event EventHandler? LostSelection
             {
-                add => _inner.LostSelection += value;
-                remove => _inner.LostSelection -= value;
+                add
+                {
+                    if (_lostSelection == null)
+                    {
+                        _inner.LostSelection += InnerLostSelection;
+                    }
+                    _lostSelection += value;
+                }
+                remove
+                {
+                    _lostSelection -= value;
+                    if (_lostSelection == null)
+                    {
+                        _inner.LostSelection -= InnerLostSelection;
+                    }
+                }
             }
 
             public event EventHandler? SourceReset
             {
-                add => _inner.SourceReset += value;
-                remove => _inner.SourceReset -= value;
+                add
+                {
+                    if (_sourceReset == null)
+                    {
+                        _inner.SourceReset += InnerSourceReset;
+                    }
+                    _sourceReset += value;
+                }
+                remove
+                {
+                    _sourceReset -= value;
+                    if (_sourceReset == null)
+                    {
+                        _inner.SourceReset -= InnerSourceReset;
+                    }
+                }
             }
 
             public event PropertyChangedEventHandler? PropertyChanged
             {
-                add => _inner.PropertyChanged += value;
-                remove => _inner.PropertyChanged -= value;
+                add
+                {
+                    if (_propertyChanged == null)
+                    {
+                        _inner.PropertyChanged += InnerPropertyChanged;
+                    }
+                    _propertyChanged += value;
+                }
+                remove
+                {
+                    _propertyChanged -= value;
+                    if (_propertyChanged == null)
+                    {
+                        _inner.PropertyChanged -= InnerPropertyChanged;
+                    }
+                }
             }
 
             public void BeginBatchUpdate() => _inner.BeginBatchUpdate();
@@ -2423,6 +2507,40 @@ namespace Avalonia.Controls
             public void SelectAll() => _inner.SelectAll();
 
             public void Clear() => _inner.Clear();
+
+            private void InnerIndexesChanged(object? sender, SelectionModelIndexesChangedEventArgs e)
+            {
+                _indexesChanged?.Invoke(this, e);
+                _lastSelectionEmpty = _inner.SelectedIndexes.Count == 0;
+            }
+
+            private void InnerSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs e)
+            {
+                _selectionChanged?.Invoke(this, e);
+                _lastSelectionEmpty = _inner.SelectedIndexes.Count == 0;
+            }
+
+            private void InnerLostSelection(object? sender, EventArgs e)
+            {
+                var isEmpty = _inner.SelectedIndexes.Count == 0;
+                if (!_lastSelectionEmpty && isEmpty)
+                {
+                    _lostSelection?.Invoke(this, e);
+                }
+
+                _lastSelectionEmpty = isEmpty;
+            }
+
+            private void InnerSourceReset(object? sender, EventArgs e)
+            {
+                _sourceReset?.Invoke(this, e);
+                _lastSelectionEmpty = _inner.SelectedIndexes.Count == 0;
+            }
+
+            private void InnerPropertyChanged(object? sender, PropertyChangedEventArgs e)
+            {
+                _propertyChanged?.Invoke(this, e);
+            }
 
             private sealed class ProjectedReadOnlyList : IReadOnlyList<object?>
             {

@@ -797,145 +797,154 @@ namespace Avalonia.Controls
 
         private void NotifyingDataSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            using var _ = _owner.BeginSelectionChangeScope(DataGridSelectionChangeSource.ItemsSourceChange);
-
-            if (_owner.LoadingOrUnloadingRow)
+            bool updateSnapshotAfterChange = e.Action == NotifyCollectionChangedAction.Reset;
+            var snapshotSuppression = _owner.BeginSelectionSnapshotSuppression();
+            try
             {
-                throw DataGridError.DataGrid.CannotChangeItemsWhenLoadingRows();
-            }
+                using var _ = _owner.BeginSelectionChangeScope(DataGridSelectionChangeSource.ItemsSourceChange);
 
-            List<object> selectionSnapshot = _owner.CaptureSelectionSnapshot();
-            if (_owner.Selection != null)
-            {
-                selectionSnapshot = null;
-            }
-            bool restoreSyncingSelectionModel = false;
-            bool previousSyncingSelectionModel = false;
+                if (_owner.LoadingOrUnloadingRow)
+                {
+                    throw DataGridError.DataGrid.CannotChangeItemsWhenLoadingRows();
+                }
 
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    Debug.Assert(e.NewItems != null, "Unexpected NotifyCollectionChangedAction.Add notification");
-                    if (ShouldAutoGenerateColumns)
-                    {
-                        // The columns are also affected (not just rows) in this case so we need to reset everything
-                        _onCollectionAddRemoveNewRowPlaceholder = false;
-                        _placeholderRowIndexDuringAdd = null;
-                        _owner.InitializeElements(false /*recycleRows*/);
-                    }
-                    else if (!IsGrouping)
-                    {
-                        // If we're grouping then we handle this through the CollectionViewGroup notifications
-                        // According to WPF, Add is a single item operation
-                        Debug.Assert(e.NewItems.Count == 1);
-                        if (_onCollectionAddRemoveNewRowPlaceholder)
+                List<object> selectionSnapshot = _owner.CaptureSelectionSnapshot();
+                bool restoreSyncingSelectionModel = false;
+                bool previousSyncingSelectionModel = false;
+
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        Debug.Assert(e.NewItems != null, "Unexpected NotifyCollectionChangedAction.Add notification");
+                        if (ShouldAutoGenerateColumns)
                         {
-                            if (_placeholderRowIndexDuringAdd.HasValue)
-                            {
-                                _owner.RemoveRowAt(_placeholderRowIndexDuringAdd.Value, DataGridCollectionView.NewItemPlaceholder);
-                            }
-                            _placeholderRowIndexDuringAdd = null;
+                            // The columns are also affected (not just rows) in this case so we need to reset everything
                             _onCollectionAddRemoveNewRowPlaceholder = false;
+                            _placeholderRowIndexDuringAdd = null;
+                            _owner.InitializeElements(false /*recycleRows*/);
                         }
-                        _owner.InsertRowAt(e.NewStartingIndex);
-                    }
-                    else
-                    {
-                        _onCollectionAddRemoveNewRowPlaceholder = false;
-                        _placeholderRowIndexDuringAdd = null;
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    IList removedItems = e.OldItems;
-                    if (removedItems == null || e.OldStartingIndex < 0)
-                    {
-                        Debug.Assert(false, "Unexpected NotifyCollectionChangedAction.Remove notification");
-                        return;
-                    }
-                    if (!IsGrouping)
-                    {
-                        // If we're grouping then we handle this through the CollectionViewGroup notifications
-                        // According to WPF, Remove is a single item operation
-                        foreach (object item in e.OldItems)
+                        else if (!IsGrouping)
                         {
-                            Debug.Assert(item != null);
-                            _owner.RemoveRowAt(e.OldStartingIndex, item);
+                            // If we're grouping then we handle this through the CollectionViewGroup notifications
+                            // According to WPF, Add is a single item operation
+                            Debug.Assert(e.NewItems.Count == 1);
+                            if (_onCollectionAddRemoveNewRowPlaceholder)
+                            {
+                                if (_placeholderRowIndexDuringAdd.HasValue)
+                                {
+                                    _owner.RemoveRowAt(_placeholderRowIndexDuringAdd.Value, DataGridCollectionView.NewItemPlaceholder);
+                                }
+                                _placeholderRowIndexDuringAdd = null;
+                                _onCollectionAddRemoveNewRowPlaceholder = false;
+                            }
+                            _owner.InsertRowAt(e.NewStartingIndex);
                         }
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Move:
-                    if (!IsGrouping && e.OldItems != null && e.NewItems != null)
-                    {
-                        Debug.Assert(e.OldItems.Count == e.NewItems.Count);
-
-                        for (int i = 0; i < e.OldItems.Count; i++)
+                        else
                         {
-                            var oldIndex = e.OldStartingIndex + i;
-                            var newIndex = e.NewStartingIndex + i;
-
-                            if (oldIndex == newIndex)
-                            {
-                                continue;
-                            }
-
-                            var item = e.OldItems[i];
-                            _owner.RemoveRowAt(oldIndex, item);
-
-                            if (oldIndex < newIndex)
-                            {
-                                newIndex--;
-                            }
-
-                            _owner.InsertRowAt(newIndex);
+                            _onCollectionAddRemoveNewRowPlaceholder = false;
+                            _placeholderRowIndexDuringAdd = null;
                         }
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Replace:
-                    throw new NotSupportedException(); // 
+                        break;
+                    case NotifyCollectionChangedAction.Remove:
+                        IList removedItems = e.OldItems;
+                        if (removedItems == null || e.OldStartingIndex < 0)
+                        {
+                            Debug.Assert(false, "Unexpected NotifyCollectionChangedAction.Remove notification");
+                            return;
+                        }
+                        if (!IsGrouping)
+                        {
+                            // If we're grouping then we handle this through the CollectionViewGroup notifications
+                            // According to WPF, Remove is a single item operation
+                            foreach (object item in e.OldItems)
+                            {
+                                Debug.Assert(item != null);
+                                _owner.RemoveRowAt(e.OldStartingIndex, item);
+                            }
+                        }
+                        break;
+                    case NotifyCollectionChangedAction.Move:
+                        if (!IsGrouping && e.OldItems != null && e.NewItems != null)
+                        {
+                            Debug.Assert(e.OldItems.Count == e.NewItems.Count);
 
-                case NotifyCollectionChangedAction.Reset:
-                    previousSyncingSelectionModel = _owner.PushSelectionSync();
-                    restoreSyncingSelectionModel = true;
+                            for (int i = 0; i < e.OldItems.Count; i++)
+                            {
+                                var oldIndex = e.OldStartingIndex + i;
+                                var newIndex = e.NewStartingIndex + i;
 
-                    // Did the data type change during the reset?  If not, we can recycle
-                    // the existing rows instead of having to clear them all.  We still need to clear our cached
-                    // values for DataType and DataProperties, though, because the collection has been reset.
-                    Type previousDataType = _dataType;
-                    _dataType = null;
-                    if (previousDataType != DataType)
-                    {
-                        ClearDataProperties();
-                        _owner.InitializeElements(false /*recycleRows*/);
-                    }
-                    else
-                    {
-                        _owner.InitializeElements(!ShouldAutoGenerateColumns /*recycleRows*/);
-                    }
-                    break;
+                                if (oldIndex == newIndex)
+                                {
+                                    continue;
+                                }
+
+                                var item = e.OldItems[i];
+                                _owner.RemoveRowAt(oldIndex, item);
+
+                                if (oldIndex < newIndex)
+                                {
+                                    newIndex--;
+                                }
+
+                                _owner.InsertRowAt(newIndex);
+                            }
+                        }
+                        break;
+                    case NotifyCollectionChangedAction.Replace:
+                        throw new NotSupportedException(); // 
+
+                    case NotifyCollectionChangedAction.Reset:
+                        previousSyncingSelectionModel = _owner.PushSelectionSync();
+                        restoreSyncingSelectionModel = true;
+
+                        // Did the data type change during the reset?  If not, we can recycle
+                        // the existing rows instead of having to clear them all.  We still need to clear our cached
+                        // values for DataType and DataProperties, though, because the collection has been reset.
+                        Type previousDataType = _dataType;
+                        _dataType = null;
+                        if (previousDataType != DataType)
+                        {
+                            ClearDataProperties();
+                            _owner.InitializeElements(false /*recycleRows*/);
+                        }
+                        else
+                        {
+                            _owner.InitializeElements(!ShouldAutoGenerateColumns /*recycleRows*/);
+                        }
+                        break;
+                }
+
+                if (selectionSnapshot != null && e.Action == NotifyCollectionChangedAction.Reset)
+                {
+                    _owner.RestoreSelectionFromSnapshot(selectionSnapshot);
+                }
+
+                _owner.UpdatePseudoClasses();
+
+                // Ensure the visual selection state matches the restored selection after mutations
+                _owner.RefreshVisibleSelection();
+
+                if (_owner.Selection == null)
+                {
+                    _owner.ResyncSelectionModelFromGridSelection();
+                }
+                else
+                {
+                    _owner.RefreshSelectionFromModel();
+                }
+
+                if (restoreSyncingSelectionModel)
+                {
+                    _owner.PopSelectionSync(previousSyncingSelectionModel);
+                }
             }
-
-            if (selectionSnapshot != null && _owner.Selection == null)
+            finally
             {
-                _owner.RestoreSelectionFromSnapshot(selectionSnapshot);
-            }
-
-            _owner.UpdatePseudoClasses();
-
-            // Ensure the visual selection state matches the restored selection after mutations
-            _owner.RefreshVisibleSelection();
-
-            if (_owner.Selection == null)
-            {
-                _owner.ResyncSelectionModelFromGridSelection();
-            }
-            else
-            {
-                _owner.RefreshSelectionFromModel();
-            }
-
-            if (restoreSyncingSelectionModel)
-            {
-                _owner.PopSelectionSync(previousSyncingSelectionModel);
+                snapshotSuppression.Dispose();
+                if (updateSnapshotAfterChange)
+                {
+                    _owner.UpdateSelectionSnapshot();
+                }
             }
         }
 

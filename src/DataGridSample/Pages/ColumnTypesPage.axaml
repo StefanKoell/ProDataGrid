@@ -1,0 +1,146 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.ColumnTypesPage"
+             x:Name="Root"
+             x:DataType="viewModels:ColumnTypesViewModel">
+  <UserControl.DataContext>
+    <viewModels:ColumnTypesViewModel/>
+  </UserControl.DataContext>
+
+  <Grid RowDefinitions="Auto,Auto,*" RowSpacing="12" Margin="12">
+    <StackPanel Spacing="4">
+      <TextBlock Classes="h2">Column Types</TextBlock>
+      <TextBlock Text="This page demonstrates 11 column types: NumericUpDown, DatePicker, TimePicker, Slider, ToggleSwitch, ProgressBar, Image, AutoComplete, MaskedText, ToggleButton, and Button columns. These eliminate the need for TemplateColumn in most scenarios."
+                 TextWrapping="Wrap" />
+      <TextBlock Text="To edit: click a cell to select it, then click the same cell again (or press F2) to enter edit mode. Press Enter to commit or Escape to cancel."
+                 TextWrapping="Wrap" Foreground="Gray" FontStyle="Italic" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1"
+                Orientation="Horizontal"
+                Spacing="8">
+      <Button Content="Add Product"
+              Command="{Binding AddProductCommand}" />
+      <Button Content="Update Progress"
+              Command="{Binding UpdateProgressCommand}" />
+      <Button Content="Toggle Active"
+              Command="{Binding ToggleActiveCommand}" />
+    </StackPanel>
+
+    <DataGrid Grid.Row="2"
+              ItemsSource="{Binding Products}"
+              AutoGenerateColumns="False"
+              IsReadOnly="False"
+              CanUserAddRows="False"
+              CanUserDeleteRows="False"
+              HeadersVisibility="All"
+              RowHeight="40">
+      <DataGrid.Columns>
+        <!-- Text Column -->
+        <DataGridTextColumn Header="Name"
+                            Binding="{Binding Name}"
+                            Width="120"
+                            x:DataType="viewModels:Product" />
+        
+        <!-- AutoComplete Column for Category -->
+        <DataGridAutoCompleteColumn Header="Category"
+                                    Binding="{Binding Category}"
+                                    ItemsSource="{Binding #Root.((viewModels:ColumnTypesViewModel)DataContext).CategorySuggestions}"
+                                    FilterMode="Contains"
+                                    MinimumPrefixLength="1"
+                                    Watermark="Search..."
+                                    Width="120"
+                                    x:DataType="viewModels:Product" />
+        
+        <!-- Masked Text Column for Phone -->
+        <DataGridMaskedTextColumn Header="Phone"
+                                  Binding="{Binding Phone}"
+                                  Mask="(000) 000-0000"
+                                  Width="120"
+                                  x:DataType="viewModels:Product" />
+        
+        <!-- Numeric Column with Currency Format -->
+        <DataGridNumericColumn Header="Price"
+                               Binding="{Binding Price}"
+                               FormatString="C2"
+                               Minimum="0"
+                               Maximum="10000"
+                               Increment="0.01"
+                               Width="100"
+                               x:DataType="viewModels:Product" />
+        
+        <!-- Numeric Column with Percentage Format -->
+        <DataGridNumericColumn Header="Discount"
+                               Binding="{Binding DiscountPercent}"
+                               FormatString="P0"
+                               Minimum="0"
+                               Maximum="1"
+                               Increment="0.05"
+                               ShowButtonSpinner="True"
+                               Width="90"
+                               x:DataType="viewModels:Product" />
+        
+        <!-- Date Picker Column -->
+        <DataGridDatePickerColumn Header="Release"
+                                  Binding="{Binding ReleaseDate}"
+                                  SelectedDateFormat="Short"
+                                  IsTodayHighlighted="True"
+                                  Width="130"
+                                  x:DataType="viewModels:Product" />
+        
+        <!-- Time Picker Column -->
+        <DataGridTimePickerColumn Header="Available"
+                                  Binding="{Binding AvailableFrom}"
+                                  ClockIdentifier="24HourClock"
+                                  MinuteIncrement="15"
+                                  Width="100"
+                                  x:DataType="viewModels:Product" />
+        
+        <!-- Slider Column for Rating -->
+        <DataGridSliderColumn Header="Rating"
+                              Binding="{Binding Rating}"
+                              Minimum="0"
+                              Maximum="5"
+                              TickFrequency="0.5"
+                              IsSnapToTickEnabled="True"
+                              ShowValueText="False"
+                              Width="100"
+                              x:DataType="viewModels:Product" />
+        
+        <!-- Toggle Switch Column -->
+        <DataGridToggleSwitchColumn Header="Active"
+                                    Binding="{Binding IsActive}"
+                                    OnContent="Yes"
+                                    OffContent="No"
+                                    Width="80"
+                                    x:DataType="viewModels:Product" />
+        
+        <!-- Toggle Button Column for Favorite -->
+        <DataGridToggleButtonColumn Header="Fav"
+                                    Binding="{Binding IsFavorite}"
+                                    Content="★"
+                                    Width="60"
+                                    x:DataType="viewModels:Product" />
+        
+        <!-- Progress Bar Column -->
+        <DataGridProgressBarColumn Header="Stock"
+                                   Binding="{Binding StockLevel}"
+                                   Minimum="0"
+                                   Maximum="100"
+                                   ShowProgressText="True"
+                                   ProgressTextFormat="{}{0:0}%"
+                                   Width="100"
+                                   x:DataType="viewModels:Product" />
+        
+        <!-- Button Column for Delete Action -->
+        <DataGridButtonColumn Header=""
+                              Content="🗑"
+                              Command="{Binding #Root.((viewModels:ColumnTypesViewModel)DataContext).DeleteProductCommand}"
+                              CommandParameter="{Binding}"
+                              Width="50"
+                              x:DataType="viewModels:Product" />
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

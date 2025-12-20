@@ -9,6 +9,7 @@ using Avalonia.Controls.DataGridDragDrop;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Selection;
 using Avalonia.Controls.DataGridSorting;
+using Avalonia.Controls.DataGridSearching;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Media;
@@ -803,6 +804,17 @@ namespace Avalonia.Controls
                 nameof(FilteringModel),
                 o => o.FilteringModel,
                 (o, v) => o.FilteringModel = v,
+                defaultBindingMode: BindingMode.TwoWay);
+
+        /// <summary>
+        /// Gets or sets the search model that drives global search. If not provided, a default
+        /// search model is created.
+        /// </summary>
+        public static readonly DirectProperty<DataGrid, ISearchModel> SearchModelProperty =
+            AvaloniaProperty.RegisterDirect<DataGrid, ISearchModel>(
+                nameof(SearchModel),
+                o => o.SearchModel,
+                (o, v) => o.SearchModel = v,
                 defaultBindingMode: BindingMode.TwoWay);
 
         /// <summary>

@@ -17,6 +17,11 @@
       <!-- Filter Resources (merged from DataGridFilterResources.xaml) -->
       <SolidColorBrush x:Key="DataGridFilterFlyoutBackgroundBrush" Color="#F8F8F8" />
 
+      <!-- Search highlight resources -->
+      <SolidColorBrush x:Key="DataGridSearchMatchBrush" Color="#FFF2B6" />
+      <SolidColorBrush x:Key="DataGridSearchCurrentBrush" Color="#FFD37A" />
+      <SolidColorBrush x:Key="DataGridSearchMatchForegroundBrush" Color="#202020" />
+
       <!-- Flyout presenter theme for filter popups -->
       <ControlTheme x:Key="DataGridFilterFlyoutPresenterTheme" TargetType="FlyoutPresenter">
         <Setter Property="Padding" Value="12" />
@@ -352,6 +357,14 @@
         <Style Selector="^:focus /template/ Grid#FocusVisual">
           <Setter Property="IsVisible" Value="True" />
         </Style>
+        <Style Selector="^:searchmatch">
+          <Setter Property="Background" Value="{DynamicResource DataGridSearchMatchBrush}" />
+          <Setter Property="Foreground" Value="{DynamicResource DataGridSearchMatchForegroundBrush}" />
+        </Style>
+        <Style Selector="^:searchcurrent">
+          <Setter Property="Background" Value="{DynamicResource DataGridSearchCurrentBrush}" />
+          <Setter Property="Foreground" Value="{DynamicResource DataGridSearchMatchForegroundBrush}" />
+        </Style>
         <Style Selector="^:invalid /template/ Rectangle#InvalidVisualElement">
           <Setter Property="IsVisible" Value="True" />
         </Style>
@@ -614,6 +627,16 @@
 
         <Style Selector="^:pointerover /template/ Rectangle#BackgroundRectangle">
           <Setter Property="Fill" Value="{DynamicResource DataGridRowHoveredBackgroundBrush}" />
+        </Style>
+
+        <Style Selector="^:searchmatch /template/ Rectangle#BackgroundRectangle">
+          <Setter Property="Fill" Value="{DynamicResource DataGridSearchMatchBrush}" />
+          <Setter Property="Opacity" Value="0.18" />
+        </Style>
+
+        <Style Selector="^:searchcurrent /template/ Rectangle#BackgroundRectangle">
+          <Setter Property="Fill" Value="{DynamicResource DataGridSearchCurrentBrush}" />
+          <Setter Property="Opacity" Value="0.24" />
         </Style>
 
         <Style Selector="^:selected">

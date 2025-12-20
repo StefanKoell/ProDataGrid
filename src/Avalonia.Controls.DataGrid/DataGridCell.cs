@@ -19,7 +19,7 @@ namespace Avalonia.Controls
     /// Represents an individual <see cref="T:Avalonia.Controls.DataGrid" /> cell.
     /// </summary>
     [TemplatePart(DATAGRIDCELL_elementRightGridLine, typeof(Rectangle))]
-    [PseudoClasses(":selected", ":current", ":edited", ":invalid", ":focus")]
+    [PseudoClasses(":selected", ":current", ":edited", ":invalid", ":focus", ":searchmatch", ":searchcurrent")]
 #if !DATAGRID_INTERNAL
     public
 #endif
@@ -256,6 +256,16 @@ namespace Avalonia.Controls
             PseudoClassesHelper.Set(PseudoClasses, ":edited", IsEdited);
             PseudoClassesHelper.Set(PseudoClasses, ":invalid", !IsValid);
             PseudoClassesHelper.Set(PseudoClasses, ":focus", OwningGrid.IsFocused && IsCurrent);
+
+            bool isSearchMatch = false;
+            bool isSearchCurrent = false;
+            if (OwningGrid != null)
+            {
+                OwningGrid.TryGetSearchCellState(OwningRow.Index, OwningColumn, out isSearchMatch, out isSearchCurrent);
+            }
+
+            PseudoClassesHelper.Set(PseudoClasses, ":searchmatch", isSearchMatch);
+            PseudoClassesHelper.Set(PseudoClasses, ":searchcurrent", isSearchCurrent);
         }
 
         // Makes sure the right gridline has the proper stroke and visibility. If lastVisibleColumn is specified, the 

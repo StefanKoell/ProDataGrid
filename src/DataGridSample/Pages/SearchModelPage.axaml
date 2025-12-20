@@ -1,0 +1,206 @@
+<!--
+  Copyright (c) Wiesław Šoltés. All rights reserved.
+  Licensed under the MIT license. See LICENSE file in the project root for details.
+-->
+<UserControl
+    x:Class="DataGridSample.Pages.SearchModelPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+    xmlns:searching="clr-namespace:Avalonia.Controls.DataGridSearching;assembly=Avalonia.Controls.DataGrid"
+    x:DataType="viewModels:SearchModelViewModel"
+    d:DesignHeight="720"
+    d:DesignWidth="1100"
+    mc:Ignorable="d">
+
+  <UserControl.DataContext>
+    <viewModels:SearchModelViewModel />
+  </UserControl.DataContext>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,*"
+        ColumnDefinitions="3*,2*">
+    <StackPanel Grid.ColumnSpan="2"
+                Spacing="4"
+                MaxWidth="980">
+      <TextBlock Text="SearchModel - global search"
+                 FontWeight="Bold"
+                 FontSize="18" />
+      <TextBlock TextWrapping="Wrap"
+                 Text="Global search across all or visible columns with live highlights, match options, and next/previous navigation." />
+    </StackPanel>
+
+    <WrapPanel Grid.Row="1"
+               Grid.ColumnSpan="2"
+               Margin="0 8"
+               VerticalAlignment="Center">
+      <TextBlock VerticalAlignment="Center"
+                 Margin="0 0 8 0"
+                 Text="Query" />
+      <TextBox Width="240"
+               Margin="0 0 8 0"
+               Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" />
+      <Button Content="Clear"
+              Margin="0 0 8 0"
+              Command="{Binding ClearCommand}" />
+      <Button Content="Previous"
+              Margin="0 0 8 0"
+              Command="{Binding PreviousCommand}" />
+      <Button Content="Next"
+              Margin="0 0 8 0"
+              Command="{Binding NextCommand}" />
+      <TextBlock VerticalAlignment="Center"
+                 Text="{Binding ResultSummary}" />
+    </WrapPanel>
+
+    <DataGrid Grid.Row="2"
+              Grid.Column="0"
+              ItemsSource="{Binding View}"
+              SearchModel="{Binding SearchModel}"
+              AutoGenerateColumns="False"
+              CanUserSortColumns="True"
+              GridLinesVisibility="Horizontal"
+              SelectionMode="Extended">
+      <DataGrid.Columns>
+        <DataGridTextColumn Width="70"
+                            Header="ID"
+                            Binding="{Binding Id}"
+                            SortMemberPath="Id"
+                            x:DataType="viewModels:SearchModelViewModel+SearchItem" />
+        <DataGridTextColumn Width="220"
+                            Header="Title"
+                            Binding="{Binding Title}"
+                            SortMemberPath="Title"
+                            x:DataType="viewModels:SearchModelViewModel+SearchItem" />
+        <DataGridTextColumn Width="140"
+                            Header="Owner"
+                            Binding="{Binding Owner}"
+                            SortMemberPath="Owner"
+                            x:DataType="viewModels:SearchModelViewModel+SearchItem" />
+        <DataGridTextColumn Width="140"
+                            Header="Category"
+                            Binding="{Binding Category}"
+                            SortMemberPath="Category"
+                            x:DataType="viewModels:SearchModelViewModel+SearchItem" />
+        <DataGridTextColumn Width="110"
+                            Header="Status"
+                            Binding="{Binding Status}"
+                            SortMemberPath="Status"
+                            x:DataType="viewModels:SearchModelViewModel+SearchItem" />
+        <DataGridTextColumn Width="90"
+                            Header="Score"
+                            Binding="{Binding Score}"
+                            SortMemberPath="Score"
+                            x:DataType="viewModels:SearchModelViewModel+SearchItem" />
+        <DataGridTextColumn Width="140"
+                            Header="Created"
+                            Binding="{Binding Created, StringFormat='{}{0:yyyy-MM-dd}'}"
+                            SortMemberPath="Created"
+                            x:DataType="viewModels:SearchModelViewModel+SearchItem" />
+        <DataGridTextColumn Width="*"
+                            Header="Notes"
+                            Binding="{Binding Notes}"
+                            SortMemberPath="Notes"
+                            x:DataType="viewModels:SearchModelViewModel+SearchItem" />
+      </DataGrid.Columns>
+    </DataGrid>
+
+    <Border Grid.Row="2"
+            Grid.Column="1"
+            Margin="8 0 0 0"
+            Padding="10"
+            Background="#08000000"
+            CornerRadius="6">
+      <StackPanel Spacing="10">
+        <StackPanel Spacing="6">
+          <TextBlock Text="Match options" FontWeight="SemiBold" />
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <TextBlock VerticalAlignment="Center" Text="Match" />
+            <ComboBox Width="160"
+                      SelectedItem="{Binding MatchMode, Mode=TwoWay}">
+              <searching:SearchMatchMode>Contains</searching:SearchMatchMode>
+              <searching:SearchMatchMode>StartsWith</searching:SearchMatchMode>
+              <searching:SearchMatchMode>EndsWith</searching:SearchMatchMode>
+              <searching:SearchMatchMode>Equals</searching:SearchMatchMode>
+              <searching:SearchMatchMode>Wildcard</searching:SearchMatchMode>
+              <searching:SearchMatchMode>Regex</searching:SearchMatchMode>
+            </ComboBox>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <TextBlock VerticalAlignment="Center" Text="Terms" />
+            <ComboBox Width="160"
+                      SelectedItem="{Binding TermMode, Mode=TwoWay}">
+              <searching:SearchTermCombineMode>Any</searching:SearchTermCombineMode>
+              <searching:SearchTermCombineMode>All</searching:SearchTermCombineMode>
+            </ComboBox>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <TextBlock VerticalAlignment="Center" Text="Scope" />
+            <ComboBox Width="160"
+                      SelectedItem="{Binding Scope, Mode=TwoWay}">
+              <searching:SearchScope>AllColumns</searching:SearchScope>
+              <searching:SearchScope>VisibleColumns</searching:SearchScope>
+            </ComboBox>
+          </StackPanel>
+        </StackPanel>
+
+        <StackPanel Spacing="6">
+          <TextBlock Text="Highlight &amp; navigation" FontWeight="SemiBold" />
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <TextBlock VerticalAlignment="Center" Text="Highlight" />
+            <ComboBox Width="160"
+                      SelectedItem="{Binding HighlightMode, Mode=TwoWay}">
+              <searching:SearchHighlightMode>None</searching:SearchHighlightMode>
+              <searching:SearchHighlightMode>Cell</searching:SearchHighlightMode>
+              <searching:SearchHighlightMode>TextAndCell</searching:SearchHighlightMode>
+            </ComboBox>
+          </StackPanel>
+          <CheckBox Content="Highlight current"
+                    IsChecked="{Binding HighlightCurrent, Mode=TwoWay}" />
+          <CheckBox Content="Wrap navigation"
+                    IsChecked="{Binding WrapNavigation, Mode=TwoWay}" />
+          <CheckBox Content="Update selection on navigate"
+                    IsChecked="{Binding UpdateSelectionOnNavigate, Mode=TwoWay}" />
+        </StackPanel>
+
+        <StackPanel Spacing="6">
+          <TextBlock Text="Parsing" FontWeight="SemiBold" />
+          <CheckBox Content="Case sensitive"
+                    IsChecked="{Binding CaseSensitive, Mode=TwoWay}" />
+          <CheckBox Content="Whole word"
+                    IsChecked="{Binding WholeWord, Mode=TwoWay}" />
+          <CheckBox Content="Normalize whitespace"
+                    IsChecked="{Binding NormalizeWhitespace, Mode=TwoWay}" />
+          <CheckBox Content="Ignore diacritics"
+                    IsChecked="{Binding IgnoreDiacritics, Mode=TwoWay}" />
+        </StackPanel>
+
+        <StackPanel Spacing="6">
+          <TextBlock Text="Results" FontWeight="SemiBold" />
+          <ListBox ItemsSource="{Binding Results}"
+                   SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
+                   Height="220">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="viewModels:SearchModelViewModel+SearchResultSummary">
+                <Border Padding="4" Margin="0 2" Background="#0A000000" CornerRadius="4">
+                  <StackPanel Spacing="2">
+                    <TextBlock Text="{Binding Column, StringFormat=Column: {0}}" />
+                    <TextBlock Text="{Binding Preview}"
+                               TextTrimming="CharacterEllipsis"
+                               MaxWidth="280" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <TextBlock Text="{Binding Row, StringFormat=Row: {0}}" />
+                      <TextBlock Text="{Binding MatchCount, StringFormat=Matches: {0}}" />
+                    </StackPanel>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

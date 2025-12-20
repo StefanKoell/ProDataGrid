@@ -11,6 +11,7 @@ using Avalonia.Data;
 using Avalonia.Controls.DataGridSelection;
 using Avalonia.Controls.Selection;
 using Avalonia.Controls.DataGridFiltering;
+using Avalonia.Controls.DataGridSearching;
 using Avalonia.Controls.DataGridHierarchical;
 using Avalonia.Controls.DataGridDragDrop;
 using Avalonia.Input;
@@ -203,6 +204,13 @@ namespace Avalonia.Controls
         private Avalonia.Controls.DataGridFiltering.DataGridFilteringAdapter _filteringAdapter;
         private Avalonia.Controls.DataGridFiltering.IDataGridFilteringModelFactory _filteringModelFactory;
         private Avalonia.Controls.DataGridFiltering.IDataGridFilteringAdapterFactory _filteringAdapterFactory;
+        private Avalonia.Controls.DataGridSearching.ISearchModel _searchModel;
+        private Avalonia.Controls.DataGridSearching.DataGridSearchAdapter _searchAdapter;
+        private Avalonia.Controls.DataGridSearching.IDataGridSearchModelFactory _searchModelFactory;
+        private Avalonia.Controls.DataGridSearching.IDataGridSearchAdapterFactory _searchAdapterFactory;
+        private readonly Dictionary<SearchCellKey, SearchResult> _searchResultsMap = new();
+        private readonly HashSet<int> _searchRowMatches = new();
+        private SearchCellKey? _currentSearchCell;
         private Avalonia.Controls.DataGridHierarchical.IHierarchicalModel _hierarchicalModel;
         private Avalonia.Controls.DataGridHierarchical.DataGridHierarchicalAdapter _hierarchicalAdapter;
         private Avalonia.Controls.DataGridHierarchical.IDataGridHierarchicalModelFactory _hierarchicalModelFactory;
@@ -399,6 +407,7 @@ namespace Avalonia.Controls
 
             SetSortingModel(CreateSortingModel(), initializing: true);
             SetFilteringModel(CreateFilteringModel(), initializing: true);
+            SetSearchModel(CreateSearchModel(), initializing: true);
 
             AnchorSlot = -1;
             _lastEstimatedRow = -1;
@@ -1180,6 +1189,11 @@ namespace Avalonia.Controls
             return _filteringModelFactory?.Create() ?? new Avalonia.Controls.DataGridFiltering.FilteringModel();
         }
 
+        protected virtual ISearchModel CreateSearchModel()
+        {
+            return _searchModelFactory?.Create() ?? new SearchModel();
+        }
+
         /// <summary>
         /// Optional factory used when creating the default sorting model.
         /// </summary>
@@ -1196,6 +1210,15 @@ namespace Avalonia.Controls
         {
             get => _filteringModelFactory;
             set => _filteringModelFactory = value;
+        }
+
+        /// <summary>
+        /// Optional factory used when creating the default search model.
+        /// </summary>
+        public IDataGridSearchModelFactory SearchModelFactory
+        {
+            get => _searchModelFactory;
+            set => _searchModelFactory = value;
         }
 
         /// <summary>
@@ -1278,6 +1301,31 @@ namespace Avalonia.Controls
         }
 
         /// <summary>
+        /// Optional factory for creating the search adapter. Use this to plug in a custom adapter
+        /// (e.g., DynamicData/server-side search) without subclassing <see cref="DataGrid"/>.
+        /// </summary>
+        public IDataGridSearchAdapterFactory SearchAdapterFactory
+        {
+            get => _searchAdapterFactory;
+            set
+            {
+                if (_searchAdapterFactory == value)
+                {
+                    return;
+                }
+
+                _searchAdapterFactory = value;
+
+                if (_searchModel != null)
+                {
+                    _searchAdapter?.Dispose();
+                    _searchAdapter = CreateSearchAdapter(_searchModel);
+                    UpdateSearchAdapterView();
+                }
+            }
+        }
+
+        /// <summary>
         /// Enables or disables multi-column sorting (Shift + click).
         /// </summary>
         public bool IsMultiSortEnabled
@@ -1339,6 +1387,15 @@ namespace Avalonia.Controls
         {
             get => _filteringModel;
             set => SetFilteringModel(value);
+        }
+
+        /// <summary>
+        /// Gets or sets the search model that drives global search.
+        /// </summary>
+        public ISearchModel SearchModel
+        {
+            get => _searchModel;
+            set => SetSearchModel(value);
         }
 
         /// <summary>
@@ -1420,6 +1477,26 @@ namespace Avalonia.Controls
             }
 
             adapter.AttachLifecycle(OnFilteringAdapterApplying, OnFilteringAdapterApplied);
+            return adapter;
+        }
+
+        /// <summary>
+        /// Creates the adapter that connects the search model to the grid.
+        /// </summary>
+        /// <param name="model">Search model instance.</param>
+        /// <returns>Adapter that will compute search results for the view.</returns>
+        protected virtual DataGridSearchAdapter CreateSearchAdapter(ISearchModel model)
+        {
+            var adapter = _searchAdapterFactory?.Create(this, model)
+                ?? new DataGridSearchAdapter(
+                    model,
+                    () => ColumnsItemsInternal);
+
+            if (adapter == null)
+            {
+                throw new InvalidOperationException("Search adapter factory returned null.");
+            }
+
             return adapter;
         }
 
@@ -1559,6 +1636,25 @@ namespace Avalonia.Controls
         private void FilteringModel_FilteringChanged(object sender, Avalonia.Controls.DataGridFiltering.FilteringChangedEventArgs e)
         {
             RefreshColumnFilterStates();
+        }
+
+        private void SearchModel_ResultsChanged(object sender, SearchResultsChangedEventArgs e)
+        {
+            UpdateSearchResults(e.NewResults);
+        }
+
+        private void SearchModel_CurrentChanged(object sender, SearchCurrentChangedEventArgs e)
+        {
+            UpdateCurrentSearchResult(e.NewResult);
+        }
+
+        private void SearchModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ISearchModel.HighlightMode)
+                || e.PropertyName == nameof(ISearchModel.HighlightCurrent))
+            {
+                RefreshSearchStates();
+            }
         }
 
         private void OnSortingAdapterApplying()
@@ -1822,6 +1918,11 @@ namespace Avalonia.Controls
             _filteringAdapter?.AttachView(DataConnection?.CollectionView);
         }
 
+        private void UpdateSearchAdapterView()
+        {
+            _searchAdapter?.AttachView(DataConnection?.CollectionView);
+        }
+
         internal void RefreshColumnSortStates()
         {
             if (ColumnsItemsInternal == null)
@@ -1846,6 +1947,274 @@ namespace Avalonia.Controls
             {
                 column?.HeaderCell?.UpdatePseudoClasses();
             }
+        }
+
+        internal bool TryGetSearchCellState(int rowIndex, DataGridColumn column, out bool isMatch, out bool isCurrent)
+        {
+            isMatch = false;
+            isCurrent = false;
+
+            if (_searchModel == null || _searchModel.HighlightMode == SearchHighlightMode.None)
+            {
+                return false;
+            }
+
+            if (rowIndex < 0 || column == null)
+            {
+                return false;
+            }
+
+            var key = new SearchCellKey(rowIndex, column);
+            isMatch = _searchResultsMap.ContainsKey(key);
+
+            if (_searchModel.HighlightCurrent && _currentSearchCell.HasValue)
+            {
+                isCurrent = _currentSearchCell.Value.Equals(key) && isMatch;
+            }
+
+            return isMatch || isCurrent;
+        }
+
+        private bool TryGetSearchResult(int rowIndex, DataGridColumn column, out SearchResult result)
+        {
+            if (rowIndex < 0 || column == null)
+            {
+                result = null;
+                return false;
+            }
+
+            return _searchResultsMap.TryGetValue(new SearchCellKey(rowIndex, column), out result);
+        }
+
+        private void UpdateSearchResults(IReadOnlyList<SearchResult> results)
+        {
+            _searchResultsMap.Clear();
+            _searchRowMatches.Clear();
+
+            if (results != null)
+            {
+                foreach (var result in results)
+                {
+                    if (result == null)
+                    {
+                        continue;
+                    }
+
+                    var column = ResolveSearchColumn(result);
+                    if (column == null)
+                    {
+                        continue;
+                    }
+
+                    var key = new SearchCellKey(result.RowIndex, column);
+                    if (!_searchResultsMap.ContainsKey(key))
+                    {
+                        _searchResultsMap[key] = result;
+                    }
+
+                    _searchRowMatches.Add(result.RowIndex);
+                }
+            }
+
+            RefreshSearchStates();
+        }
+
+        private void UpdateCurrentSearchResult(SearchResult result)
+        {
+            _currentSearchCell = BuildSearchKey(result);
+
+            if (result == null)
+            {
+                RefreshSearchStates();
+                return;
+            }
+
+            var column = ResolveSearchColumn(result);
+            if (column == null)
+            {
+                RefreshSearchStates();
+                return;
+            }
+
+            if (IsAttachedToVisualTree)
+            {
+                ScrollIntoView(result.Item, column);
+
+                if (_searchModel?.UpdateSelectionOnNavigate == true)
+                {
+                    var slot = SlotFromRowIndex(result.RowIndex);
+                    if (slot >= 0)
+                    {
+                        UpdateSelectionAndCurrency(column.Index, slot, DataGridSelectionAction.SelectCurrent, scrollIntoView: false);
+                    }
+                }
+            }
+
+            RefreshSearchStates();
+        }
+
+        private void RefreshSearchStates()
+        {
+            if (_rowsPresenter == null || _searchModel == null)
+            {
+                return;
+            }
+
+            var highlightMode = _searchModel.HighlightMode;
+            bool highlightMatches = highlightMode != SearchHighlightMode.None;
+            bool highlightCurrent = highlightMatches && _searchModel.HighlightCurrent;
+
+            foreach (Control element in DisplayData.GetScrollingRows())
+            {
+                if (element is not DataGridRow row)
+                {
+                    continue;
+                }
+
+                UpdateSearchStatesForRow(row, highlightMode, highlightMatches, highlightCurrent);
+            }
+        }
+
+        private void UpdateSearchStatesForRow(
+            DataGridRow row,
+            SearchHighlightMode highlightMode,
+            bool highlightMatches,
+            bool highlightCurrent)
+        {
+            if (row == null)
+            {
+                return;
+            }
+
+            var rowIndex = row.Index;
+            bool rowHasMatch = highlightMatches && _searchRowMatches.Contains(rowIndex);
+            bool rowIsCurrent = highlightCurrent && _currentSearchCell.HasValue
+                && _currentSearchCell.Value.RowIndex == rowIndex
+                && _searchResultsMap.ContainsKey(_currentSearchCell.Value);
+
+            row.UpdateSearchPseudoClasses(rowHasMatch, rowIsCurrent);
+
+            if (row.Cells == null)
+            {
+                return;
+            }
+
+            foreach (DataGridCell cell in row.Cells)
+            {
+                if (cell?.OwningColumn == null)
+                {
+                    continue;
+                }
+
+                SearchResult result = null;
+                bool cellHasMatch = highlightMatches && TryGetSearchResult(rowIndex, cell.OwningColumn, out result);
+                bool cellIsCurrent = highlightCurrent && _currentSearchCell.HasValue
+                    && _currentSearchCell.Value.Equals(new SearchCellKey(rowIndex, cell.OwningColumn))
+                    && cellHasMatch;
+
+                cell.UpdatePseudoClasses();
+                UpdateSearchTextPresenter(cell, result, cellIsCurrent, highlightMode);
+            }
+        }
+
+        private void UpdateSearchTextPresenter(
+            DataGridCell cell,
+            SearchResult result,
+            bool isCurrent,
+            SearchHighlightMode highlightMode)
+        {
+            if (cell?.Content is not DataGridSearchTextBlock textBlock)
+            {
+                return;
+            }
+
+            textBlock.HighlightMode = highlightMode;
+
+            if (highlightMode == SearchHighlightMode.TextAndCell && result != null && result.Matches.Count > 0)
+            {
+                textBlock.SearchText = result.Text;
+                textBlock.SearchMatches = result.Matches;
+                textBlock.IsSearchCurrent = isCurrent;
+            }
+            else
+            {
+                textBlock.SearchText = null;
+                textBlock.SearchMatches = Array.Empty<SearchMatch>();
+                textBlock.IsSearchCurrent = false;
+            }
+        }
+
+        private SearchCellKey? BuildSearchKey(SearchResult result)
+        {
+            if (result == null)
+            {
+                return null;
+            }
+
+            var column = ResolveSearchColumn(result);
+            if (column == null)
+            {
+                return null;
+            }
+
+            return new SearchCellKey(result.RowIndex, column);
+        }
+
+        private DataGridColumn ResolveSearchColumn(SearchResult result)
+        {
+            if (result == null)
+            {
+                return null;
+            }
+
+            if (result.ColumnId is DataGridColumn column)
+            {
+                return column;
+            }
+
+            if (result.ColumnId is string path)
+            {
+                return FindColumnBySearchPath(path);
+            }
+
+            if (result.ColumnIndex >= 0 && ColumnsItemsInternal != null && result.ColumnIndex < ColumnsItemsInternal.Count)
+            {
+                return ColumnsItemsInternal[result.ColumnIndex];
+            }
+
+            return null;
+        }
+
+        private DataGridColumn FindColumnBySearchPath(string path)
+        {
+            if (ColumnsItemsInternal == null || string.IsNullOrEmpty(path))
+            {
+                return null;
+            }
+
+            foreach (var column in ColumnsItemsInternal)
+            {
+                if (column == null)
+                {
+                    continue;
+                }
+
+                var searchPath = DataGridColumnSearch.GetSearchMemberPath(column);
+                if (!string.IsNullOrEmpty(searchPath) &&
+                    string.Equals(searchPath, path, StringComparison.Ordinal))
+                {
+                    return column;
+                }
+
+                var propertyPath = column.GetSortPropertyName();
+                if (!string.IsNullOrEmpty(propertyPath) &&
+                    string.Equals(propertyPath, path, StringComparison.Ordinal))
+                {
+                    return column;
+                }
+            }
+
+            return null;
         }
 
         private void SetSortingModel(ISortingModel model, bool initializing = false)
@@ -1923,6 +2292,52 @@ namespace Avalonia.Controls
             }
 
             RaisePropertyChanged(FilteringModelProperty, oldModel, _filteringModel);
+        }
+
+        private void SetSearchModel(ISearchModel model, bool initializing = false)
+        {
+            var oldModel = _searchModel;
+            var newModel = model ?? CreateSearchModel();
+
+            if (ReferenceEquals(oldModel, newModel))
+            {
+                return;
+            }
+
+            var highlightMode = oldModel?.HighlightMode ?? newModel.HighlightMode;
+            var highlightCurrent = oldModel?.HighlightCurrent ?? newModel.HighlightCurrent;
+            var updateSelection = oldModel?.UpdateSelectionOnNavigate ?? newModel.UpdateSelectionOnNavigate;
+            var wrapNavigation = oldModel?.WrapNavigation ?? newModel.WrapNavigation;
+
+            _searchAdapter?.Dispose();
+            _searchAdapter = null;
+
+            if (oldModel != null)
+            {
+                oldModel.ResultsChanged -= SearchModel_ResultsChanged;
+                oldModel.CurrentChanged -= SearchModel_CurrentChanged;
+                oldModel.PropertyChanged -= SearchModel_PropertyChanged;
+            }
+
+            _searchModel = newModel;
+            _searchModel.HighlightMode = highlightMode;
+            _searchModel.HighlightCurrent = highlightCurrent;
+            _searchModel.UpdateSelectionOnNavigate = updateSelection;
+            _searchModel.WrapNavigation = wrapNavigation;
+
+            _searchModel.ResultsChanged += SearchModel_ResultsChanged;
+            _searchModel.CurrentChanged += SearchModel_CurrentChanged;
+            _searchModel.PropertyChanged += SearchModel_PropertyChanged;
+
+            _searchAdapter = CreateSearchAdapter(_searchModel);
+
+            if (!initializing)
+            {
+                UpdateSearchAdapterView();
+            }
+
+            RefreshSearchStates();
+            RaisePropertyChanged(SearchModelProperty, oldModel, _searchModel);
         }
 
         private void FilteringModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -2632,6 +3047,37 @@ namespace Avalonia.Controls
                 _columnHeadersPresenter.Children.Clear();
             }
             ColumnsInternal.FillerColumn.IsRepresented = false;
+        }
+
+        private readonly struct SearchCellKey : IEquatable<SearchCellKey>
+        {
+            public SearchCellKey(int rowIndex, DataGridColumn column)
+            {
+                RowIndex = rowIndex;
+                Column = column;
+            }
+
+            public int RowIndex { get; }
+
+            public DataGridColumn Column { get; }
+
+            public bool Equals(SearchCellKey other)
+            {
+                return RowIndex == other.RowIndex && ReferenceEquals(Column, other.Column);
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is SearchCellKey other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (RowIndex * 397) ^ (Column?.GetHashCode() ?? 0);
+                }
+            }
         }
     }
 }

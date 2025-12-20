@@ -31,7 +31,7 @@ namespace Avalonia.Controls
     [TemplatePart(DATAGRIDROW_elementDetails,        typeof(DataGridDetailsPresenter))]
     [TemplatePart(DATAGRIDROW_elementRoot,           typeof(Panel))]
     [TemplatePart(DATAGRIDROW_elementRowHeader,      typeof(DataGridRowHeader))]
-    [PseudoClasses(":selected", ":editing", ":invalid", ":current", ":dragging", ":drag-over-before", ":drag-over-after", ":drag-over-inside", ":placeholder")]
+    [PseudoClasses(":selected", ":editing", ":invalid", ":current", ":dragging", ":drag-over-before", ":drag-over-after", ":drag-over-inside", ":placeholder", ":searchmatch", ":searchcurrent")]
 #if !DATAGRID_INTERNAL
     public
 #endif
@@ -698,6 +698,12 @@ namespace Avalonia.Controls
             }
 
             base.OnPropertyChanged(change);
+        }
+
+        internal void UpdateSearchPseudoClasses(bool isSearchMatch, bool isSearchCurrent)
+        {
+            PseudoClassesHelper.Set(PseudoClasses, ":searchmatch", isSearchMatch);
+            PseudoClassesHelper.Set(PseudoClasses, ":searchcurrent", isSearchCurrent);
         }
 
     }

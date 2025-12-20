@@ -5,6 +5,7 @@
 
 using Avalonia.Media;
 using Avalonia.Controls.Utils;
+using Avalonia.Controls.DataGridSearching;
 using Avalonia.Utilities;
 using System;
 using System.Diagnostics;
@@ -249,6 +250,14 @@ namespace Avalonia.Controls
 
             // Show or hide RowDetails based on DataGrid settings
             EnsureRowDetailsVisibility(row, raiseNotification: false, animate: false);
+
+            if (_searchModel != null)
+            {
+                var highlightMode = _searchModel.HighlightMode;
+                bool highlightMatches = highlightMode != SearchHighlightMode.None;
+                bool highlightCurrent = highlightMatches && _searchModel.HighlightCurrent;
+                UpdateSearchStatesForRow(row, highlightMode, highlightMatches, highlightCurrent);
+            }
         }
 
 

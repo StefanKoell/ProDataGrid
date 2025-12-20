@@ -202,7 +202,7 @@ namespace Avalonia.Controls
         /// <returns>A new, read-only <see cref="T:Avalonia.Controls.TextBlock" /> element that is bound to the column's <see cref="P:Avalonia.Controls.DataGridBoundColumn.Binding" /> property value.</returns>
         protected override Control GenerateElement(DataGridCell cell, object dataItem)
         {
-            var textBlockElement = new TextBlock
+            var textBlockElement = new DataGridSearchTextBlock
             {
                 Name = "CellTextBlock"
             };

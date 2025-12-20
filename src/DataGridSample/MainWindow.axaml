@@ -149,11 +149,20 @@
     <TabItem Header="Filtering Model">
       <pages:FilteringModelSamplePage />
     </TabItem>
+    <TabItem Header="Search Model">
+      <pages:SearchModelPage />
+    </TabItem>
+    <TabItem Header="Column Search">
+      <pages:ColumnSearchPage />
+    </TabItem>
     <TabItem Header="DynamicData Sorting">
       <pages:DynamicDataSortingPage />
     </TabItem>
     <TabItem Header="DynamicData Filtering">
       <pages:DynamicDataFilteringPage />
+    </TabItem>
+    <TabItem Header="DynamicData Search">
+      <pages:DynamicDataSearchPage />
     </TabItem>
     <TabItem Header="Hierarchical Model">
       <pages:HierarchicalSamplePage />

@@ -109,6 +109,7 @@ namespace Avalonia.Controls
 
                 UpdateSortingAdapterView();
                 UpdateFilteringAdapterView();
+                UpdateSearchAdapterView();
 
                 if (DataConnection.DataSource != null)
                 {
@@ -503,6 +504,7 @@ namespace Avalonia.Controls
                 || e.Action == NotifyCollectionChangedAction.Reset)
             {
                 UpdatePseudoClasses();
+                UpdateSearchAdapterView();
             }
         }
 

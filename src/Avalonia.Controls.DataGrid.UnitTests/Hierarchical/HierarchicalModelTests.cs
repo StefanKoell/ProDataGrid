@@ -1512,9 +1512,7 @@ namespace Avalonia.Controls.DataGridTests.Hierarchical;
         model.ExpandAll();
         Assert.Equal(4, model.Count);
 
-        // Collapse each root item individually (CollapseAll on virtual root is not supported)
-        model.Collapse(model.GetNode(0));
-        model.Collapse(model.GetNode(1)); // Index shifted after first collapse
+        model.CollapseAll();
 
         Assert.Equal(2, model.Count);
         Assert.False(model.GetNode(0).IsExpanded);

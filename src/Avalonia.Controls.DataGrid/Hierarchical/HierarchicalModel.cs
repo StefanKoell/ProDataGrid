@@ -649,6 +649,11 @@ namespace Avalonia.Controls.DataGridHierarchical
                 throw new ArgumentNullException(nameof(node));
             }
 
+            if (_isVirtualRoot && ReferenceEquals(node, Root))
+            {
+                return;
+            }
+
             if (node.IsLeaf)
             {
                 return;
@@ -873,6 +878,11 @@ namespace Avalonia.Controls.DataGridHierarchical
             }
 
             var targetDepth = minDepth ?? 0;
+            var hasVirtualRoot = _isVirtualRoot && ReferenceEquals(start, Root);
+            if (hasVirtualRoot)
+            {
+                targetDepth++;
+            }
             var stack = new Stack<(HierarchicalNode Node, int Depth, bool Visited)>();
             stack.Push((start, 0, false));
 
@@ -882,7 +892,7 @@ namespace Avalonia.Controls.DataGridHierarchical
 
                 if (!visited)
                 {
-                    if (current.IsExpanded)
+                    if (current.IsExpanded || (hasVirtualRoot && ReferenceEquals(current, Root)))
                     {
                         EnsureChildrenMaterialized(current);
                         var children = current.Children;

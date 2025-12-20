@@ -800,11 +800,7 @@ public class HierarchicalHeadlessTests
         model.ExpandAll();
         Assert.Equal(4, model.Count);
 
-        // Collapse each root item individually
-        model.Collapse(model.GetNode(0));
-        // After collapsing root1, we have: Root1, Root2 (with Child2 still inside)
-        // Root2 is now at index 1, still expanded
-        model.Collapse(model.GetNode(1));
+        model.CollapseAll();
 
         Assert.Equal(2, model.Count);
         Assert.False(model.GetNode(0).IsExpanded);

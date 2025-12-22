@@ -67,6 +67,19 @@ public class DataGridHyperlinkColumnThemeTests
         Assert.Same(editorTheme, post.editorTheme);
     }
 
+    [AvaloniaFact]
+    public void HyperlinkColumn_Respects_Watermark()
+    {
+        var column = new DerivedHyperlinkColumn
+        {
+            Watermark = "Enter link"
+        };
+
+        var editor = column.CreateEditingElement(new DataGridCell(), new LinkInfo());
+
+        Assert.Equal("Enter link", editor.Watermark);
+    }
+
     private class DerivedHyperlinkColumn : DataGridHyperlinkColumn
     {
         public HyperlinkButton CreateDisplayElement(DataGridCell cell, object dataItem) =>

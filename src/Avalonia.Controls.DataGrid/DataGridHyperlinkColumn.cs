@@ -63,6 +63,21 @@ namespace Avalonia.Controls
         }
 
         /// <summary>
+        /// Defines the <see cref="Watermark"/> property.
+        /// </summary>
+        public static readonly StyledProperty<string> WatermarkProperty =
+            TextBox.WatermarkProperty.AddOwner<DataGridHyperlinkColumn>();
+
+        /// <summary>
+        /// Gets or sets the placeholder text displayed when the box is empty.
+        /// </summary>
+        public string Watermark
+        {
+            get => GetValue(WatermarkProperty);
+            set => SetValue(WatermarkProperty, value);
+        }
+
+        /// <summary>
         /// Gets or sets the binding for the displayed hyperlink content.
         /// </summary>
         [AssignBinding]
@@ -116,6 +131,10 @@ namespace Avalonia.Controls
                         base.RefreshCellContent(element, propertyName);
                         break;
                 }
+            }
+            else if (element is TextBox textBox && propertyName == nameof(Watermark))
+            {
+                SyncEditingProperties(textBox);
             }
             else
             {
@@ -186,6 +205,8 @@ namespace Avalonia.Controls
                 textBox.Theme = theme;
             }
 
+            SyncEditingProperties(textBox);
+
             return textBox;
         }
 
@@ -224,7 +245,8 @@ namespace Avalonia.Controls
         {
             base.OnPropertyChanged(change);
 
-            if (change.Property == TargetNameProperty)
+            if (change.Property == TargetNameProperty
+                || change.Property == WatermarkProperty)
             {
                 NotifyPropertyChanged(change.Property.Name);
             }
@@ -255,6 +277,14 @@ namespace Avalonia.Controls
             else
             {
                 hyperlink.ClearValue(Control.NameProperty);
+            }
+        }
+
+        private void SyncEditingProperties(TextBox textBox)
+        {
+            if (!string.IsNullOrEmpty(Watermark))
+            {
+                textBox.Watermark = Watermark;
             }
         }
 

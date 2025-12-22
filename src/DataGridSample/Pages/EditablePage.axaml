@@ -11,7 +11,7 @@
   <Grid RowDefinitions="Auto,Auto,*">
     <StackPanel Grid.Row="0" Orientation="Vertical" Spacing="4" Margin="0,0,0,8">
       <TextBlock Classes="h2">Editable</TextBlock>
-      <TextBlock Text="Editable grid with custom font size and tri-state checkboxes." TextWrapping="Wrap" />
+      <TextBlock Text="Editable grid with custom font size, tri-state checkboxes, and column watermarks." TextWrapping="Wrap" />
     </StackPanel>
 
     <StackPanel Grid.Row="1" Spacing="4" Orientation="Horizontal">
@@ -26,8 +26,8 @@
                 ItemsSource="{Binding EditablePeople}"
                 IsReadOnly="False">
         <DataGrid.Columns>
-          <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" Width="2*" FontSize="{Binding #FontSizeSlider.Value, Mode=OneWay}" x:DataType="models:Person" />
-          <DataGridTextColumn Header="Last" Binding="{Binding LastName}" Width="2*" FontSize="{Binding #FontSizeSlider.Value, Mode=OneWay}" x:DataType="models:Person" />
+          <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" Watermark="First name" Width="2*" FontSize="{Binding #FontSizeSlider.Value, Mode=OneWay}" x:DataType="models:Person" />
+          <DataGridTextColumn Header="Last" Binding="{Binding LastName}" Watermark="Last name" Width="2*" FontSize="{Binding #FontSizeSlider.Value, Mode=OneWay}" x:DataType="models:Person" />
           <DataGridCheckBoxColumn Header="Is Banned" Binding="{Binding IsBanned}" Width="*" IsThreeState="{Binding #IsThreeStateCheckBox.IsChecked, Mode=OneWay}" x:DataType="models:Person" />
           <DataGridTemplateColumn Header="Age">
             <DataGridTemplateColumn.CellTemplate>

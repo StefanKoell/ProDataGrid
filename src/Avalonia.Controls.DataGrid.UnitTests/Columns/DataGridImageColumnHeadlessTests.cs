@@ -84,6 +84,21 @@ public class DataGridImageColumnHeadlessTests
     }
 
     [AvaloniaFact]
+    public void ImageColumn_Respects_Watermark()
+    {
+        var column = new TestImageColumn
+        {
+            AllowEditing = true,
+            Watermark = "Enter image URI"
+        };
+
+        var editingElement = column.CreateEditingElement(new DataGridCell(), new object());
+        var textBox = Assert.IsType<TextBox>(editingElement);
+
+        Assert.Equal("Enter image URI", textBox.Watermark);
+    }
+
+    [AvaloniaFact]
     public void ImageColumn_Default_Stretch()
     {
         var column = new DataGridImageColumn();
@@ -154,5 +169,11 @@ public class DataGridImageColumnHeadlessTests
     {
         public string Name { get; set; } = string.Empty;
         public string? ImagePath { get; set; }
+    }
+
+    private sealed class TestImageColumn : DataGridImageColumn
+    {
+        public Control CreateEditingElement(DataGridCell cell, object dataItem) =>
+            GenerateEditingElementDirect(cell, dataItem);
     }
 }

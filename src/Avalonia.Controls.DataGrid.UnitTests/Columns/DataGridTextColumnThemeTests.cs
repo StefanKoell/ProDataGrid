@@ -82,6 +82,19 @@ public class DataGridTextColumnThemeTests
         Assert.Same(textBlockTheme, post.textBlockTheme);
     }
 
+    [AvaloniaFact]
+    public void TextColumn_Respects_Watermark()
+    {
+        var column = new WatermarkTextColumn
+        {
+            Watermark = "Enter name"
+        };
+
+        var editingElement = column.CreateEditingElement(new DataGridCell(), new object());
+
+        Assert.Equal("Enter name", editingElement.Watermark);
+    }
+
     private class DerivedTextColumn : DataGridTextColumn
     {
         public CustomTextBox CreateEditingElement(DataGridCell cell, object dataItem)
@@ -136,5 +149,11 @@ public class DataGridTextColumnThemeTests
 
     private class CustomTextBlock : TextBlock
     {
+    }
+
+    private sealed class WatermarkTextColumn : DataGridTextColumn
+    {
+        public TextBox CreateEditingElement(DataGridCell cell, object dataItem) =>
+            (TextBox)GenerateEditingElementDirect(cell, dataItem);
     }
 }

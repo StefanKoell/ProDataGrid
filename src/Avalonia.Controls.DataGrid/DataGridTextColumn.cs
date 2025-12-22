@@ -144,6 +144,21 @@ namespace Avalonia.Controls
             set => SetValue(ForegroundProperty, value);
         }
 
+        /// <summary>
+        /// Defines the <see cref="Watermark"/> property.
+        /// </summary>
+        public static readonly StyledProperty<string> WatermarkProperty =
+            TextBox.WatermarkProperty.AddOwner<DataGridTextColumn>();
+
+        /// <summary>
+        /// Gets or sets the placeholder text displayed when the box is empty.
+        /// </summary>
+        public string Watermark
+        {
+            get => GetValue(WatermarkProperty);
+            set => SetValue(WatermarkProperty, value);
+        }
+
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {
             base.OnPropertyChanged(change);
@@ -152,7 +167,8 @@ namespace Avalonia.Controls
                 || change.Property == FontSizeProperty
                 || change.Property == FontStyleProperty
                 || change.Property == FontWeightProperty
-                || change.Property == ForegroundProperty)
+                || change.Property == ForegroundProperty
+                || change.Property == WatermarkProperty)
             {
                 NotifyPropertyChanged(change.Property.Name);
             }
@@ -284,6 +300,10 @@ namespace Avalonia.Controls
                 {
                     DataGridHelper.SyncColumnProperty(this, content, ForegroundProperty);
                 }
+                else if (propertyName == nameof(Watermark) && content is TextBox textBox)
+                {
+                    SyncEditingProperties(textBox);
+                }
             }
             else
             {
@@ -298,6 +318,19 @@ namespace Avalonia.Controls
             DataGridHelper.SyncColumnProperty(this, content, FontStyleProperty);
             DataGridHelper.SyncColumnProperty(this, content, FontWeightProperty);
             DataGridHelper.SyncColumnProperty(this, content, ForegroundProperty);
+
+            if (content is TextBox textBox)
+            {
+                SyncEditingProperties(textBox);
+            }
+        }
+
+        private void SyncEditingProperties(TextBox textBox)
+        {
+            if (!string.IsNullOrEmpty(Watermark))
+            {
+                textBox.Watermark = Watermark;
+            }
         }
 
         private ControlTheme GetThemeValue(Lazy<ControlTheme> themeCache)

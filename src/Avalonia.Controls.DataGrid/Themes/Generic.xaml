@@ -216,20 +216,24 @@
         <Setter Property="Padding" Value="0" />
         <Setter Property="Template">
           <ControlTemplate>
-            <Border Background="Transparent"
-                    BorderBrush="Transparent"
-                    BorderThickness="0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
               <Path x:Name="PART_Glyph"
-                    Width="10"
-                    Height="10"
                     Stretch="Uniform"
                     Fill="{TemplateBinding Foreground}"
                     Data="{DynamicResource DataGridRowGroupHeaderIconClosedPath}" />
             </Border>
           </ControlTemplate>
         </Setter>
+        <Style Selector="^ /template/ Path#PART_Glyph">
+          <Setter Property="Width" Value="10" />
+          <Setter Property="Height" Value="10" />
+          <Setter Property="HorizontalAlignment" Value="Center" />
+          <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
         <Style Selector="^:checked /template/ Path#PART_Glyph">
           <Setter Property="Data" Value="{DynamicResource DataGridRowGroupHeaderIconOpenedPath}" />
         </Style>

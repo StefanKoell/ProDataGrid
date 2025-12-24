@@ -167,7 +167,7 @@ namespace Avalonia.Collections
         /// For trimmed apps, ensure the item type preserves a public parameterless constructor and its public properties,
         /// e.g. decorate the model with
         /// [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)].
-        /// </summary>
+        /// </remarks>
         private ConstructorInfo _itemConstructor;
 
         /// <summary>

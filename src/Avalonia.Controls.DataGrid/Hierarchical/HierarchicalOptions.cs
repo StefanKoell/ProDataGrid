@@ -111,6 +111,21 @@ namespace Avalonia.Controls.DataGridHierarchical
         public Func<object, object?>? ExpandedStateKeySelector { get; set; }
 
         /// <summary>
+        /// Optional selector used to read the expanded state from an item. Return null to fall back to model state.
+        /// </summary>
+        public Func<object, bool?>? IsExpandedSelector { get; set; }
+
+        /// <summary>
+        /// Optional setter used to write expanded state back to an item.
+        /// </summary>
+        public Action<object, bool>? IsExpandedSetter { get; set; }
+
+        /// <summary>
+        /// Optional property path used to read/write expanded state when selectors are not provided.
+        /// </summary>
+        public string? IsExpandedPropertyPath { get; set; }
+
+        /// <summary>
         /// Optional selector that returns the index path to an item from the root items collection.
         /// For single-root models, the root item is index 0 in the path.
         /// Use this to expand to a selected item without searching the entire hierarchy.

@@ -162,6 +162,9 @@ namespace Avalonia.Controls.DataGridHierarchical
         private bool _treatGroupsAsNodes;
         private ExpandedStateKeyMode _expandedStateKeyMode = ExpandedStateKeyMode.Item;
         private Func<T, object?>? _expandedStateKeySelector;
+        private Func<T, bool?>? _isExpandedSelector;
+        private Action<T, bool>? _isExpandedSetter;
+        private string? _isExpandedPropertyPath;
         private Func<T, IReadOnlyList<int>?>? _itemPathSelector;
         private bool _allowExpandToItemSearch;
 
@@ -342,6 +345,36 @@ namespace Avalonia.Controls.DataGridHierarchical
             }
         }
 
+        public Func<T, bool?>? IsExpandedSelector
+        {
+            get => _isExpandedSelector;
+            set
+            {
+                _isExpandedSelector = value;
+                Push();
+            }
+        }
+
+        public Action<T, bool>? IsExpandedSetter
+        {
+            get => _isExpandedSetter;
+            set
+            {
+                _isExpandedSetter = value;
+                Push();
+            }
+        }
+
+        public string? IsExpandedPropertyPath
+        {
+            get => _isExpandedPropertyPath;
+            set
+            {
+                _isExpandedPropertyPath = value;
+                Push();
+            }
+        }
+
         public Func<T, IReadOnlyList<int>?>? ItemPathSelector
         {
             get => _itemPathSelector;
@@ -393,6 +426,19 @@ namespace Avalonia.Controls.DataGridHierarchical
             target.ExpandedStateKeySelector = ExpandedStateKeySelector != null
                 ? o => o is T typed ? ExpandedStateKeySelector(typed) : null
                 : null;
+            target.IsExpandedSelector = IsExpandedSelector != null
+                ? o => o is T typed ? IsExpandedSelector(typed) : null
+                : null;
+            target.IsExpandedSetter = IsExpandedSetter != null
+                ? (o, value) =>
+                {
+                    if (o is T typed)
+                    {
+                        IsExpandedSetter(typed, value);
+                    }
+                }
+                : null;
+            target.IsExpandedPropertyPath = IsExpandedPropertyPath;
             target.ItemPathSelector = ItemPathSelector != null
                 ? o => o is T typed ? ItemPathSelector(typed) : null
                 : null;

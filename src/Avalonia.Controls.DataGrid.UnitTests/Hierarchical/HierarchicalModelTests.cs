@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,6 +53,38 @@ namespace Avalonia.Controls.DataGridTests.Hierarchical;
         }
     }
 
+    private sealed class ExpandableItem : INotifyPropertyChanged
+    {
+        public ExpandableItem(string name)
+        {
+            Name = name;
+            Children = new ObservableCollection<ExpandableItem>();
+        }
+
+        public string Name { get; }
+
+        public ObservableCollection<ExpandableItem> Children { get; }
+
+        private bool _isExpanded;
+
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set
+            {
+                if (_isExpanded == value)
+                {
+                    return;
+                }
+
+                _isExpanded = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsExpanded)));
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+    }
+
     private static HierarchicalModel CreateModel()
     {
         return new HierarchicalModel(new HierarchicalOptions
@@ -94,6 +127,108 @@ namespace Avalonia.Controls.DataGridTests.Hierarchical;
 
         Assert.Equal(2, model.Count);
         Assert.Same(root.Children[0], model.GetItem(1));
+    }
+
+    [Fact]
+    public void ExpandedState_Respects_ItemState_On_SetRoot()
+    {
+        var root = new ExpandableItem("root") { IsExpanded = true };
+        var child = new ExpandableItem("child") { IsExpanded = true };
+        child.Children.Add(new ExpandableItem("grand"));
+        root.Children.Add(child);
+
+        var model = new HierarchicalModel(new HierarchicalOptions
+        {
+            ChildrenSelector = item => ((ExpandableItem)item).Children,
+            IsExpandedSelector = item => ((ExpandableItem)item).IsExpanded,
+            IsExpandedSetter = (item, value) => ((ExpandableItem)item).IsExpanded = value
+        });
+
+        model.SetRoot(root);
+
+        Assert.True(model.Root!.IsExpanded);
+        Assert.True(model.GetNode(1).IsExpanded);
+        Assert.Equal(3, model.Count);
+    }
+
+    [Fact]
+    public void ExpandedState_Updates_Item_On_Model_Expand_Collapse()
+    {
+        var root = new ExpandableItem("root");
+        root.Children.Add(new ExpandableItem("child"));
+
+        var model = new HierarchicalModel(new HierarchicalOptions
+        {
+            ChildrenSelector = item => ((ExpandableItem)item).Children,
+            IsExpandedSelector = item => ((ExpandableItem)item).IsExpanded,
+            IsExpandedSetter = (item, value) => ((ExpandableItem)item).IsExpanded = value
+        });
+
+        model.SetRoot(root);
+
+        Assert.False(root.IsExpanded);
+
+        model.Expand(model.Root!);
+        Assert.True(root.IsExpanded);
+
+        model.Collapse(model.Root!);
+        Assert.False(root.IsExpanded);
+    }
+
+    [Fact]
+    public void ExpandedState_Updates_Model_On_Item_Change()
+    {
+        var root = new ExpandableItem("root");
+        var child = new ExpandableItem("child");
+        child.Children.Add(new ExpandableItem("grand"));
+        root.Children.Add(child);
+
+        var model = new HierarchicalModel(new HierarchicalOptions
+        {
+            ChildrenSelector = item => ((ExpandableItem)item).Children,
+            IsExpandedSelector = item => ((ExpandableItem)item).IsExpanded,
+            IsExpandedSetter = (item, value) => ((ExpandableItem)item).IsExpanded = value
+        });
+
+        model.SetRoot(root);
+
+        Assert.Equal(1, model.Count);
+
+        root.IsExpanded = true;
+        Assert.True(model.Root!.IsExpanded);
+        Assert.Equal(2, model.Count);
+
+        child.IsExpanded = true;
+        Assert.Equal(3, model.Count);
+        Assert.True(model.FindNode(child)!.IsExpanded);
+
+        root.IsExpanded = false;
+        Assert.False(model.Root!.IsExpanded);
+        Assert.Equal(1, model.Count);
+    }
+
+    [Fact]
+    public void ExpandedState_Updates_Model_On_Node_Change()
+    {
+        var root = new Item("root");
+        root.Children.Add(new Item("child"));
+
+        var model = new HierarchicalModel(new HierarchicalOptions
+        {
+            ChildrenSelector = item => ((Item)item).Children
+        });
+
+        model.SetRoot(root);
+
+        Assert.Equal(1, model.Count);
+
+        model.Root!.IsExpanded = true;
+        Assert.True(model.Root.IsExpanded);
+        Assert.Equal(2, model.Count);
+
+        model.Root.IsExpanded = false;
+        Assert.False(model.Root.IsExpanded);
+        Assert.Equal(1, model.Count);
     }
 
     [Fact]

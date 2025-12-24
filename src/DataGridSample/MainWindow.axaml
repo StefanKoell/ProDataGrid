@@ -173,6 +173,9 @@
     <TabItem Header="Hierarchical Model">
       <pages:HierarchicalSamplePage />
     </TabItem>
+    <TabItem Header="Hierarchical Expanded State">
+      <pages:HierarchicalExpandedStatePage />
+    </TabItem>
     <TabItem Header="Hierarchical Selection">
       <pages:HierarchicalSelectionPage />
     </TabItem>

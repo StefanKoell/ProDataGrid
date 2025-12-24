@@ -1,0 +1,101 @@
+<!--
+  Copyright (c) Wiesław Šoltés. All rights reserved.
+  Licensed under the MIT license. See LICENSE file in the project root for details.
+-->
+<UserControl
+    x:Class="DataGridSample.Pages.HierarchicalExpandedStatePage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+    xmlns:hier="clr-namespace:Avalonia.Controls.DataGridHierarchical;assembly=Avalonia.Controls.DataGrid"
+    x:DataType="viewModels:HierarchicalExpandedStateViewModel"
+    d:DesignHeight="720"
+    d:DesignWidth="1100"
+    mc:Ignorable="d">
+
+  <UserControl.DataContext>
+    <viewModels:HierarchicalExpandedStateViewModel />
+  </UserControl.DataContext>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,*"
+        RowSpacing="8">
+    <StackPanel Spacing="4">
+      <TextBlock Text="Hierarchical expansion binding"
+                 FontWeight="Bold"
+                 FontSize="18" />
+      <TextBlock TextWrapping="Wrap"
+                 Text="IsExpanded is synced with the item state through HierarchicalOptions. Toggle the expander or either checkbox to see the grid and view model stay in sync." />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1"
+                Orientation="Horizontal"
+                Spacing="8">
+      <Button Content="Expand all"
+              Command="{Binding ExpandAllCommand}" />
+      <Button Content="Collapse all"
+              Command="{Binding CollapseAllCommand}" />
+      <Button Content="Toggle root (VM)"
+              Command="{Binding ToggleRootCommand}" />
+      <Button Content="Toggle first child (VM)"
+              Command="{Binding ToggleFirstChildCommand}" />
+    </StackPanel>
+
+    <DataGrid Grid.Row="2"
+              AutoGenerateColumns="False"
+              HierarchicalModel="{Binding Model}"
+              HierarchicalRowsEnabled="True"
+              HeadersVisibility="Column"
+              GridLinesVisibility="Horizontal"
+              x:DataType="viewModels:HierarchicalExpandedStateViewModel">
+      <DataGrid.Columns>
+        <DataGridHierarchicalColumn Header="Name"
+                                    Width="2*"
+                                    x:CompileBindings="False"
+                                    Binding="{Binding Item}">
+          <DataGridHierarchicalColumn.CellTemplate>
+            <DataTemplate x:DataType="viewModels:HierarchicalExpandedStateViewModel+TreeItem">
+              <TextBlock Text="{Binding Name}" />
+            </DataTemplate>
+          </DataGridHierarchicalColumn.CellTemplate>
+        </DataGridHierarchicalColumn>
+
+        <DataGridTemplateColumn Header="Expanded"
+                                Width="120"
+                                x:CompileBindings="False">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="hier:HierarchicalNode">
+              <CheckBox x:DataType="viewModels:HierarchicalExpandedStateViewModel+TreeItem"
+                        DataContext="{Binding Item}"
+                        IsChecked="{Binding IsExpanded, Mode=TwoWay}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Header="Node"
+                                Width="90"
+                                x:CompileBindings="False">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="hier:HierarchicalNode">
+              <CheckBox IsChecked="{Binding IsExpanded, Mode=TwoWay}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Header="Children"
+                                Width="90"
+                                x:CompileBindings="False">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="hier:HierarchicalNode">
+              <TextBlock x:DataType="viewModels:HierarchicalExpandedStateViewModel+TreeItem"
+                         DataContext="{Binding Item}"
+                         Text="{Binding Children.Count}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

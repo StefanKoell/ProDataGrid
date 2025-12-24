@@ -27,7 +27,7 @@
                  FontWeight="Bold"
                  FontSize="18" />
       <TextBlock TextWrapping="Wrap"
-                 Text="IsExpanded is synced with the item state through HierarchicalOptions. Toggle the expander or the checkbox to see the grid and view model stay in sync." />
+                 Text="IsExpanded is synced with the item state through HierarchicalOptions. Toggle the expander or either checkbox to see the grid and view model stay in sync." />
     </StackPanel>
 
     <StackPanel Grid.Row="1"
@@ -70,6 +70,16 @@
               <CheckBox x:DataType="viewModels:HierarchicalExpandedStateViewModel+TreeItem"
                         DataContext="{Binding Item}"
                         IsChecked="{Binding IsExpanded, Mode=TwoWay}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Header="Node"
+                                Width="90"
+                                x:CompileBindings="False">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="hier:HierarchicalNode">
+              <CheckBox IsChecked="{Binding IsExpanded, Mode=TwoWay}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>

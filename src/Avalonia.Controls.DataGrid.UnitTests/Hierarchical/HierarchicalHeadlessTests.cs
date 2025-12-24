@@ -151,6 +151,61 @@ public class HierarchicalHeadlessTests
     }
 
     [AvaloniaFact]
+    public void NodeIsExpanded_Updates_DataGrid_Rows()
+    {
+        var root = new Item("root");
+        root.Children.Add(new Item("child"));
+
+        var model = new HierarchicalModel(new HierarchicalOptions
+        {
+            ChildrenSelector = o => ((Item)o).Children
+        });
+        model.SetRoot(root);
+
+        var grid = new DataGrid
+        {
+            HierarchicalModel = model,
+            HierarchicalRowsEnabled = true,
+            AutoGenerateColumns = false,
+            ItemsSource = model.Flattened
+        };
+
+        grid.ColumnsInternal.Add(new DataGridHierarchicalColumn
+        {
+            Header = "Name",
+            Binding = new Avalonia.Data.Binding("Item.Name")
+        });
+
+        var window = new Window
+        {
+            Width = 400,
+            Height = 300,
+            Content = grid
+        };
+
+        window.SetThemeStyles();
+        window.Show();
+
+        grid.ApplyTemplate();
+        grid.Measure(new Size(400, 300));
+        grid.Arrange(new Rect(0, 0, 400, 300));
+        grid.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        var items = Assert.IsAssignableFrom<IReadOnlyList<HierarchicalNode>>(grid.ItemsSource);
+        Assert.Equal(1, items.Count);
+
+        Assert.False(model.Root!.IsExpanded);
+        model.Root.IsExpanded = true;
+        Dispatcher.UIThread.RunJobs();
+        grid.UpdateLayout();
+
+        Assert.True(model.Root.IsExpanded);
+        Assert.Equal(2, model.Count);
+        Assert.Equal(2, items.Count);
+    }
+
+    [AvaloniaFact]
     public void Rapid_Toggle_Culls_And_Rebinds()
     {
         var root = new Item("root");

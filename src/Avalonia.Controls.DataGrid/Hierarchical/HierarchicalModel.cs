@@ -423,6 +423,7 @@ namespace Avalonia.Controls.DataGridHierarchical
         private readonly Dictionary<(Type, string), Action<object, object?>> _propertyPathSetterCache;
         private readonly HashSet<HierarchicalNode> _pendingCullNodes = new();
         private readonly HashSet<HierarchicalNode> _expandedStateUpdates = new();
+        private readonly HashSet<HierarchicalNode> _nodeExpandedUpdates = new();
         private readonly Dictionary<HierarchicalNode, NodeLoadState> _loadStates = new();
         private int _virtualizationGuardDepth;
         private IEnumerable? _rootItems;
@@ -544,7 +545,7 @@ namespace Avalonia.Controls.DataGridHierarchical
             // Set the source for children resolution.
             virtualRoot.ChildrenSource = rootItems;
             virtualRoot.HasMaterializedChildren = true;
-            virtualRoot.IsExpanded = true;
+            SetNodeExpandedState(virtualRoot, true);
 
             SetRoot(virtualRoot, rebuildFlattened: false);
 
@@ -784,11 +785,11 @@ namespace Avalonia.Controls.DataGridHierarchical
 
             if (!shouldExpand)
             {
-                node.IsExpanded = false;
+                SetNodeExpandedState(node, false);
                 return;
             }
 
-            node.IsExpanded = true;
+            SetNodeExpandedState(node, true);
             expandedNodes.Add(node);
             EnsureChildrenMaterialized(node);
 
@@ -822,11 +823,11 @@ namespace Avalonia.Controls.DataGridHierarchical
 
             if (!shouldExpand)
             {
-                node.IsExpanded = false;
+                SetNodeExpandedState(node, false);
                 return;
             }
 
-            node.IsExpanded = true;
+            SetNodeExpandedState(node, true);
             expandedNodes.Add(node);
             EnsureChildrenMaterialized(node);
 
@@ -887,15 +888,26 @@ namespace Avalonia.Controls.DataGridHierarchical
                 throw new ArgumentNullException(nameof(node));
             }
 
-            if (node.IsExpanded && node.HasMaterializedChildren && node.LoadError == null)
+            var parentIndex = _flattened.IndexOf(node);
+            var hasVisibleDescendants = parentIndex >= 0 && CountVisibleDescendantsInFlattened(node, parentIndex) > 0;
+
+            if (node.IsExpanded && node.LoadError == null)
             {
-                return;
+                if (node.IsLeaf || parentIndex < 0)
+                {
+                    return;
+                }
+
+                if (node.HasMaterializedChildren && hasVisibleDescendants)
+                {
+                    return;
+                }
             }
 
             var wasExpanded = node.IsExpanded;
             if (!wasExpanded)
             {
-                node.IsExpanded = true; // gate concurrent expand attempts
+                SetNodeExpandedState(node, true); // gate concurrent expand attempts
             }
 
             try
@@ -904,29 +916,33 @@ namespace Avalonia.Controls.DataGridHierarchical
             }
             catch
             {
-                node.IsExpanded = wasExpanded;
+                SetNodeExpandedState(node, wasExpanded);
                 throw;
             }
 
             if (node.LoadError != null || !node.HasMaterializedChildren)
             {
-                node.IsExpanded = wasExpanded;
+                SetNodeExpandedState(node, wasExpanded);
                 return;
             }
 
-            var parentIndex = _flattened.IndexOf(node);
+            parentIndex = _flattened.IndexOf(node);
             var inserted = 0;
 
-            if (!wasExpanded && parentIndex >= 0 && !node.IsLeaf)
+            if (parentIndex >= 0 && !node.IsLeaf)
             {
-                inserted = InsertVisibleChildren(node, parentIndex + 1);
-                if (inserted > 0)
+                var hasVisible = CountVisibleDescendantsInFlattened(node, parentIndex) > 0;
+                if (!wasExpanded || !hasVisible)
                 {
-                    OnFlattenedChanged(new[] { new FlattenedChange(parentIndex + 1, 0, inserted) });
+                    inserted = InsertVisibleChildren(node, parentIndex + 1);
+                    if (inserted > 0)
+                    {
+                        OnFlattenedChanged(new[] { new FlattenedChange(parentIndex + 1, 0, inserted) });
+                    }
                 }
             }
 
-            node.IsExpanded = true;
+            SetNodeExpandedState(node, true);
             RecalculateExpandedCountsFrom(node);
             OnNodeExpanded(node);
         }
@@ -948,15 +964,17 @@ namespace Avalonia.Controls.DataGridHierarchical
                 return;
             }
 
-            if (!node.IsExpanded)
+            var parentIndex = _flattened.IndexOf(node);
+            var visibleCount = parentIndex >= 0 ? CountVisibleDescendantsInFlattened(node, parentIndex) : 0;
+
+            if (!node.IsExpanded && visibleCount == 0)
             {
                 return;
             }
 
             CancelPendingLoad(node);
 
-            var parentIndex = _flattened.IndexOf(node);
-            if (parentIndex >= 0)
+            if (parentIndex >= 0 && visibleCount > 0)
             {
                 var removed = RemoveVisibleDescendants(node, parentIndex, detachDescendants: false);
                 if (removed > 0)
@@ -965,7 +983,7 @@ namespace Avalonia.Controls.DataGridHierarchical
                 }
             }
 
-            node.IsExpanded = false;
+            SetNodeExpandedState(node, false);
             node.ExpandedCount = 0;
             RecalculateExpandedCountsUpwards(node.Parent);
             OnNodeCollapsed(node);
@@ -1461,6 +1479,29 @@ namespace Avalonia.Controls.DataGridHierarchical
             finally
             {
                 _expandedStateUpdates.Remove(node);
+            }
+        }
+
+        private void SetNodeExpandedState(HierarchicalNode node, bool isExpanded)
+        {
+            if (node.IsExpanded == isExpanded)
+            {
+                return;
+            }
+
+            if (!_nodeExpandedUpdates.Add(node))
+            {
+                node.IsExpanded = isExpanded;
+                return;
+            }
+
+            try
+            {
+                node.IsExpanded = isExpanded;
+            }
+            finally
+            {
+                _nodeExpandedUpdates.Remove(node);
             }
         }
 
@@ -1985,6 +2026,7 @@ namespace Avalonia.Controls.DataGridHierarchical
         {
             ApplyExpandedStateFromItem(node);
             AttachExpandedStateNotifier(node);
+            AttachNodeExpandedStateNotifier(node);
         }
 
         private void ApplyExpandedStateFromItem(HierarchicalNode node)
@@ -1996,7 +2038,7 @@ namespace Avalonia.Controls.DataGridHierarchical
 
             if (TryGetItemExpandedState(node.Item, out var isExpanded))
             {
-                node.IsExpanded = isExpanded;
+                SetNodeExpandedState(node, isExpanded);
             }
         }
 
@@ -2029,6 +2071,53 @@ namespace Avalonia.Controls.DataGridHierarchical
 
             node.ExpandedStateNotifier = null;
             node.ExpandedStateChangedHandler = null;
+        }
+
+        private void AttachNodeExpandedStateNotifier(HierarchicalNode node)
+        {
+            DetachNodeExpandedStateNotifier(node);
+
+            PropertyChangedEventHandler handler = (_, e) => OnNodeExpandedStateChanged(node, e);
+            node.PropertyChanged += handler;
+            node.NodeExpandedStateChangedHandler = handler;
+        }
+
+        private void DetachNodeExpandedStateNotifier(HierarchicalNode node)
+        {
+            if (node.NodeExpandedStateChangedHandler != null)
+            {
+                node.PropertyChanged -= node.NodeExpandedStateChangedHandler;
+            }
+
+            node.NodeExpandedStateChangedHandler = null;
+        }
+
+        private void OnNodeExpandedStateChanged(HierarchicalNode node, PropertyChangedEventArgs e)
+        {
+            if (_nodeExpandedUpdates.Contains(node))
+            {
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(e.PropertyName) &&
+                !string.Equals(e.PropertyName, nameof(HierarchicalNode.IsExpanded), StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            if (_isVirtualRoot && ReferenceEquals(node, Root))
+            {
+                return;
+            }
+
+            if (node.IsExpanded)
+            {
+                Expand(node);
+            }
+            else
+            {
+                Collapse(node);
+            }
         }
 
         private void OnItemExpandedStateChanged(HierarchicalNode node, PropertyChangedEventArgs e)
@@ -2126,6 +2215,7 @@ namespace Avalonia.Controls.DataGridHierarchical
             ClearLoadState(node);
             DetachChildrenNotifier(node);
             DetachExpandedStateNotifier(node);
+            DetachNodeExpandedStateNotifier(node);
 
             foreach (var child in node.Children)
             {
@@ -2133,18 +2223,22 @@ namespace Avalonia.Controls.DataGridHierarchical
             }
         }
 
-        private void DematerializeDescendants(HierarchicalNode node)
+        private void DematerializeDescendants(HierarchicalNode node, bool detachSelf = false)
         {
             CancelPendingLoad(node);
             ClearLoadState(node);
             foreach (var child in node.MutableChildren)
             {
-                child.IsExpanded = false;
-                DematerializeDescendants(child);
+                SetNodeExpandedState(child, false);
+                DematerializeDescendants(child, detachSelf: true);
             }
 
             DetachChildrenNotifier(node);
-            DetachExpandedStateNotifier(node);
+            if (detachSelf)
+            {
+                DetachExpandedStateNotifier(node);
+                DetachNodeExpandedStateNotifier(node);
+            }
             node.ChildrenSource = null;
             node.MutableChildren.Clear();
             node.HasMaterializedChildren = false;

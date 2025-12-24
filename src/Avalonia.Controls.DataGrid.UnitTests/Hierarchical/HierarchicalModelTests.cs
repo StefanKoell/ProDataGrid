@@ -208,6 +208,30 @@ namespace Avalonia.Controls.DataGridTests.Hierarchical;
     }
 
     [Fact]
+    public void ExpandedState_Updates_Model_On_Node_Change()
+    {
+        var root = new Item("root");
+        root.Children.Add(new Item("child"));
+
+        var model = new HierarchicalModel(new HierarchicalOptions
+        {
+            ChildrenSelector = item => ((Item)item).Children
+        });
+
+        model.SetRoot(root);
+
+        Assert.Equal(1, model.Count);
+
+        model.Root!.IsExpanded = true;
+        Assert.True(model.Root.IsExpanded);
+        Assert.Equal(2, model.Count);
+
+        model.Root.IsExpanded = false;
+        Assert.False(model.Root.IsExpanded);
+        Assert.Equal(1, model.Count);
+    }
+
+    [Fact]
     public void Rebuild_Preserves_Expanded_State_By_Path_For_Duplicate_Items()
     {
         var root = new DuplicateItem("root");

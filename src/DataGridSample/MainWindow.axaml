@@ -8,8 +8,22 @@
         Height="700"
         WindowStartupLocation="CenterScreen">
 
-  <TabControl Margin="8"
-              TabStripPlacement="Left">
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Top"
+                Orientation="Horizontal"
+                Margin="8 8 8 0"
+                Spacing="8">
+      <TextBlock VerticalAlignment="Center"
+                 Text="Filter tabs" />
+      <TextBox x:Name="TabFilterBox"
+               Width="240"
+               Watermark="Type to filter sample pages"
+               TextChanged="OnTabFilterChanged" />
+    </StackPanel>
+
+    <TabControl x:Name="SampleTabs"
+                Margin="8"
+                TabStripPlacement="Left">
     <TabControl.ItemsPanel>
       <ItemsPanelTemplate>
         <StackPanel Orientation="Vertical" />
@@ -230,6 +244,7 @@
     <TabItem Header="Summaries - Custom">
       <pages:SummariesCustomPage />
     </TabItem>
-  </TabControl>
+    </TabControl>
+  </DockPanel>
 
 </Window>

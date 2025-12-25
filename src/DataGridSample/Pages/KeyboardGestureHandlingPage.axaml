@@ -25,8 +25,7 @@
       <Popup PlacementTarget="{Binding #KeyboardShortcutsToggle}"
              Placement="Bottom"
              IsOpen="{Binding #KeyboardShortcutsToggle.IsChecked, Mode=TwoWay}"
-             IsLightDismissEnabled="True"
-             DataContext="{Binding #KeyboardShortcutsToggle.DataContext}">
+             IsLightDismissEnabled="True">
         <controls:KeyboardGestureHelpPopup Overrides="{Binding KeyboardGestureOverrides}" />
       </Popup>
       <TextBlock VerticalAlignment="Center" Text="Last key:" />

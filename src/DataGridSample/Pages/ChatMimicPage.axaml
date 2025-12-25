@@ -1,0 +1,86 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.ChatMimicPage"
+             x:DataType="viewModels:ChatMimicViewModel">
+  <UserControl.DataContext>
+    <viewModels:ChatMimicViewModel />
+  </UserControl.DataContext>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,*"
+        RowSpacing="8">
+    <StackPanel Spacing="4">
+      <TextBlock Text="Chat-style conversation"
+                 FontWeight="Bold"
+                 FontSize="18" />
+      <TextBlock TextWrapping="Wrap"
+                 Text="A single column with message bubbles and left/right alignment to mimic a chat timeline." />
+    </StackPanel>
+
+    <TextBlock Grid.Row="1"
+               Text="{Binding Summary}"
+               Opacity="0.7" />
+
+    <DataGrid Grid.Row="2"
+              ItemsSource="{Binding Messages}"
+              AutoGenerateColumns="False"
+              HeadersVisibility="None"
+              GridLinesVisibility="None"
+              SelectionMode="Single"
+              IsReadOnly="True"
+              UseLogicalScrollable="True"
+              CanUserSortColumns="False"
+              CanUserResizeColumns="False"
+              CanUserReorderColumns="False">
+      <DataGrid.Columns>
+        <DataGridTemplateColumn Width="*"
+                                x:DataType="viewModels:ChatMimicViewModel+ChatMessage">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="viewModels:ChatMimicViewModel+ChatMessage">
+              <Grid Margin="0,2">
+                <Border Background="#14000000"
+                        CornerRadius="10"
+                        Padding="10"
+                        MaxWidth="360"
+                        HorizontalAlignment="Left"
+                        IsVisible="{Binding IsIncoming}">
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="{Binding Sender}"
+                               FontSize="11"
+                               Opacity="0.7" />
+                    <TextBlock Text="{Binding Text}"
+                               TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding Timestamp, StringFormat='{}{0:HH:mm}'}"
+                               FontSize="10"
+                               Opacity="0.6"
+                               HorizontalAlignment="Right" />
+                  </StackPanel>
+                </Border>
+
+                <Border Background="#140064C8"
+                        CornerRadius="10"
+                        Padding="10"
+                        MaxWidth="360"
+                        HorizontalAlignment="Right"
+                        IsVisible="{Binding IsOutgoing}">
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="You"
+                               FontSize="11"
+                               Opacity="0.7" />
+                    <TextBlock Text="{Binding Text}"
+                               TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding Timestamp, StringFormat='{}{0:HH:mm}'}"
+                               FontSize="10"
+                               Opacity="0.6"
+                               HorizontalAlignment="Right" />
+                  </StackPanel>
+                </Border>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.ListBoxMimicFilterModelPage"
+             x:DataType="viewModels:ListBoxMimicFilterModelViewModel">
+  <UserControl.DataContext>
+    <viewModels:ListBoxMimicFilterModelViewModel />
+  </UserControl.DataContext>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,Auto,*"
+        RowSpacing="8">
+    <StackPanel Spacing="4">
+      <TextBlock Text="ListBox mimic with FilteringModel"
+                 FontWeight="Bold"
+                 FontSize="18" />
+      <TextBlock TextWrapping="Wrap"
+                 Text="Filter a single templated text column while keeping virtualization." />
+    </StackPanel>
+
+    <TextBlock Grid.Row="1"
+               Text="{Binding Summary}"
+               Opacity="0.7" />
+
+    <WrapPanel Grid.Row="2"
+               Margin="0 4">
+      <TextBlock VerticalAlignment="Center"
+                 Margin="0 0 8 8"
+                 Text="Filter" />
+      <TextBox Width="240"
+               Margin="0 0 8 8"
+               Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" />
+      <Button Content="Clear"
+              Margin="0 0 8 8"
+              Command="{Binding ClearFilterCommand}" />
+    </WrapPanel>
+
+    <DataGrid Grid.Row="3"
+              ItemsSource="{Binding Items}"
+              FilteringModel="{Binding FilteringModel}"
+              AutoGenerateColumns="False"
+              HeadersVisibility="None"
+              GridLinesVisibility="None"
+              SelectionMode="Single"
+              IsReadOnly="True"
+              UseLogicalScrollable="True"
+              CanUserSortColumns="False"
+              CanUserResizeColumns="False"
+              CanUserReorderColumns="False">
+      <DataGrid.Columns>
+        <DataGridTemplateColumn Width="*"
+                                SortMemberPath="Display"
+                                x:DataType="viewModels:ListBoxMimicFilterModelViewModel+ListEntry">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="viewModels:ListBoxMimicFilterModelViewModel+ListEntry">
+              <Border Padding="10,6">
+                <TextBlock Text="{Binding Display}"
+                           TextTrimming="CharacterEllipsis" />
+              </Border>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

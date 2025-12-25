@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.ListBoxMimicSortModelPage"
+             x:DataType="viewModels:ListBoxMimicSortModelViewModel">
+  <UserControl.DataContext>
+    <viewModels:ListBoxMimicSortModelViewModel />
+  </UserControl.DataContext>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,Auto,*"
+        RowSpacing="8">
+    <StackPanel Spacing="4">
+      <TextBlock Text="ListBox mimic with SortingModel"
+                 FontWeight="Bold"
+                 FontSize="18" />
+      <TextBlock TextWrapping="Wrap"
+                 Text="Sort a single templated text column while keeping virtualization." />
+    </StackPanel>
+
+    <TextBlock Grid.Row="1"
+               Text="{Binding Summary}"
+               Opacity="0.7" />
+
+    <WrapPanel Grid.Row="2"
+               Margin="0 4">
+      <Button Content="Sort A-Z"
+              Margin="0 0 8 8"
+              Command="{Binding SortAscendingCommand}" />
+      <Button Content="Sort Z-A"
+              Margin="0 0 8 8"
+              Command="{Binding SortDescendingCommand}" />
+      <Button Content="Clear sort"
+              Margin="0 0 8 8"
+              Command="{Binding ClearSortCommand}" />
+    </WrapPanel>
+
+    <DataGrid Grid.Row="3"
+              ItemsSource="{Binding Items}"
+              SortingModel="{Binding SortingModel}"
+              AutoGenerateColumns="False"
+              HeadersVisibility="None"
+              GridLinesVisibility="None"
+              SelectionMode="Single"
+              IsReadOnly="True"
+              UseLogicalScrollable="True"
+              CanUserSortColumns="False"
+              CanUserResizeColumns="False"
+              CanUserReorderColumns="False">
+      <DataGrid.Columns>
+        <DataGridTemplateColumn Width="*"
+                                SortMemberPath="Display"
+                                x:DataType="viewModels:ListBoxMimicSortModelViewModel+ListEntry">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="viewModels:ListBoxMimicSortModelViewModel+ListEntry">
+              <Border Padding="10,6">
+                <TextBlock Text="{Binding Display}"
+                           TextTrimming="CharacterEllipsis" />
+              </Border>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

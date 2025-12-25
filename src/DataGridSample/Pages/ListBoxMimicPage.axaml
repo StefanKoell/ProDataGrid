@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.ListBoxMimicPage"
+             x:DataType="viewModels:ListBoxMimicViewModel">
+  <UserControl.DataContext>
+    <viewModels:ListBoxMimicViewModel />
+  </UserControl.DataContext>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,*"
+        RowSpacing="8">
+    <StackPanel Spacing="4">
+      <TextBlock Text="ListBox-style text column"
+                 FontWeight="Bold"
+                 FontSize="18" />
+      <TextBlock TextWrapping="Wrap"
+                 Text="A single templated text column with headers hidden mimics a ListBox while keeping DataGrid virtualization." />
+    </StackPanel>
+
+    <TextBlock Grid.Row="1"
+               Text="{Binding Summary}"
+               Opacity="0.7" />
+
+    <DataGrid Grid.Row="2"
+              ItemsSource="{Binding Items}"
+              AutoGenerateColumns="False"
+              HeadersVisibility="None"
+              GridLinesVisibility="None"
+              SelectionMode="Single"
+              IsReadOnly="True"
+              UseLogicalScrollable="True"
+              CanUserSortColumns="False"
+              CanUserResizeColumns="False"
+              CanUserReorderColumns="False">
+      <DataGrid.Columns>
+        <DataGridTemplateColumn Width="*"
+                                x:DataType="viewModels:ListBoxMimicViewModel+ListEntry">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="viewModels:ListBoxMimicViewModel+ListEntry">
+              <Border Padding="10,6">
+                <TextBlock Text="{Binding Display}"
+                           TextTrimming="CharacterEllipsis" />
+              </Border>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.PropertyGridMimicPage"
+             x:DataType="viewModels:PropertyGridMimicViewModel">
+  <UserControl.DataContext>
+    <viewModels:PropertyGridMimicViewModel />
+  </UserControl.DataContext>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,*"
+        RowSpacing="8">
+    <StackPanel Spacing="4">
+      <TextBlock Text="PropertyGrid-style editor"
+                 FontWeight="Bold"
+                 FontSize="18" />
+      <TextBlock TextWrapping="Wrap"
+                 Text="Two columns with grouped sections and inline editors for text, numbers, booleans, and choices." />
+    </StackPanel>
+
+    <TextBlock Grid.Row="1"
+               Text="{Binding Summary}"
+               Opacity="0.7" />
+
+    <DataGrid Grid.Row="2"
+              ItemsSource="{Binding View}"
+              AutoGenerateColumns="False"
+              HeadersVisibility="None"
+              GridLinesVisibility="Horizontal"
+              SelectionMode="Single"
+              IsReadOnly="False"
+              UseLogicalScrollable="True"
+              CanUserSortColumns="False"
+              CanUserResizeColumns="False"
+              CanUserReorderColumns="False">
+      <DataGrid.Columns>
+        <DataGridTextColumn Width="2*"
+                            Binding="{Binding Name}"
+                            IsReadOnly="True"
+                            x:DataType="viewModels:PropertyGridMimicViewModel+PropertyEntry" />
+        <DataGridTemplateColumn Width="3*"
+                                x:DataType="viewModels:PropertyGridMimicViewModel+PropertyEntry">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="viewModels:PropertyGridMimicViewModel+PropertyEntry">
+              <Grid>
+                <TextBox Text="{Binding TextValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         IsVisible="{Binding IsText}"
+                         VerticalContentAlignment="Center" />
+                <NumericUpDown Value="{Binding NumberValue, Mode=TwoWay}"
+                               IsVisible="{Binding IsNumber}"
+                               Minimum="0"
+                               Maximum="9999"
+                               HorizontalAlignment="Left" />
+                <CheckBox Content="Enabled"
+                          IsVisible="{Binding IsBoolean}"
+                          IsChecked="{Binding BoolValue, Mode=TwoWay}"
+                          VerticalAlignment="Center" />
+                <ComboBox ItemsSource="{Binding Options}"
+                          SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
+                          IsVisible="{Binding IsChoice}"
+                          MinWidth="160" />
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

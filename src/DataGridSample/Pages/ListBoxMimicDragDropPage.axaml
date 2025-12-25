@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.ListBoxMimicDragDropPage"
+             x:DataType="viewModels:ListBoxMimicDragDropViewModel">
+  <UserControl.DataContext>
+    <viewModels:ListBoxMimicDragDropViewModel />
+  </UserControl.DataContext>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,*"
+        RowSpacing="8">
+    <StackPanel Spacing="4">
+      <TextBlock Text="ListBox mimic with drag &amp; drop"
+                 FontWeight="Bold"
+                 FontSize="18" />
+      <TextBlock TextWrapping="Wrap"
+                 Text="Reorder rows by dragging anywhere in the single templated column." />
+    </StackPanel>
+
+    <TextBlock Grid.Row="1"
+               Text="{Binding Summary}"
+               Opacity="0.7" />
+
+    <DataGrid Grid.Row="2"
+              ItemsSource="{Binding Items}"
+              AutoGenerateColumns="False"
+              HeadersVisibility="None"
+              GridLinesVisibility="None"
+              SelectionMode="Single"
+              IsReadOnly="False"
+              UseLogicalScrollable="True"
+              CanUserSortColumns="False"
+              CanUserResizeColumns="False"
+              CanUserReorderColumns="False"
+              CanUserReorderRows="True"
+              RowDragHandle="Row"
+              RowDragDropOptions="{Binding Options}"
+              RowDropHandler="{Binding DropHandler}">
+      <DataGrid.Columns>
+        <DataGridTemplateColumn Width="*"
+                                x:DataType="viewModels:ListBoxMimicDragDropViewModel+ListEntry">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="viewModels:ListBoxMimicDragDropViewModel+ListEntry">
+              <Border Padding="10,6">
+                <TextBlock Text="{Binding Display}"
+                           TextTrimming="CharacterEllipsis" />
+              </Border>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

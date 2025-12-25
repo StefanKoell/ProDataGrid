@@ -187,6 +187,21 @@
     <TabItem Header="Hierarchical Model">
       <pages:HierarchicalSamplePage />
     </TabItem>
+    <TabItem Header="TreeView Mimic">
+      <pages:TreeViewMimicPage />
+    </TabItem>
+    <TabItem Header="TreeView Mimic - Drag &amp; Drop">
+      <pages:TreeViewMimicDragDropPage />
+    </TabItem>
+    <TabItem Header="TreeView Mimic - Search Model">
+      <pages:TreeViewMimicSearchModelPage />
+    </TabItem>
+    <TabItem Header="TreeView Mimic - Filter Model">
+      <pages:TreeViewMimicFilterModelPage />
+    </TabItem>
+    <TabItem Header="TreeView Mimic - Sort Model">
+      <pages:TreeViewMimicSortModelPage />
+    </TabItem>
     <TabItem Header="Hierarchical Undo/Redo">
       <pages:HierarchicalUndoRedoPage />
     </TabItem>
@@ -219,6 +234,30 @@
     </TabItem>
     <TabItem Header="Derived Text Column">
       <pages:CustomTextColumnPage />
+    </TabItem>
+    <TabItem Header="ListBox Mimic">
+      <pages:ListBoxMimicPage />
+    </TabItem>
+    <TabItem Header="ListBox Mimic - Drag &amp; Drop">
+      <pages:ListBoxMimicDragDropPage />
+    </TabItem>
+    <TabItem Header="ListBox Mimic - Search Model">
+      <pages:ListBoxMimicSearchModelPage />
+    </TabItem>
+    <TabItem Header="ListBox Mimic - Filter Model">
+      <pages:ListBoxMimicFilterModelPage />
+    </TabItem>
+    <TabItem Header="ListBox Mimic - Sort Model">
+      <pages:ListBoxMimicSortModelPage />
+    </TabItem>
+    <TabItem Header="PropertyGrid Mimic">
+      <pages:PropertyGridMimicPage />
+    </TabItem>
+    <TabItem Header="Mailbox Mimic">
+      <pages:MailboxMimicPage />
+    </TabItem>
+    <TabItem Header="Chat Mimic">
+      <pages:ChatMimicPage />
     </TabItem>
     <TabItem Header="Clipboard Export">
       <pages:ClipboardExportPage />

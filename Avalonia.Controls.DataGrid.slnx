@@ -10,6 +10,7 @@
     </Folder>
     <Folder Name="/src/">
         <Project Path="src/Avalonia.Controls.DataGrid/Avalonia.Controls.DataGrid.csproj" />
+        <Project Path="src/ProDiagnostics/ProDiagnostics.csproj" />
     </Folder>
     <Folder Name="/tests/">
         <Project Path="src/Avalonia.Controls.DataGrid.UnitTests/Avalonia.Controls.DataGrid.UnitTests.csproj" />

@@ -8,7 +8,9 @@ using System.Collections.Generic;
 namespace Avalonia.Controls.Utils
 {
 #if !DATAGRID_INTERNAL
-    public
+public
+#else
+internal
 #endif
     interface ICellEditBinding
     {

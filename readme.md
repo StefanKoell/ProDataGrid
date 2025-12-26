@@ -584,8 +584,44 @@ Sample: see `Hierarchical Model` page in `src/DataGridSample` for a file-system 
 - The sample app (`src/DataGridSample`) includes pages for pixel-perfect columns, frozen columns, large datasets, and variable-height scenarios (`Pages/*Page.axaml`).
 - Run it locally with `dotnet run --project src/DataGridSample/DataGridSample.csproj` to see templates, estimators, `SelectedItems` binding, and the `DataTable.DefaultView` page that demonstrates the TypeDescriptor-based column binding.
 
+## ProDiagnostics
+
+`ProDiagnostics` provides Avalonia developer tools UI as a standalone package. It focuses on runtime inspection and debugging:
+
+- Visual and logical tree inspection.
+- Property and style inspection with live values.
+- Routed event tracking.
+- Layout exploration and renderer diagnostics overlays.
+
+### Installation
+
+Install from NuGet:
+
+```sh
+dotnet add package ProDiagnostics
+```
+
+### Quick start
+
+Attach DevTools after application initialization:
+
+```csharp
+public override void OnFrameworkInitializationCompleted()
+{
+    if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        desktop.MainWindow = new MainWindow();
+
+    base.OnFrameworkInitializationCompleted();
+    this.AttachDevTools();
+}
+```
+
+By default DevTools opens with `F12`. You can also attach to a `TopLevel` or provide a custom key gesture or options.
+
 ## License
 
 ProDataGrid is licensed under the [MIT License](licence.md).
+
+ProDiagnostics is licensed under the [MIT License](licence.md).
 
 The original `Avalonia.Controls.DataGrid` and `Avalonia.Diagnostics` license is preserved in [licence-avalonia.md](licence-avalonia.md).

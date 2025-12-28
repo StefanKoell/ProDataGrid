@@ -1549,6 +1549,22 @@ internal
         /// </summary>
         protected virtual void OnSelectionChanged(SelectionChangedEventArgs e)
         {
+            using var activity = DataGridDiagnostics.SelectionChanged();
+            using var _ = DataGridDiagnostics.BeginSelectionChanged();
+
+            var dataGridArgs = e as DataGridSelectionChangedEventArgs;
+            if (activity != null)
+            {
+                activity.SetTag(DataGridDiagnostics.Tags.AddedCount, e.AddedItems?.Count ?? 0);
+                activity.SetTag(DataGridDiagnostics.Tags.RemovedCount, e.RemovedItems?.Count ?? 0);
+                if (dataGridArgs != null)
+                {
+                    activity.SetTag(DataGridDiagnostics.Tags.SelectionSource, dataGridArgs.Source.ToString());
+                    activity.SetTag(DataGridDiagnostics.Tags.UserInitiated, dataGridArgs.IsUserInitiated);
+                }
+            }
+
+            DataGridDiagnostics.RecordSelectionChanged(dataGridArgs?.Source ?? DataGridSelectionChangeSource.Unknown);
             RaiseEvent(e);
         }
 

@@ -34,18 +34,35 @@ namespace Avalonia.Controls
         private DataGridRow GenerateRow(int rowIndex, int slot, object dataContext)
         {
             Debug.Assert(rowIndex > -1);
+            using var activity = DataGridDiagnostics.GenerateRow();
+            using var _ = DataGridDiagnostics.BeginRowGenerate();
+            activity?.SetTag(DataGridDiagnostics.Tags.RowIndex, rowIndex);
+            activity?.SetTag(DataGridDiagnostics.Tags.Slot, slot);
+
+            string source = null;
             DataGridRow dataGridRow = GetGeneratedRow(dataContext);
             bool isOwnContainer = false;
+            if (dataGridRow != null)
+            {
+                source = DataGridDiagnostics.Sources.Existing;
+            }
 
             if (dataGridRow == null && IsItemItsOwnContainerOverride(dataContext))
             {
                 dataGridRow = dataContext as DataGridRow;
                 isOwnContainer = dataGridRow != null;
+                if (isOwnContainer)
+                {
+                    source = DataGridDiagnostics.Sources.OwnContainer;
+                }
             }
 
             if (dataGridRow == null)
             {
                 var recycledRow = DisplayData.GetRecycledRow();
+                source = recycledRow != null
+                    ? DataGridDiagnostics.Sources.Recycled
+                    : DataGridDiagnostics.Sources.New;
                 dataGridRow = recycledRow ?? new DataGridRow();
                 var previousDataContext = (dataGridRow.RecycledDataContext ?? dataGridRow.DataContext);
                 dataGridRow.Index = rowIndex;
@@ -89,6 +106,12 @@ namespace Avalonia.Controls
                 NotifyRowPrepared(dataGridRow, dataGridRow.DataContext ?? dataContext);
                 dataGridRow.ClearRecyclingState();
                 OnLoadingRow(new DataGridRowEventArgs(dataGridRow));
+            }
+
+            if (source != null)
+            {
+                activity?.SetTag(DataGridDiagnostics.Tags.Source, source);
+                DataGridDiagnostics.RecordRowRealized(source);
             }
             return dataGridRow;
         }

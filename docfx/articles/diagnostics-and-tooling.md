@@ -48,3 +48,7 @@ Use these hooks to assert recycling order, verify placeholders vs real items, or
 ## Recycling Diagnostics
 
 `TrimRecycledContainers`, `KeepRecycledContainersInVisualTree`, and `RecycledContainerHidingMode` let you tune the recycling pool. The sample app includes a diagnostics page to visualize these settings.
+
+## Metrics and Activities
+
+See `metrics-and-activities.md` for OpenTelemetry-friendly diagnostics and instrumentation details.

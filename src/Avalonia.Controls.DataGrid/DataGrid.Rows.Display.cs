@@ -22,6 +22,12 @@ namespace Avalonia.Controls
 
         private void UpdateDisplayedRows(int newFirstDisplayedSlot, double displayHeight)
         {
+            using var activity = DataGridDiagnostics.UpdateDisplayedRows();
+            using var _ = DataGridDiagnostics.BeginRowsDisplayUpdate();
+            activity?.SetTag(DataGridDiagnostics.Tags.DisplayHeight, displayHeight);
+            activity?.SetTag(DataGridDiagnostics.Tags.SlotCount, SlotCount);
+            activity?.SetTag(DataGridDiagnostics.Tags.Columns, ColumnsItemsInternal.Count);
+
             Debug.Assert(!_collapsedSlotsTable.Contains(newFirstDisplayedSlot));
             int firstDisplayedScrollingSlot = newFirstDisplayedSlot;
             int lastDisplayedScrollingSlot = -1;
@@ -96,11 +102,21 @@ namespace Avalonia.Controls
             Debug.Assert(DisplayData.FirstScrollingSlot < SlotCount, "firstDisplayedScrollingRow larger than number of rows");
             Debug.Assert(DisplayData.FirstScrollingSlot == firstDisplayedScrollingSlot);
             Debug.Assert(DisplayData.LastScrollingSlot == lastDisplayedScrollingSlot);
+
+            activity?.SetTag(DataGridDiagnostics.Tags.FirstDisplayedSlot, DisplayData.FirstScrollingSlot);
+            activity?.SetTag(DataGridDiagnostics.Tags.LastDisplayedSlot, DisplayData.LastScrollingSlot);
+            activity?.SetTag(DataGridDiagnostics.Tags.DisplayedSlots, DisplayData.NumDisplayedScrollingElements);
         }
 
 
         private void UpdateDisplayedRowsFromBottom(int newLastDisplayedScrollingRow)
         {
+            using var activity = DataGridDiagnostics.UpdateDisplayedRows();
+            using var _ = DataGridDiagnostics.BeginRowsDisplayUpdate();
+            activity?.SetTag(DataGridDiagnostics.Tags.DisplayHeight, CellsEstimatedHeight);
+            activity?.SetTag(DataGridDiagnostics.Tags.SlotCount, SlotCount);
+            activity?.SetTag(DataGridDiagnostics.Tags.Columns, ColumnsItemsInternal.Count);
+
             //Debug.Assert(!_collapsedSlotsTable.Contains(newLastDisplayedScrollingRow));
 
             int lastDisplayedScrollingRow = newLastDisplayedScrollingRow;
@@ -147,6 +163,10 @@ namespace Avalonia.Controls
             Debug.Assert(DisplayData.NumDisplayedScrollingElements >= 0, "the number of visible scrolling rows can't be negative");
             Debug.Assert(DisplayData.NumTotallyDisplayedScrollingElements >= 0, "the number of totally visible scrolling rows can't be negative");
             Debug.Assert(DisplayData.FirstScrollingSlot < SlotCount, "firstDisplayedScrollingRow larger than number of rows");
+
+            activity?.SetTag(DataGridDiagnostics.Tags.FirstDisplayedSlot, DisplayData.FirstScrollingSlot);
+            activity?.SetTag(DataGridDiagnostics.Tags.LastDisplayedSlot, DisplayData.LastScrollingSlot);
+            activity?.SetTag(DataGridDiagnostics.Tags.DisplayedSlots, DisplayData.NumDisplayedScrollingElements);
         }
 
 

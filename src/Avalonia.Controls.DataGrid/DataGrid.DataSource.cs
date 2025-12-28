@@ -347,6 +347,14 @@ internal
 
         internal void RefreshRowsAndColumns(bool clearRows)
         {
+            using var activity = DataGridDiagnostics.RefreshRowsAndColumns();
+            using var _ = DataGridDiagnostics.BeginDataGridRefresh();
+            activity?.SetTag(DataGridDiagnostics.Tags.ClearRows, clearRows);
+            activity?.SetTag(DataGridDiagnostics.Tags.AutoGenerateColumns, AutoGenerateColumns);
+            activity?.SetTag(DataGridDiagnostics.Tags.Columns, ColumnsItemsInternal.Count);
+            activity?.SetTag(DataGridDiagnostics.Tags.Rows, DataConnection?.Count ?? 0);
+            activity?.SetTag(DataGridDiagnostics.Tags.SlotCount, SlotCount);
+
             if (_measured)
             {
                 try
@@ -402,6 +410,10 @@ internal
             }
 
             RequestPointerOverRefresh();
+
+            activity?.SetTag(DataGridDiagnostics.Tags.FirstDisplayedSlot, DisplayData.FirstScrollingSlot);
+            activity?.SetTag(DataGridDiagnostics.Tags.LastDisplayedSlot, DisplayData.LastScrollingSlot);
+            activity?.SetTag(DataGridDiagnostics.Tags.DisplayedSlots, DisplayData.NumDisplayedScrollingElements);
         }
 
 

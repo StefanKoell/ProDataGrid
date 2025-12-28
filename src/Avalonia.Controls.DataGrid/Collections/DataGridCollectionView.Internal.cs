@@ -5,6 +5,7 @@
 
 #nullable disable
 
+using Avalonia.Controls;
 using Avalonia.Controls.Utils;
 using Avalonia.Utilities;
 using System.Collections.Generic;
@@ -370,6 +371,10 @@ namespace Avalonia.Collections
         private IList PrepareLocalArray(IEnumerable enumerable)
         {
             Debug.Assert(enumerable != null, "Input list to filter/sort should not be null");
+            using var activity = DataGridDiagnostics.CollectionFilter();
+            using var _ = DataGridDiagnostics.BeginCollectionFilter();
+            activity?.SetTag(DataGridDiagnostics.Tags.FilterEnabled, Filter != null);
+            activity?.SetTag(DataGridDiagnostics.Tags.SortDescriptions, SortDescriptions?.Count ?? 0);
 
             // filter the collection's array into the local array
             List<object> localList = new List<object>();
@@ -511,6 +516,10 @@ namespace Avalonia.Collections
         private List<object> SortList(List<object> list)
         {
             Debug.Assert(list != null, "Input list to sort should not be null");
+            using var activity = DataGridDiagnostics.CollectionSort();
+            using var _ = DataGridDiagnostics.BeginCollectionSort();
+            activity?.SetTag(DataGridDiagnostics.Tags.SortDescriptions, SortDescriptions?.Count ?? 0);
+            activity?.SetTag(DataGridDiagnostics.Tags.Rows, list.Count);
 
             IEnumerable<object> seq = (IEnumerable<object>)list;
             IComparer<object> comparer = new CultureSensitiveComparer(Culture);

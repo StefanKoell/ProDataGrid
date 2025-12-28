@@ -167,6 +167,7 @@ internal
 
         internal void NotifyRowRecycling(DataGridRow row)
         {
+            DataGridDiagnostics.RecordRowRecycled();
             row.RecycledDataContext ??= row.DataContext;
             row.RecycledIsPlaceholder = row.IsPlaceholder;
             OnCleanUpVirtualizedItem(row);
@@ -175,6 +176,7 @@ internal
 
         internal void NotifyRowPrepared(DataGridRow row, object item)
         {
+            DataGridDiagnostics.RecordRowPrepared();
             PrepareContainerForItemOverride(row, item);
         }
 

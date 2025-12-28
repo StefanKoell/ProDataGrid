@@ -5,6 +5,7 @@
 
 #nullable disable
 
+using Avalonia.Controls;
 using Avalonia.Controls.Utils;
 using Avalonia.Utilities;
 using System.Collections.Generic;
@@ -766,6 +767,15 @@ namespace Avalonia.Collections
         //TODO Paging
         private void RefreshOverride()
         {
+            using var activity = DataGridDiagnostics.CollectionRefresh();
+            using var _ = DataGridDiagnostics.BeginCollectionRefresh();
+            activity?.SetTag(DataGridDiagnostics.Tags.UsesLocalArray, UsesLocalArray);
+            activity?.SetTag(DataGridDiagnostics.Tags.FilterEnabled, Filter != null);
+            activity?.SetTag(DataGridDiagnostics.Tags.SortDescriptions, SortDescriptions?.Count ?? 0);
+            activity?.SetTag(DataGridDiagnostics.Tags.GroupDescriptions, GroupDescriptions?.Count ?? 0);
+            activity?.SetTag(DataGridDiagnostics.Tags.PageSize, PageSize);
+            activity?.SetTag(DataGridDiagnostics.Tags.PageIndex, PageIndex);
+
             object oldCurrentItem = CurrentItem;
             int oldCurrentPosition = CurrentPosition;
             bool oldIsCurrentAfterLast = IsCurrentAfterLast;
@@ -832,6 +842,8 @@ namespace Avalonia.Collections
 
             // now raise currency changes at the end
             RaiseCurrencyChanges(false, oldCurrentItem, oldCurrentPosition, oldIsCurrentBeforeFirst, oldIsCurrentAfterLast);
+
+            activity?.SetTag(DataGridDiagnostics.Tags.IsGrouping, IsGrouping);
         }
 
         /// <summary>

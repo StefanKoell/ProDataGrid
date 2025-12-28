@@ -392,6 +392,14 @@ internal
 
         internal void RefreshRows(bool recycleRows, bool clearRows)
         {
+            using var activity = DataGridDiagnostics.RefreshRows();
+            using var _ = DataGridDiagnostics.BeginRowsRefresh();
+            activity?.SetTag(DataGridDiagnostics.Tags.RecycleRows, recycleRows);
+            activity?.SetTag(DataGridDiagnostics.Tags.ClearRows, clearRows);
+            activity?.SetTag(DataGridDiagnostics.Tags.Columns, ColumnsItemsInternal.Count);
+            activity?.SetTag(DataGridDiagnostics.Tags.Rows, DataConnection?.Count ?? 0);
+            activity?.SetTag(DataGridDiagnostics.Tags.SlotCount, SlotCount);
+
             if (_measured)
             {
                 // _desiredCurrentColumnIndex is used in MakeFirstDisplayedCellCurrentCell to set the

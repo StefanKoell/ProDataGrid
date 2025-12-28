@@ -5,6 +5,7 @@
 
 #nullable disable
 
+using Avalonia.Controls;
 using Avalonia.Controls.Utils;
 using Avalonia.Utilities;
 using System.Collections.Generic;
@@ -53,6 +54,11 @@ namespace Avalonia.Collections
         /// </summary>
         private void PrepareGroups()
         {
+            using var activity = DataGridDiagnostics.CollectionGroup();
+            using var _ = DataGridDiagnostics.BeginCollectionGroup();
+            activity?.SetTag(DataGridDiagnostics.Tags.GroupDescriptions, _group.GroupDescriptions.Count);
+            activity?.SetTag(DataGridDiagnostics.Tags.Rows, _internalList.Count);
+
             // we should only use this method if we aren't paging
             Debug.Assert(PageSize == 0, "Unexpected PageSize != 0");
 
@@ -102,6 +108,11 @@ namespace Avalonia.Collections
         /// </summary>
         private void PrepareTemporaryGroups()
         {
+            using var activity = DataGridDiagnostics.CollectionGroupTemporary();
+            using var _ = DataGridDiagnostics.BeginCollectionGroupTemporary();
+            activity?.SetTag(DataGridDiagnostics.Tags.GroupDescriptions, _group.GroupDescriptions.Count);
+            activity?.SetTag(DataGridDiagnostics.Tags.Rows, _internalList.Count);
+
             _temporaryGroup = new CollectionViewGroupRoot(this, CheckFlag(CollectionViewFlags.IsDataInGroupOrder));
 
             foreach (var gd in _group.GroupDescriptions)
@@ -145,6 +156,12 @@ namespace Avalonia.Collections
         //TODO Paging
         private void PrepareGroupsForCurrentPage()
         {
+            using var activity = DataGridDiagnostics.CollectionGroupPage();
+            using var _ = DataGridDiagnostics.BeginCollectionGroupPage();
+            activity?.SetTag(DataGridDiagnostics.Tags.GroupDescriptions, GroupDescriptions.Count);
+            activity?.SetTag(DataGridDiagnostics.Tags.PageSize, PageSize);
+            activity?.SetTag(DataGridDiagnostics.Tags.PageIndex, PageIndex);
+
             _group.Clear();
             _group.Initialize();
 

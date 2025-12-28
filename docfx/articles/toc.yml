@@ -38,6 +38,8 @@
   href: events-and-routing.md
 - name: Diagnostics and Tooling
   href: diagnostics-and-tooling.md
+- name: Metrics and Activities
+  href: metrics-and-activities.md
 - name: ProDiagnostics
   href: prodiagnostics.md
 - name: Sample Gallery

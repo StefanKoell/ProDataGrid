@@ -45,6 +45,52 @@ namespace Avalonia.Controls.Selection
             }
         }
 
+        public static void SelectRange(this ISelectionModel model, object startItem, object endItem)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            if (model.Source == null)
+            {
+                if (model.SingleSelect || Equals(startItem, endItem))
+                {
+                    model.SelectedItem = endItem;
+                    return;
+                }
+
+                throw new InvalidOperationException("Selection model source is not set.");
+            }
+
+            var startIndex = ResolveIndex(model.Source, startItem);
+            if (startIndex < 0)
+            {
+                throw new ArgumentException("Item not found in selection model source.", nameof(startItem));
+            }
+
+            var endIndex = ResolveIndex(model.Source, endItem);
+            if (endIndex < 0)
+            {
+                throw new ArgumentException("Item not found in selection model source.", nameof(endItem));
+            }
+
+            if (model.SingleSelect)
+            {
+                model.SelectedIndex = endIndex;
+                return;
+            }
+
+            if (startIndex <= endIndex)
+            {
+                model.SelectRange(startIndex, endIndex);
+            }
+            else
+            {
+                model.SelectRange(endIndex, startIndex);
+            }
+        }
+
         private static int ResolveIndex(IEnumerable source, object item)
         {
             if (source == null)

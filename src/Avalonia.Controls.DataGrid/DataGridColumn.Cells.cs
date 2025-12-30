@@ -190,8 +190,13 @@ namespace Avalonia.Controls
             return GenerateElement(cell, dataItem);
         }
 
+        protected virtual void RefreshEditingElement(Control editingElement)
+        {
+        }
+
         internal object PrepareCellForEditInternal(Control editingElement, RoutedEventArgs editingEventArgs)
         {
+            RefreshEditingElement(editingElement);
             var result = PrepareCellForEdit(editingElement, editingEventArgs);
             editingElement.Focus();
 

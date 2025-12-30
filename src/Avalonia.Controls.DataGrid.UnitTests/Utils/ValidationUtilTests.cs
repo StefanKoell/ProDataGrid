@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
+using Avalonia.Controls;
 using Avalonia.Controls.Utils;
 using Avalonia.Data;
 using Xunit;
@@ -130,6 +131,41 @@ namespace Avalonia.Controls.DataGridTests.Utils
             var result = ValidationUtil.UnpackDataValidationException(exception);
 
             Assert.Same(exception, result);
+        }
+
+        [Fact]
+        public void GetValidationSeverity_Uses_DataGridValidationResult_Severity()
+        {
+            var warning = new DataValidationException(new DataGridValidationResult("warning", DataGridValidationSeverity.Warning));
+
+            var result = ValidationUtil.GetValidationSeverity(warning);
+
+            Assert.Equal(DataGridValidationSeverity.Warning, result);
+        }
+
+        [Fact]
+        public void GetValidationSeverity_Uses_Strongest_Severity_From_Enumerable()
+        {
+            var results = new[]
+            {
+                new DataGridValidationResult("info", DataGridValidationSeverity.Info),
+                new DataGridValidationResult("warning", DataGridValidationSeverity.Warning)
+            };
+            var exception = new DataValidationException(results);
+
+            var result = ValidationUtil.GetValidationSeverity(exception);
+
+            Assert.Equal(DataGridValidationSeverity.Warning, result);
+        }
+
+        [Fact]
+        public void GetValidationSeverity_Defaults_To_Error_For_String_Data()
+        {
+            var exception = new DataValidationException("error");
+
+            var result = ValidationUtil.GetValidationSeverity(exception);
+
+            Assert.Equal(DataGridValidationSeverity.Error, result);
         }
 
         [Fact]

@@ -119,7 +119,9 @@ internal
             element.DataContext = item;
             element.IsPlaceholder = ReferenceEquals(item, DataGridCollectionView.NewItemPlaceholder);
             element.IsValid = true;
+            element.ValidationSeverity = DataGridValidationSeverity.None;
             element.ClearDragDropState();
+            RestoreRowValidationState(element, item);
         }
 
         /// <summary>
@@ -145,6 +147,7 @@ internal
 
             element.IsPlaceholder = false;
             element.ClearDragDropState();
+            ClearRowValidation(element);
             element.DataContext = null;
         }
 

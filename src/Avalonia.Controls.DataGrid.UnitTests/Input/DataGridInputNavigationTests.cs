@@ -245,6 +245,10 @@ public class DataGridInputNavigationTests
     public void WaitForLostFocus_Defers_KeyHandlers()
     {
         var (grid, _) = CreateGrid();
+        var firstColumn = grid.ColumnsInternal[0] as DataGridTextColumn;
+        Assert.NotNull(firstColumn);
+        firstColumn!.Binding = null;
+        grid.UpdateLayout();
         SetCurrentCell(grid, rowIndex: 0, columnIndex: 0);
         var editingElement = BeginEditAndFocus(grid);
         grid.Focusable = false;
@@ -274,6 +278,26 @@ public class DataGridInputNavigationTests
             Assert.True(handled);
             Assert.NotEmpty(lostFocusQueue);
         }
+    }
+
+    [AvaloniaFact]
+    public void WaitForLostFocus_Does_Not_Defer_For_Explicit_Binding()
+    {
+        var (grid, _) = CreateGrid();
+        SetCurrentCell(grid, rowIndex: 0, columnIndex: 0);
+        var editingElement = BeginEditAndFocus(grid);
+        grid.Focusable = false;
+
+        SetFocusedObject(grid, editingElement);
+        SetExecutingLostFocusActions(grid, false);
+
+        var lostFocusQueue = GetLostFocusActions(grid);
+        lostFocusQueue.Clear();
+
+        var handled = InvokeKeyHandler(grid, "ProcessTabKey", Key.Tab, KeyModifiers.None);
+
+        Assert.True(handled);
+        Assert.Empty(lostFocusQueue);
     }
 
     [AvaloniaFact]

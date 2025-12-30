@@ -6,10 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 using System.Threading;
 using System.Linq;
 using Avalonia.Data;
+using System.Collections;
+using Avalonia.Controls;
 
 namespace Avalonia.Controls.Utils
 {
@@ -98,6 +99,80 @@ namespace Avalonia.Controls.Utils
             }
 
             return exception;
+        }
+
+        public static DataGridValidationSeverity GetValidationSeverity(IEnumerable<Exception> errors)
+        {
+            var severity = DataGridValidationSeverity.None;
+            foreach (var error in errors)
+            {
+                var current = GetValidationSeverity(error);
+                if (current > severity)
+                {
+                    severity = current;
+                }
+            }
+
+            return severity;
+        }
+
+        public static DataGridValidationSeverity GetValidationSeverity(Exception error)
+        {
+            if (error is DataValidationException dataValidationException)
+            {
+                var errorData = dataValidationException.ErrorData;
+                if (errorData != null)
+                {
+                    return GetSeverityFromErrorData(errorData);
+                }
+            }
+
+            return DataGridValidationSeverity.Error;
+        }
+
+        private static DataGridValidationSeverity GetSeverityFromErrorData(object errorData)
+        {
+            if (errorData is DataGridValidationResult result)
+            {
+                return result.Severity;
+            }
+
+            if (errorData is IEnumerable<DataGridValidationResult> results)
+            {
+                var severity = DataGridValidationSeverity.None;
+                foreach (var item in results)
+                {
+                    if (item.Severity > severity)
+                    {
+                        severity = item.Severity;
+                    }
+                }
+
+                return severity;
+            }
+
+            if (errorData is string)
+            {
+                return DataGridValidationSeverity.Error;
+            }
+
+            if (errorData is IEnumerable enumerable)
+            {
+                var severity = DataGridValidationSeverity.None;
+                foreach (var item in enumerable)
+                {
+                    if (item is DataGridValidationResult resultItem && resultItem.Severity > severity)
+                    {
+                        severity = resultItem.Severity;
+                    }
+                }
+
+                return severity == DataGridValidationSeverity.None
+                    ? DataGridValidationSeverity.Error
+                    : severity;
+            }
+
+            return DataGridValidationSeverity.Error;
         }
 
         /// <summary>

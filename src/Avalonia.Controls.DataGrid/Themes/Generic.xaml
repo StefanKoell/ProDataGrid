@@ -158,6 +158,8 @@
                               IsVisible="{Binding (DataValidationErrors.HasErrors)}" />
               <ContentPresenter Name="PART_ContentPresenter"
                                 Padding="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -189,6 +191,112 @@
                     Height="14"
                     Data="M14,7 A7,7 0 0,0 0,7 M0,7 A7,7 0 1,0 14,7 M7,3l0,5 M7,9l0,2"
                     Stroke="{DynamicResource DataGridCellInvalidBrush}"
+                    StrokeThickness="2" />
+            </Panel>
+          </DataTemplate>
+        </Setter>
+      </ControlTheme>
+
+      <!-- DataGridCellDataValidationWarningsTheme -->
+      <ControlTheme x:Key="DataGridCellDataValidationWarningsTheme"
+                    TargetType="DataValidationErrors">
+        <Setter Property="CornerRadius" Value="{DynamicResource DataGridCellCornerRadius}" />
+        <Setter Property="Template">
+          <ControlTemplate TargetType="DataValidationErrors">
+            <DockPanel LastChildFill="True">
+              <ContentControl Content="{Binding (DataValidationErrors.Errors)}"
+                              ContentTemplate="{TemplateBinding ErrorTemplate}"
+                              DataContext="{TemplateBinding Owner}"
+                              DockPanel.Dock="Right"
+                              IsVisible="{Binding (DataValidationErrors.HasErrors)}" />
+              <ContentPresenter Name="PART_ContentPresenter"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                CornerRadius="{TemplateBinding CornerRadius}" />
+            </DockPanel>
+          </ControlTemplate>
+        </Setter>
+        <Setter Property="ErrorTemplate">
+          <DataTemplate>
+            <Panel Name="PART_InlineErrorTemplatePanel"
+                   Background="Transparent">
+              <Panel.Styles>
+                <Style Selector="Panel#PART_InlineErrorTemplatePanel">
+                  <Setter Property="Margin" Value="8,0" />
+                </Style>
+                <Style Selector="Panel#PART_InlineErrorTemplatePanel ToolTip">
+                  <Setter Property="BorderBrush" Value="{DynamicResource DataGridCellWarningBrush}" />
+                </Style>
+                <Style Selector="Panel#PART_InlineErrorTemplatePanel ToolTip TextBlock">
+                  <Setter Property="TextWrapping" Value="Wrap" />
+                </Style>
+              </Panel.Styles>
+              <ToolTip.Tip>
+                <ItemsControl ItemsSource="{Binding}" />
+              </ToolTip.Tip>
+              <Path Width="14"
+                    Height="14"
+                    Data="M14,7 A7,7 0 0,0 0,7 M0,7 A7,7 0 1,0 14,7 M7,3l0,5 M7,9l0,2"
+                    Stroke="{DynamicResource DataGridCellWarningBrush}"
+                    StrokeThickness="2" />
+            </Panel>
+          </DataTemplate>
+        </Setter>
+      </ControlTheme>
+
+      <!-- DataGridCellDataValidationInfoTheme -->
+      <ControlTheme x:Key="DataGridCellDataValidationInfoTheme"
+                    TargetType="DataValidationErrors">
+        <Setter Property="CornerRadius" Value="{DynamicResource DataGridCellCornerRadius}" />
+        <Setter Property="Template">
+          <ControlTemplate TargetType="DataValidationErrors">
+            <DockPanel LastChildFill="True">
+              <ContentControl Content="{Binding (DataValidationErrors.Errors)}"
+                              ContentTemplate="{TemplateBinding ErrorTemplate}"
+                              DataContext="{TemplateBinding Owner}"
+                              DockPanel.Dock="Right"
+                              IsVisible="{Binding (DataValidationErrors.HasErrors)}" />
+              <ContentPresenter Name="PART_ContentPresenter"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                CornerRadius="{TemplateBinding CornerRadius}" />
+            </DockPanel>
+          </ControlTemplate>
+        </Setter>
+        <Setter Property="ErrorTemplate">
+          <DataTemplate>
+            <Panel Name="PART_InlineErrorTemplatePanel"
+                   Background="Transparent">
+              <Panel.Styles>
+                <Style Selector="Panel#PART_InlineErrorTemplatePanel">
+                  <Setter Property="Margin" Value="8,0" />
+                </Style>
+                <Style Selector="Panel#PART_InlineErrorTemplatePanel ToolTip">
+                  <Setter Property="BorderBrush" Value="{DynamicResource DataGridCellInfoBrush}" />
+                </Style>
+                <Style Selector="Panel#PART_InlineErrorTemplatePanel ToolTip TextBlock">
+                  <Setter Property="TextWrapping" Value="Wrap" />
+                </Style>
+              </Panel.Styles>
+              <ToolTip.Tip>
+                <ItemsControl ItemsSource="{Binding}" />
+              </ToolTip.Tip>
+              <Path Width="14"
+                    Height="14"
+                    Data="M14,7 A7,7 0 0,0 0,7 M0,7 A7,7 0 1,0 14,7 M7,3l0,5 M7,9l0,2"
+                    Stroke="{DynamicResource DataGridCellInfoBrush}"
                     StrokeThickness="2" />
             </Panel>
           </DataTemplate>
@@ -531,12 +639,14 @@
                              StrokeThickness="1" />
                 </Grid>
 
-                <ContentPresenter Grid.Column="0" Margin="{TemplateBinding Padding}"
-                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                  Content="{TemplateBinding Content}"
-                                  ContentTemplate="{TemplateBinding ContentTemplate}"
-                                  Foreground="{TemplateBinding Foreground}" />
+                <DataValidationErrors Grid.Column="0"
+                                      Name="PART_CellValidationErrors"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Foreground="{TemplateBinding Foreground}" />
 
                 <Rectangle Grid.Column="0" x:Name="InvalidVisualElement"
                            IsVisible="False"
@@ -571,6 +681,14 @@
         </Style>
         <Style Selector="^:invalid /template/ Rectangle#InvalidVisualElement">
           <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:warning /template/ Rectangle#InvalidVisualElement">
+          <Setter Property="IsVisible" Value="True" />
+          <Setter Property="Stroke" Value="{DynamicResource DataGridCellWarningBrush}" />
+        </Style>
+        <Style Selector="^:info /template/ Rectangle#InvalidVisualElement">
+          <Setter Property="IsVisible" Value="True" />
+          <Setter Property="Stroke" Value="{DynamicResource DataGridCellInfoBrush}" />
         </Style>
       </ControlTheme>
 
@@ -823,6 +941,24 @@
         <Style Selector="^:invalid">
           <Style Selector="^ /template/ Rectangle#InvalidVisualElement">
             <Setter Property="Opacity" Value="0.4" />
+          </Style>
+          <Style Selector="^ /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Opacity" Value="0" />
+          </Style>
+        </Style>
+        <Style Selector="^:warning">
+          <Style Selector="^ /template/ Rectangle#InvalidVisualElement">
+            <Setter Property="Opacity" Value="0.35" />
+            <Setter Property="Fill" Value="{DynamicResource DataGridRowWarningBrush}" />
+          </Style>
+          <Style Selector="^ /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Opacity" Value="0" />
+          </Style>
+        </Style>
+        <Style Selector="^:info">
+          <Style Selector="^ /template/ Rectangle#InvalidVisualElement">
+            <Setter Property="Opacity" Value="0.35" />
+            <Setter Property="Fill" Value="{DynamicResource DataGridRowInfoBrush}" />
           </Style>
           <Style Selector="^ /template/ Rectangle#BackgroundRectangle">
             <Setter Property="Opacity" Value="0" />
@@ -1165,6 +1301,12 @@
 
   <Style Selector="DataGridCell DataValidationErrors">
     <Setter Property="Theme" Value="{DynamicResource DataGridCellDataValidationErrorsTheme}" />
+  </Style>
+  <Style Selector="DataGridCell:warning DataValidationErrors">
+    <Setter Property="Theme" Value="{DynamicResource DataGridCellDataValidationWarningsTheme}" />
+  </Style>
+  <Style Selector="DataGridCell:info DataValidationErrors">
+    <Setter Property="Theme" Value="{DynamicResource DataGridCellDataValidationInfoTheme}" />
   </Style>
 
   <!-- Drag and Drop Styles -->

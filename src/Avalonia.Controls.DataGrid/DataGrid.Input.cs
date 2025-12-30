@@ -744,7 +744,10 @@ internal
                 // Enter behaves like down arrow - it commits the potential editing and goes down one cell.
                 if (!ProcessDownKeyInternal(false, ctrl))
                 {
-                    return false;
+                    if (EditingRow == null)
+                    {
+                        return false;
+                    }
                 }
             }
             else if (WaitForLostFocus(() => ProcessEnterKey(shift, ctrl)))

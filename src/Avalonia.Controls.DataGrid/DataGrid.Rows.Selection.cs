@@ -167,6 +167,11 @@ namespace Avalonia.Controls
                 return false;
             }
 
+            if (IsSlotPlaceholderRow(slot))
+            {
+                return _selectedItems.ContainsSlot(slot);
+            }
+
             if (_selectionModelAdapter != null && DataConnection?.CollectionView != null)
             {
                 int rowIndex = RowIndexFromSlot(slot);
@@ -185,6 +190,15 @@ namespace Avalonia.Controls
             if (rowIndex < 0)
             {
                 return false;
+            }
+
+            if (DataConnection != null)
+            {
+                int slot = SlotFromRowIndex(rowIndex);
+                if (slot >= 0 && IsSlotPlaceholderRow(slot))
+                {
+                    return _selectedItems.ContainsSlot(slot);
+                }
             }
 
             if (_selectionModelAdapter != null)

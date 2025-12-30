@@ -1,0 +1,83 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:DataGridSample.Converters"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.ValidationStylingPage"
+             x:Name="Root"
+             x:DataType="viewModels:ValidationStylingViewModel">
+  <UserControl.DataContext>
+    <viewModels:ValidationStylingViewModel />
+  </UserControl.DataContext>
+
+  <UserControl.Resources>
+    <converters:ValidationSeverityBrushConverter x:Key="ValidationSeverityBrushConverter" />
+  </UserControl.Resources>
+
+  <Grid RowDefinitions="Auto,Auto,*" RowSpacing="12" Margin="12">
+    <StackPanel Spacing="4">
+      <TextBlock Classes="h2">Validation Styling</TextBlock>
+      <TextBlock Text="Severity-aware validation keeps errors blocking and warnings/info non-blocking while still highlighting the cell."
+                 TextWrapping="Wrap" />
+      <TextBlock Text="Try clearing Title (error), setting Risk to 8+, or Health below 50."
+                 TextWrapping="Wrap"
+                 Foreground="Gray"
+                 FontStyle="Italic" />
+    </StackPanel>
+
+    <ItemsControl Grid.Row="1"
+                  ItemsSource="{Binding Legend}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <StackPanel Orientation="Horizontal"
+                      Spacing="16" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="viewModels:ValidationLegendItem">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Border Width="12"
+                    Height="12"
+                    CornerRadius="2"
+                    Background="{Binding Severity, Converter={StaticResource ValidationSeverityBrushConverter}}" />
+            <StackPanel>
+              <TextBlock Text="{Binding Label}" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding Description}" FontSize="11" Foreground="Gray" />
+            </StackPanel>
+          </StackPanel>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+
+    <DataGrid Grid.Row="2"
+              ItemsSource="{Binding Items}"
+              AutoGenerateColumns="False"
+              IsReadOnly="False"
+              CanUserAddRows="False"
+              CanUserDeleteRows="False"
+              CanUserResizeColumns="True"
+              HeadersVisibility="All"
+              GridLinesVisibility="All"
+              RowHeight="36">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Title"
+                            Binding="{Binding Title}"
+                            Width="220"
+                            x:DataType="viewModels:ValidationStylingItem" />
+        <DataGridNumericColumn Header="Risk"
+                               Binding="{Binding Risk}"
+                               Minimum="0"
+                               Maximum="10"
+                               Increment="1"
+                               Width="140"
+                               x:DataType="viewModels:ValidationStylingItem" />
+        <DataGridNumericColumn Header="Health"
+                               Binding="{Binding Health}"
+                               Minimum="0"
+                               Maximum="100"
+                               Increment="5"
+                               Width="160"
+                               x:DataType="viewModels:ValidationStylingItem" />
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

@@ -20,7 +20,7 @@ namespace Avalonia.Controls
     /// Represents an individual <see cref="T:Avalonia.Controls.DataGrid" /> cell.
     /// </summary>
     [TemplatePart(DATAGRIDCELL_elementRightGridLine, typeof(Rectangle))]
-    [PseudoClasses(":selected", ":current", ":edited", ":invalid", ":focus", ":searchmatch", ":searchcurrent")]
+    [PseudoClasses(":selected", ":current", ":edited", ":invalid", ":warning", ":info", ":focus", ":searchmatch", ":searchcurrent")]
 #if !DATAGRID_INTERNAL
 public
 #else
@@ -35,11 +35,17 @@ internal
         private DataGridRow _owningRow;
 
         bool _isValid = true;
+        DataGridValidationSeverity _validationSeverity = DataGridValidationSeverity.None;
 
         public static readonly DirectProperty<DataGridCell, bool> IsValidProperty =
             AvaloniaProperty.RegisterDirect<DataGridCell, bool>(
                 nameof(IsValid),
                 o => o.IsValid);
+
+        public static readonly DirectProperty<DataGridCell, DataGridValidationSeverity> ValidationSeverityProperty =
+            AvaloniaProperty.RegisterDirect<DataGridCell, DataGridValidationSeverity>(
+                nameof(ValidationSeverity),
+                o => o.ValidationSeverity);
 
         public static readonly DirectProperty<DataGridCell, DataGridColumn> OwningColumnProperty =
             AvaloniaProperty.RegisterDirect<DataGridCell, DataGridColumn>(
@@ -69,6 +75,12 @@ internal
         {
             get { return _isValid; }
             internal set { SetAndRaise(IsValidProperty, ref _isValid, value); }
+        }
+
+        public DataGridValidationSeverity ValidationSeverity
+        {
+            get { return _validationSeverity; }
+            internal set { SetAndRaise(ValidationSeverityProperty, ref _validationSeverity, value); }
         }
 
         /// <summary>
@@ -268,7 +280,9 @@ internal
             PseudoClassesHelper.Set(PseudoClasses, ":cell-selected", cellSelected);
             PseudoClassesHelper.Set(PseudoClasses, ":current", IsCurrent);
             PseudoClassesHelper.Set(PseudoClasses, ":edited", IsEdited);
-            PseudoClassesHelper.Set(PseudoClasses, ":invalid", !IsValid);
+            PseudoClassesHelper.Set(PseudoClasses, ":invalid", ValidationSeverity == DataGridValidationSeverity.Error);
+            PseudoClassesHelper.Set(PseudoClasses, ":warning", ValidationSeverity == DataGridValidationSeverity.Warning);
+            PseudoClassesHelper.Set(PseudoClasses, ":info", ValidationSeverity == DataGridValidationSeverity.Info);
             PseudoClassesHelper.Set(PseudoClasses, ":focus", OwningGrid.IsFocused && IsCurrent);
 
             bool isSearchMatch = false;

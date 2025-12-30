@@ -48,6 +48,31 @@ public class DataGridColumnEditingHeadlessTests
     }
 
     [AvaloniaFact]
+    public void TextColumn_Edit_Does_Not_Update_Source_Until_Commit()
+    {
+        var vm = new EditingTestViewModel();
+        vm.Items[0].Text = "Original";
+        var (window, grid) = CreateWindow(vm, CreateTextColumn());
+
+        window.Show();
+        grid.ApplyTemplate();
+        grid.UpdateLayout();
+
+        SelectCellAndBeginEdit(grid, 0, 1);
+
+        var cell = GetCell(grid, "Text", 0);
+        var textBox = Assert.IsType<TextBox>(cell.Content);
+        textBox.Text = "Pending";
+
+        Assert.Equal("Original", vm.Items[0].Text);
+
+        grid.CommitEdit();
+        grid.UpdateLayout();
+
+        Assert.Equal("Pending", vm.Items[0].Text);
+    }
+
+    [AvaloniaFact]
     public void TextColumn_CommitEdit_Updates_Value()
     {
         var vm = new EditingTestViewModel();
@@ -156,6 +181,31 @@ public class DataGridColumnEditingHeadlessTests
     }
 
     [AvaloniaFact]
+    public void ComboBoxColumn_Edit_Does_Not_Update_Source_Until_Commit()
+    {
+        var vm = new EditingTestViewModel();
+        vm.Items[0].Choice = "One";
+        var (window, grid) = CreateWindow(vm, CreateComboBoxColumn());
+
+        window.Show();
+        grid.ApplyTemplate();
+        grid.UpdateLayout();
+
+        SelectCellAndBeginEdit(grid, 0, 1);
+
+        var cell = GetCell(grid, "Choice", 0);
+        var comboBox = Assert.IsType<ComboBox>(cell.Content);
+        comboBox.SelectedItem = "Two";
+
+        Assert.Equal("One", vm.Items[0].Choice);
+
+        grid.CommitEdit();
+        grid.UpdateLayout();
+
+        Assert.Equal("Two", vm.Items[0].Choice);
+    }
+
+    [AvaloniaFact]
     public void ComboBoxColumn_CommitEdit_Updates_Value()
     {
         var vm = new EditingTestViewModel();
@@ -219,6 +269,40 @@ public class DataGridColumnEditingHeadlessTests
         grid.UpdateLayout();
 
         Assert.Equal(200m, vm.Items[0].Price);
+    }
+
+    [AvaloniaFact]
+    public void NumericColumn_Reuses_Editing_Element_With_Updated_Value()
+    {
+        var vm = new EditingTestViewModel();
+        vm.Items[0].Price = 50m;
+        var (window, grid) = CreateWindow(vm, CreateNumericColumn());
+
+        window.Show();
+        grid.ApplyTemplate();
+        grid.UpdateLayout();
+
+        SelectCellAndBeginEdit(grid, 0, 1);
+
+        var cell = GetCell(grid, "Price", 0);
+        var numericUpDown = Assert.IsType<NumericUpDown>(cell.Content);
+        Assert.Equal(50m, numericUpDown.Value);
+
+        numericUpDown.Value = 60m;
+        Assert.True(grid.CommitEdit(DataGridEditingUnit.Cell, exitEditingMode: true));
+        grid.UpdateLayout();
+
+        vm.Items[0].Price = 80m;
+        grid.UpdateLayout();
+
+        SelectCellAndBeginEdit(grid, 0, 1);
+
+        var refreshedCell = GetCell(grid, "Price", 0);
+        var refreshedNumeric = Assert.IsType<NumericUpDown>(refreshedCell.Content);
+
+        Assert.Equal(80m, refreshedNumeric.Value);
+
+        Assert.True(grid.CommitEdit());
     }
 
     [AvaloniaFact]

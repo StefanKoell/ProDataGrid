@@ -13,6 +13,7 @@ using Avalonia.Interactivity;
 using Avalonia.Reactive;
 using Avalonia.VisualTree;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -324,6 +325,7 @@ internal
             }
 
             // Finally, we can prepare the cell for editing
+            _editingCellValidationSnapshot = CellValidationSnapshot.Capture(dataGridCell);
             _editingColumnIndex = CurrentColumnIndex;
             _editingEventArgs = editingEventArgs;
             dataGridCell.UpdatePseudoClasses();
@@ -348,6 +350,7 @@ internal
             if (DataConnection.BeginEdit(dataGridRow.DataContext))
             {
                 EditingRow = dataGridRow;
+                CaptureRowValidationSnapshot(dataGridRow);
                 GenerateEditingElements();
                 return true;
             }
@@ -438,9 +441,10 @@ internal
             {
                 void SetValidationStatus(ICellEditBinding binding)
                 {
-                    if (binding.IsValid)
+                    var severity = ValidationUtil.GetValidationSeverity(binding.ValidationErrors);
+                    if (severity == DataGridValidationSeverity.None)
                     {
-                        ResetValidationStatus();
+                        ResetValidationStatus(editingCell);
                         if (editingElement != null)
                         {
                             DataValidationErrors.ClearErrors(editingElement);
@@ -448,47 +452,82 @@ internal
                     }
                     else
                     {
-                        if (IsValid)
-                        {
-                            IsValid = false;
-                        }
-
                         if (editingRow != null)
                         {
-                            if (editingCell.IsValid)
-                            {
-                                editingCell.IsValid = false;
-                                editingCell.UpdatePseudoClasses();
-                            }
-
-                            if (editingRow.IsValid)
-                            {
-                                editingRow.IsValid = false;
-                                editingRow.ApplyState();
-                            }
+                            editingCell.IsValid = severity != DataGridValidationSeverity.Error;
+                            editingCell.ValidationSeverity = severity;
+                            editingCell.UpdatePseudoClasses();
+                            UpdateRowValidationStateFromCells(editingRow);
                         }
+                        UpdateGridValidationState();
 
                         if (editingElement != null)
                         {
-                            DataValidationErrors.SetError(editingElement,
+                            DataValidationErrors.ClearErrors(editingElement);
+                        }
+
+                        if (editingCell != null)
+                        {
+                            DataValidationErrors.SetError(editingCell,
                                 new AggregateException(binding.ValidationErrors));
                         }
                     }
                 }
 
                 var editBinding = CurrentColumn?.CellEditBinding;
-                if (editBinding != null && !editBinding.CommitEdit())
+                if (editBinding != null)
                 {
-                    SetValidationStatus(editBinding);
-                    _validationSubscription?.Dispose();
-                    _validationSubscription = editBinding.ValidationChanged.Subscribe(v => SetValidationStatus(editBinding));
+                    editBinding.CommitEdit();
+                    var severity = ValidationUtil.GetValidationSeverity(editBinding.ValidationErrors);
+                    if (severity != DataGridValidationSeverity.None)
+                    {
+                        SetValidationStatus(editBinding);
 
-                    ScrollSlotIntoView(CurrentColumnIndex, CurrentSlot, forCurrentCellChange: false, forceHorizontalScroll: true);
-                    return false;
+                        if (severity == DataGridValidationSeverity.Error)
+                        {
+                            _validationSubscription?.Dispose();
+                            _validationSubscription = editBinding.ValidationChanged.Subscribe(v => SetValidationStatus(editBinding));
+
+                            ScrollSlotIntoView(CurrentColumnIndex, CurrentSlot, forCurrentCellChange: false, forceHorizontalScroll: true);
+                            return false;
+                        }
+
+                        _validationSubscription?.Dispose();
+                        _validationSubscription = null;
+                    }
+                    else
+                    {
+                        ResetValidationStatus(editingCell);
+                    }
+                }
+                else
+                {
+                    ResetValidationStatus(editingCell);
                 }
             }
 
-            ResetValidationStatus();
+            if (editAction != DataGridEditAction.Commit)
+            {
+                ResetValidationStatus(editingCell);
+                if (editingElement != null)
+                {
+                    DataValidationErrors.ClearErrors(editingElement);
+                }
+                RestoreRowValidationState(editingRow, editingRow.DataContext, clearIfNoIndei: false);
+                if (editingRow?.DataContext is not INotifyDataErrorInfo)
+                {
+                    RestoreEditingCellValidationSnapshot(editingCell);
+                    UpdateRowValidationStateFromCells(editingRow);
+                    UpdateGridValidationState();
+                }
+                else if (IsColumnBindingPathEmpty(editingCell?.OwningColumn))
+                {
+                    RestoreEditingCellValidationSnapshot(editingCell);
+                    UpdateRowValidationStateFromCells(editingRow);
+                    UpdateGridValidationState();
+                }
+            }
+            _editingCellValidationSnapshot = null;
 
             if (exitEditingMode)
             {
@@ -590,7 +629,27 @@ internal
                     return false;
                 }
             }
-            ResetValidationStatus();
+            if (editAction != DataGridEditAction.Commit)
+            {
+                ResetValidationStatus();
+                RestoreRowValidationState(editingRow, editingRow.DataContext, clearIfNoIndei: false);
+                if (editingRow?.DataContext is not INotifyDataErrorInfo)
+                {
+                    RestoreRowValidationSnapshot(editingRow);
+                    UpdateRowValidationStateFromCells(editingRow);
+                    UpdateGridValidationState();
+                }
+                else
+                {
+                    RestoreTemplateColumnValidationSnapshots(editingRow);
+                    UpdateRowValidationStateFromCells(editingRow);
+                    UpdateGridValidationState();
+                }
+            }
+            if (!exitEditingMode && editingRow == EditingRow)
+            {
+                CaptureRowValidationSnapshot(editingRow);
+            }
 
             // Update the previously edited row's state
             if (exitEditingMode && editingRow == EditingRow)
@@ -755,6 +814,163 @@ internal
             return dataGridRow.Cells[columnIndex];
         }
 
+        private void CaptureRowValidationSnapshot(DataGridRow row)
+        {
+            if (row == null)
+            {
+                _editingRowValidationSnapshot = null;
+                return;
+            }
+
+            var snapshots = new List<CellValidationSnapshot>(row.Cells.Count);
+            foreach (DataGridCell cell in row.Cells)
+            {
+                if (cell != null)
+                {
+                    snapshots.Add(CellValidationSnapshot.Capture(cell));
+                }
+            }
+
+            _editingRowValidationSnapshot = snapshots;
+        }
+
+        private void RestoreRowValidationSnapshot(DataGridRow row)
+        {
+            if (_editingRowValidationSnapshot == null || row == null)
+            {
+                return;
+            }
+
+            foreach (var snapshot in _editingRowValidationSnapshot)
+            {
+                if (snapshot.Cell?.OwningRow == row)
+                {
+                    snapshot.Restore();
+                }
+            }
+        }
+
+        private void RestoreCellValidationSnapshot(DataGridCell cell)
+        {
+            if (_editingRowValidationSnapshot == null || cell == null)
+            {
+                return;
+            }
+
+            foreach (var snapshot in _editingRowValidationSnapshot)
+            {
+                if (ReferenceEquals(snapshot.Cell, cell))
+                {
+                    snapshot.Restore();
+                    break;
+                }
+            }
+        }
+
+        private void RestoreEditingCellValidationSnapshot(DataGridCell cell)
+        {
+            if (_editingCellValidationSnapshot == null || cell == null)
+            {
+                return;
+            }
+
+            if (ReferenceEquals(_editingCellValidationSnapshot.Cell, cell))
+            {
+                _editingCellValidationSnapshot.Restore();
+            }
+        }
+
+        private void RestoreTemplateColumnValidationSnapshots(DataGridRow row)
+        {
+            if (_editingRowValidationSnapshot == null || row == null)
+            {
+                return;
+            }
+
+            foreach (var snapshot in _editingRowValidationSnapshot)
+            {
+                var cell = snapshot.Cell;
+                if (cell?.OwningRow != row)
+                {
+                    continue;
+                }
+
+                if (IsColumnBindingPathEmpty(cell.OwningColumn))
+                {
+                    snapshot.Restore();
+                }
+            }
+        }
+
+        private static bool IsColumnBindingPathEmpty(DataGridColumn column)
+        {
+            return column == null || string.IsNullOrWhiteSpace(GetColumnBindingPath(column));
+        }
+
+        private sealed class CellValidationSnapshot
+        {
+            public CellValidationSnapshot(DataGridCell cell, bool isValid, DataGridValidationSeverity severity, object[] errors)
+            {
+                Cell = cell;
+                IsValid = isValid;
+                Severity = severity;
+                Errors = errors;
+            }
+
+            public DataGridCell Cell { get; }
+
+            public bool IsValid { get; }
+
+            public DataGridValidationSeverity Severity { get; }
+
+            public object[] Errors { get; }
+
+            public static CellValidationSnapshot Capture(DataGridCell cell)
+            {
+                return new CellValidationSnapshot(
+                    cell,
+                    cell.IsValid,
+                    cell.ValidationSeverity,
+                    CreateErrorsSnapshot(cell));
+            }
+
+            public void Restore()
+            {
+                Cell.IsValid = IsValid;
+                Cell.ValidationSeverity = Severity;
+                Cell.UpdatePseudoClasses();
+
+                if (Errors == null || Errors.Length == 0)
+                {
+                    DataValidationErrors.ClearErrors(Cell);
+                }
+                else
+                {
+                    DataValidationErrors.SetErrors(Cell, Errors);
+                }
+            }
+
+            private static object[] CreateErrorsSnapshot(DataGridCell cell)
+            {
+                var errors = DataValidationErrors.GetErrors(cell);
+                if (errors == null)
+                {
+                    return null;
+                }
+
+                var list = new List<object>();
+                foreach (var error in errors)
+                {
+                    if (error != null)
+                    {
+                        list.Add(error);
+                    }
+                }
+
+                return list.Count == 0 ? Array.Empty<object>() : list.ToArray();
+            }
+        }
+
 
         private void ResetEditingRow()
         {
@@ -767,6 +983,8 @@ internal
                 UnloadRow(EditingRow);
             }
             EditingRow = null;
+            _editingRowValidationSnapshot = null;
+            _editingCellValidationSnapshot = null;
         }
 
 
@@ -896,6 +1114,10 @@ internal
             if (EditingRow != null && EditingColumnIndex != -1 && !_executingLostFocusActions)
             {
                 DataGridColumn editingColumn = ColumnsItemsInternal[EditingColumnIndex];
+                if (editingColumn?.CellEditBinding is ExplicitCellEditBinding)
+                {
+                    return false;
+                }
                 Control editingElement = editingColumn.GetCellContent(EditingRow);
                 if (editingElement != null && editingElement.ContainsChild(_focusedObject))
                 {
@@ -1056,6 +1278,8 @@ internal
         private RoutedEventArgs _editingEventArgs;
 
         private bool _focusEditingControl;
+        private List<CellValidationSnapshot> _editingRowValidationSnapshot;
+        private CellValidationSnapshot _editingCellValidationSnapshot;
 
 
         /// <summary>

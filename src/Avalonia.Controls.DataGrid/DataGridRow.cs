@@ -31,7 +31,7 @@ namespace Avalonia.Controls
     [TemplatePart(DATAGRIDROW_elementDetails,        typeof(DataGridDetailsPresenter))]
     [TemplatePart(DATAGRIDROW_elementRoot,           typeof(Panel))]
     [TemplatePart(DATAGRIDROW_elementRowHeader,      typeof(DataGridRowHeader))]
-    [PseudoClasses(":selected", ":editing", ":invalid", ":current", ":pointerover", ":dragging", ":drag-over-before", ":drag-over-after", ":drag-over-inside", ":placeholder", ":searchmatch", ":searchcurrent")]
+    [PseudoClasses(":selected", ":editing", ":invalid", ":warning", ":info", ":current", ":pointerover", ":dragging", ":drag-over-before", ":drag-over-after", ":drag-over-inside", ":placeholder", ":searchmatch", ":searchcurrent")]
 #if !DATAGRID_INTERNAL
 public
 #else
@@ -57,6 +57,7 @@ internal
         private int? _mouseOverColumnIndex;
         private DataGrid _owningGrid;
         private bool _isValid = true;
+        private DataGridValidationSeverity _validationSeverity = DataGridValidationSeverity.None;
         private bool _isPlaceholder;
         private Rectangle _bottomGridLine;
         private bool _areHandlersSuspended;
@@ -115,6 +116,11 @@ internal
                 nameof(IsValid),
                 o => o.IsValid);
 
+        public static readonly DirectProperty<DataGridRow, DataGridValidationSeverity> ValidationSeverityProperty =
+            AvaloniaProperty.RegisterDirect<DataGridRow, DataGridValidationSeverity>(
+                nameof(ValidationSeverity),
+                o => o.ValidationSeverity);
+
         /// <summary>
         /// Gets a value that indicates whether the data in a row is valid.
         /// </summary>
@@ -122,6 +128,12 @@ internal
         {
             get { return _isValid; }
             internal set { SetAndRaise(IsValidProperty, ref _isValid, value); }
+        }
+
+        public DataGridValidationSeverity ValidationSeverity
+        {
+            get { return _validationSeverity; }
+            internal set { SetAndRaise(ValidationSeverityProperty, ref _validationSeverity, value); }
         }
 
         public static readonly StyledProperty<IDataTemplate> DetailsTemplateProperty =
@@ -200,6 +212,7 @@ internal
 
             Index = -1;
             IsValid = true;
+            ValidationSeverity = DataGridValidationSeverity.None;
             Slot = -1;
             _mouseOverColumnIndex = null;
             _detailsDesiredHeight = double.NaN;

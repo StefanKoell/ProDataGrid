@@ -185,6 +185,9 @@
     <TabItem Header="Validation">
       <pages:ValidationColumnsPage />
     </TabItem>
+    <TabItem Header="Validation Styling">
+      <pages:ValidationStylingPage />
+    </TabItem>
     <TabItem Header="DataTable">
       <local:DataTablePage />
     </TabItem>

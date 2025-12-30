@@ -532,6 +532,21 @@ public class DataGridKeyboardInputTests
     }
 
     [AvaloniaFact]
+    public void F2_Starts_Edit_On_NewItemPlaceholder()
+    {
+        var (grid, items) = CreateGrid(rowCount: 2, canUserAddRows: true);
+        var slot = grid.SlotFromRowIndex(items.Count);
+        grid.UpdateSelectionAndCurrency(columnIndex: 0, slot, DataGridSelectionAction.SelectCurrent, scrollIntoView: false);
+        grid.UpdateLayout();
+
+        var args = PressKey(grid, Key.F2);
+
+        Assert.True(args.Handled);
+        Assert.Equal(0, grid.EditingColumnIndex);
+        Assert.NotNull(grid.EditingRow);
+    }
+
+    [AvaloniaFact]
     public void F2_Starts_Edit_When_Alt_Pressed()
     {
         var (grid, _) = CreateGrid();
@@ -625,7 +640,8 @@ public class DataGridKeyboardInputTests
         DataGridSelectionMode selectionMode = DataGridSelectionMode.Extended,
         bool autoGenerateColumns = false,
         bool addColumns = true,
-        bool canUserDeleteRows = false)
+        bool canUserDeleteRows = false,
+        bool canUserAddRows = false)
     {
         var items = new ObservableCollection<RowItem>();
         for (var i = 0; i < rowCount; i++)
@@ -646,7 +662,7 @@ public class DataGridKeyboardInputTests
             ItemsSource = items,
             SelectionMode = selectionMode,
             SelectionUnit = selectionUnit,
-            CanUserAddRows = false,
+            CanUserAddRows = canUserAddRows,
             CanUserDeleteRows = canUserDeleteRows,
             AutoGenerateColumns = autoGenerateColumns
         };

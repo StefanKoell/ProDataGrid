@@ -6,6 +6,7 @@
 #nullable disable
 
 using Avalonia.Automation;
+using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.DataGridDragDrop;
 using Avalonia.Input;
@@ -18,7 +19,7 @@ namespace Avalonia.Controls.Primitives
     /// Represents an individual <see cref="T:Avalonia.Controls.DataGrid" /> row header. 
     /// </summary>
     [TemplatePart(DATAGRIDROWHEADER_elementRootName, typeof(Control))]
-    [PseudoClasses(":invalid", ":selected", ":editing", ":current")]
+[PseudoClasses(":invalid", ":warning", ":info", ":selected", ":editing", ":current")]
 #if !DATAGRID_INTERNAL
 public
 #else
@@ -152,7 +153,9 @@ internal
             {
                 if (OwningRow != null)
                 {
-                    PseudoClassesHelper.Set(PseudoClasses, ":invalid", !OwningRow.IsValid);
+                    PseudoClassesHelper.Set(PseudoClasses, ":invalid", OwningRow.ValidationSeverity == DataGridValidationSeverity.Error);
+                    PseudoClassesHelper.Set(PseudoClasses, ":warning", OwningRow.ValidationSeverity == DataGridValidationSeverity.Warning);
+                    PseudoClassesHelper.Set(PseudoClasses, ":info", OwningRow.ValidationSeverity == DataGridValidationSeverity.Info);
                     PseudoClassesHelper.Set(PseudoClasses, ":selected", OwningRow.IsSelected);
                     PseudoClassesHelper.Set(PseudoClasses, ":editing", OwningRow.IsEditing);
 

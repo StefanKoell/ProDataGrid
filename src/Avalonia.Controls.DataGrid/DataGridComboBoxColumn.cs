@@ -230,7 +230,7 @@ internal
         /// <summary>
         /// Gets the binding that should be used for edit/clipboard operations.
         /// </summary>
-        private IBinding EffectiveBinding
+        internal IBinding EffectiveBinding
         {
             get
             {
@@ -634,13 +634,23 @@ internal
 
         private static ICellEditBinding BindEditingElement(AvaloniaObject target, AvaloniaProperty property, IBinding binding)
         {
+            if (BindingCloneHelper.TryCreateExplicitBinding(binding, out var explicitBinding))
+            {
+                var explicitResult = explicitBinding.Initiate(target, property, enableDataValidation: true);
+                if (explicitResult != null)
+                {
+                    BindingOperations.Apply(target, property, explicitResult, null);
+                    return new ExplicitCellEditBinding(target, property);
+                }
+            }
+
             var result = binding?.Initiate(target, property, enableDataValidation: true);
 
             if (result != null)
             {
                 if (result.Source is IAvaloniaSubject<object> subject)
                 {
-                    var bindingHelper = new CellEditBinding(subject);
+                    var bindingHelper = new CellEditBinding(subject, result.Expression, () => target.GetValue(property));
                     var instanceBinding = new InstancedBinding(bindingHelper.InternalSubject, result.Mode, result.Priority);
 
                     BindingOperations.Apply(target, property, instanceBinding, null);
@@ -652,5 +662,6 @@ internal
 
             return null;
         }
+
     }
 }

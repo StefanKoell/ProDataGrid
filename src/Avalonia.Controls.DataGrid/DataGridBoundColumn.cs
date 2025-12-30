@@ -115,15 +115,33 @@ internal
             return element;
         } 
 
+        protected override void RefreshEditingElement(Control editingElement)
+        {
+            if (Binding != null)
+            {
+                BindingOperations.GetBindingExpressionBase(editingElement, BindingTarget)?.UpdateTarget();
+            }
+        }
+
         private static ICellEditBinding BindEditingElement(AvaloniaObject target, AvaloniaProperty property, IBinding binding)
         {
+            if (BindingCloneHelper.TryCreateExplicitBinding(binding, out var explicitBinding))
+            {
+                var explicitResult = explicitBinding.Initiate(target, property, enableDataValidation: true);
+                if (explicitResult != null)
+                {
+                    BindingOperations.Apply(target, property, explicitResult, null);
+                    return new ExplicitCellEditBinding(target, property);
+                }
+            }
+
             var result = binding.Initiate(target, property, enableDataValidation: true); 
 
             if (result != null)
             {
                 if(result.Source is IAvaloniaSubject<object> subject)
                 {
-                    var bindingHelper = new CellEditBinding(subject);
+                    var bindingHelper = new CellEditBinding(subject, result.Expression, () => target.GetValue(property));
                     var instanceBinding = new InstancedBinding(bindingHelper.InternalSubject, result.Mode, result.Priority); 
 
                     BindingOperations.Apply(target, property, instanceBinding, null);
@@ -137,6 +155,7 @@ internal
         } 
 
         protected abstract Control GenerateEditingElementDirect(DataGridCell cell, object dataItem); 
+
 
         protected AvaloniaProperty BindingTarget { get; set; } 
 

@@ -353,6 +353,8 @@ public class DataGridThemeResourceCoverageTests
 
         yield return new ResourceExpectation("DataGridGridLinesVisibility", typeof(DataGridGridLinesVisibility));
         yield return new ResourceExpectation("DataGridCellDataValidationErrorsTheme", typeof(IStyle));
+        yield return new ResourceExpectation("DataGridCellDataValidationWarningsTheme", typeof(IStyle));
+        yield return new ResourceExpectation("DataGridCellDataValidationInfoTheme", typeof(IStyle));
     }
 
     private static readonly ControlThemeExpectation[] GenericControlThemeExpectations =
@@ -361,6 +363,8 @@ public class DataGridThemeResourceCoverageTests
         new("DataGridFilterButtonTheme", typeof(Button)),
         new("DataGridFilterButtonFilteredTheme", typeof(Button)),
         new("DataGridCellDataValidationErrorsTheme", typeof(DataValidationErrors)),
+        new("DataGridCellDataValidationWarningsTheme", typeof(DataValidationErrors)),
+        new("DataGridCellDataValidationInfoTheme", typeof(DataValidationErrors)),
         new("DataGridCellTextBlockTheme", typeof(TextBlock)),
         new("DataGridCellTextBoxTheme", typeof(TextBox)),
         new("DataGridCellAutoCompleteTextBlockTheme", typeof(TextBlock)),
@@ -431,6 +435,8 @@ public class DataGridThemeResourceCoverageTests
         "DataGridRowGroupHeaderHoveredBackgroundBrush",
         "DataGridRowHoveredBackgroundBrush",
         "DataGridRowInvalidBrush",
+        "DataGridRowWarningBrush",
+        "DataGridRowInfoBrush",
         "DataGridRowSelectedBackgroundBrush",
         "DataGridRowSelectedHoveredBackgroundBrush",
         "DataGridRowSelectedUnfocusedBackgroundBrush",
@@ -438,6 +444,8 @@ public class DataGridThemeResourceCoverageTests
         "DataGridCellFocusVisualPrimaryBrush",
         "DataGridCellFocusVisualSecondaryBrush",
         "DataGridCellInvalidBrush",
+        "DataGridCellWarningBrush",
+        "DataGridCellInfoBrush",
         "DataGridGridLinesBrush",
         "DataGridDetailsPresenterBackgroundBrush",
         "DataGridRowBackgroundBrush",
@@ -514,6 +522,8 @@ public class DataGridThemeResourceCoverageTests
         "DataGridRowGroupHeaderHoveredBackgroundBrush",
         "DataGridRowHoveredBackgroundBrush",
         "DataGridRowInvalidBrush",
+        "DataGridRowWarningBrush",
+        "DataGridRowInfoBrush",
         "DataGridRowDropIndicatorBrush",
         "DataGridRowSelectedBackgroundBrush",
         "DataGridRowSelectedHoveredBackgroundBrush",
@@ -522,6 +532,8 @@ public class DataGridThemeResourceCoverageTests
         "DataGridCellFocusVisualPrimaryBrush",
         "DataGridCellFocusVisualSecondaryBrush",
         "DataGridCellInvalidBrush",
+        "DataGridCellWarningBrush",
+        "DataGridCellInfoBrush",
         "DataGridGridLinesBrush",
         "DataGridDetailsPresenterBackgroundBrush",
         "DataGridSummaryRowBackgroundBrush",

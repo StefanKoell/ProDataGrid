@@ -55,6 +55,7 @@ internal
         private FlyoutBase _filterFlyout;
         private System.Collections.IComparer _customSortComparer;
 
+
         /// <summary>
         /// Routed event raised when the column header receives a pointer press.
         /// </summary>

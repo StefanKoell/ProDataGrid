@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Columns and Editing | ProDataGrid for Avalonia </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Columns and Editing | ProDataGrid for Avalonia ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/StefanKoell/ProDataGrid/blob/master/docfx/articles/columns-and-editing.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="columns-and-editing">Columns and Editing</h1>
+
+<p>ProDataGrid supports a wide range of built-in columns, flexible sizing, auto-generation, and strong binding support. Editing is built in and can be combined with validation rules and row operations.</p>
+<h2 id="basic-setup">Basic Setup</h2>
+<p>Basic layout with common column types and width modes (pixel, auto, star):</p>
+<pre><code class="lang-xml">&lt;DataGrid ItemsSource=&quot;{Binding People}&quot;
+          AutoGenerateColumns=&quot;False&quot;
+          CanUserResizeColumns=&quot;True&quot;
+          GridLinesVisibility=&quot;Horizontal&quot;&gt;
+  &lt;DataGrid.Columns&gt;
+    &lt;!-- Pixel width --&gt;
+    &lt;DataGridTextColumn Header=&quot;ID&quot;
+                        Binding=&quot;{Binding Id}&quot;
+                        Width=&quot;60&quot; /&gt;
+
+    &lt;!-- Auto sizes to content --&gt;
+    &lt;DataGridTextColumn Header=&quot;Name&quot;
+                        Binding=&quot;{Binding Name}&quot;
+                        Width=&quot;Auto&quot; /&gt;
+
+    &lt;!-- Fixed pixel width checkbox column --&gt;
+    &lt;DataGridCheckBoxColumn Header=&quot;Active&quot;
+                            Binding=&quot;{Binding IsActive}&quot;
+                            Width=&quot;80&quot; /&gt;
+
+    &lt;!-- Star sizing shares remaining space --&gt;
+    &lt;DataGridTextColumn Header=&quot;Department&quot;
+                        Binding=&quot;{Binding Department}&quot;
+                        Width=&quot;*&quot; /&gt;
+
+    &lt;!-- Template column with custom content and weighted star width --&gt;
+    &lt;DataGridTemplateColumn Header=&quot;Notes&quot;
+                            Width=&quot;2*&quot;&gt;
+      &lt;DataGridTemplateColumn.CellTemplate&gt;
+        &lt;DataTemplate&gt;
+          &lt;TextBlock Text=&quot;{Binding Notes}&quot;
+                     TextWrapping=&quot;Wrap&quot; /&gt;
+        &lt;/DataTemplate&gt;
+      &lt;/DataGridTemplateColumn.CellTemplate&gt;
+    &lt;/DataGridTemplateColumn&gt;
+  &lt;/DataGrid.Columns&gt;
+&lt;/DataGrid&gt;
+</code></pre>
+<p>Widths accept pixel values (<code>&quot;80&quot;</code>), <code>Auto</code> (content-based), <code>*</code> or weighted stars (e.g., <code>2*</code>) that share remaining space.</p>
+<h2 id="column-sizing-and-layout">Column Sizing and Layout</h2>
+<ul>
+<li>Widths: pixel, <code>Auto</code>, and star sizing (<code>*</code>, <code>2*</code>).</li>
+<li>Constraints: <code>MinWidth</code>/<code>MaxWidth</code> per column.</li>
+<li>Interaction: <code>CanUserResizeColumns</code>, <code>CanUserResizeColumnsOnDoubleClick</code>, and <code>CanUserReorderColumns</code> at the grid level; <code>CanUserResize</code>, <code>CanUserReorder</code>, and <code>CanUserSort</code> per column.</li>
+<li>Frozen columns: <code>FrozenColumnCount</code> and <code>FrozenColumnCountRight</code> pin columns on the left/right.</li>
+</ul>
+<p>Double-click the column header resize handle to fit the column to visible content when <code>CanUserResizeColumnsOnDoubleClick</code> is enabled.</p>
+<pre><code class="lang-xml">&lt;DataGrid FrozenColumnCount=&quot;1&quot;
+          FrozenColumnCountRight=&quot;1&quot;
+          CanUserResizeColumns=&quot;True&quot;
+          CanUserReorderColumns=&quot;True&quot; /&gt;
+</code></pre>
+<h2 id="headers-sorting-and-filters">Headers, Sorting, and Filters</h2>
+<p>Columns expose header content and sorting metadata:</p>
+<ul>
+<li><code>Header</code> and <code>HeaderTemplate</code> define the column header content.</li>
+<li><code>SortMemberPath</code> controls which property is sorted when the header is clicked.</li>
+<li><code>SortDirection</code> can be set to seed an initial sort glyph.</li>
+<li><code>ShowFilterButton</code> and <code>FilterFlyout</code> control the built-in filter glyph and flyout entry point.</li>
+</ul>
+<p>Filter glyphs are driven by the filtering model; see <a href="data-operations.html">Data Operations</a>.</p>
+<h2 id="auto-generated-and-bindable-columns">Auto-Generated and Bindable Columns</h2>
+<ul>
+<li>Turn on <code>AutoGenerateColumns</code> to build columns from the data model.</li>
+<li>Use <code>AutoGeneratingColumn</code> to customize headers, widths, and bindings.</li>
+<li>Build or replace the <code>Columns</code> collection at runtime for dynamic layouts.</li>
+</ul>
+<p>Bind <code>Columns</code> to an <code>ObservableCollection&lt;DataGridColumn&gt;</code> to drive columns from a view-model. Control synchronization and placement when auto-generated columns are also enabled:</p>
+<ul>
+<li><code>ColumnsSynchronizationMode</code>: <code>OneWayToGrid</code> (default) or <code>TwoWay</code> to mirror grid structural changes back to the source.</li>
+<li><code>ColumnsSourceResetBehavior</code>: <code>Reload</code> or <code>Ignore</code> reset notifications from the source.</li>
+<li><code>AutoGeneratedColumnsPlacement</code>: <code>AfterSource</code>, <code>BeforeSource</code>, or <code>None</code> when a columns source is set.</li>
+</ul>
+<pre><code class="lang-xml">&lt;DataGrid ItemsSource=&quot;{Binding Items}&quot;
+          Columns=&quot;{Binding Columns}&quot;
+          ColumnsSynchronizationMode=&quot;TwoWay&quot;
+          ColumnsSourceResetBehavior=&quot;Reload&quot;
+          AutoGeneratedColumnsPlacement=&quot;AfterSource&quot;
+          AutoGenerateColumns=&quot;True&quot;
+          HeadersVisibility=&quot;All&quot; /&gt;
+</code></pre>
+<h2 id="editing-and-row-operations">Editing and Row Operations</h2>
+<ul>
+<li><code>IsReadOnly</code> on the grid or column disables editing.</li>
+<li>Editing lifecycle: <code>BeginningEdit</code>, <code>PreparingCellForEdit</code>, <code>CellEditEnding</code>, <code>CellEditEnded</code>, <code>RowEditEnding</code>, <code>RowEditEnded</code>.</li>
+<li>Programmatic flow: <code>BeginEdit</code>, <code>CommitEdit</code>, <code>CancelEdit</code>.</li>
+<li><code>CanUserAddRows</code> and <code>CanUserDeleteRows</code> enable add/delete when the collection view supports it.</li>
+<li><code>DataGridTemplateColumn.NewRowCellTemplate</code> lets you customize cells in the new-row placeholder.</li>
+</ul>
+<p>Validation integrates with Avalonia validation rules and per-column settings. See <a href="validation-and-errors.html">Validation and Errors</a>.</p>
+<h2 id="template-columns">Template Columns</h2>
+<p><code>DataGridTemplateColumn</code> gives full control over display and editing:</p>
+<pre><code class="lang-xml">&lt;DataGridTemplateColumn Header=&quot;Notes&quot; Width=&quot;2*&quot;&gt;
+  &lt;DataGridTemplateColumn.CellTemplate&gt;
+    &lt;DataTemplate&gt;
+      &lt;TextBlock Text=&quot;{Binding Notes}&quot; TextWrapping=&quot;Wrap&quot; /&gt;
+    &lt;/DataTemplate&gt;
+  &lt;/DataGridTemplateColumn.CellTemplate&gt;
+  &lt;DataGridTemplateColumn.CellEditingTemplate&gt;
+    &lt;DataTemplate&gt;
+      &lt;TextBox Text=&quot;{Binding Notes}&quot; AcceptsReturn=&quot;True&quot; /&gt;
+    &lt;/DataTemplate&gt;
+  &lt;/DataGridTemplateColumn.CellEditingTemplate&gt;
+&lt;/DataGridTemplateColumn&gt;
+</code></pre>
+<h2 id="datatable-binding">DataTable Binding</h2>
+<p>When binding to <code>DataTable.DefaultView</code>, ProDataGrid binds cells via <code>TypeDescriptor</code> so you do not need manual indexers.</p>
+<h2 id="custom-columns">Custom Columns</h2>
+<p>Derive from a built-in column to customize element creation while still reusing the grid's theme resources:</p>
+<pre><code class="lang-csharp">using Avalonia.Controls;
+
+public class AccentTextColumn : DataGridTextColumn
+{
+    protected override Control GenerateElement(DataGridCell cell, object dataItem)
+    {
+        var textBlock = (TextBlock)base.GenerateElement(cell, dataItem);
+        if (CellTextBlockTheme is { } theme)
+        {
+            textBlock.Theme = theme;
+        }
+
+        return textBlock;
+    }
+}
+</code></pre>
+<h2 id="column-types-reference">Column Types Reference</h2>
+<p>For a catalog of built-in column types and their main properties, see <a href="column-types-reference.html">Column Types Reference</a>.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/StefanKoell/ProDataGrid/blob/master/docfx/articles/columns-and-editing.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

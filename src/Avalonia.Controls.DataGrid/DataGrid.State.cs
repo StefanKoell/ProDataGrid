@@ -719,6 +719,7 @@ namespace Avalonia.Controls
         {
             if (RowGroupSublevelIndents == null || DisplayData == null)
             {
+                _pendingGroupingIndentationReset = false;
                 InvalidateRowsMeasure(invalidateIndividualElements: true);
                 InvalidateRowsArrange();
                 return;
@@ -726,6 +727,7 @@ namespace Avalonia.Controls
 
             if (DisplayData.FirstScrollingSlot < 0 || DisplayData.LastScrollingSlot < 0)
             {
+                _pendingGroupingIndentationReset = false;
                 if (SlotCount > 0 && IsAttachedToVisualTree && IsVisible)
                 {
                     RequestGroupingIndentationRefresh();
@@ -742,12 +744,19 @@ namespace Avalonia.Controls
 
             int slot = DisplayData.FirstScrollingSlot;
             int lastSlot = DisplayData.LastScrollingSlot;
+            var resetDisplayedRows = false;
             while (slot >= 0 && slot <= lastSlot)
             {
                 var element = DisplayData.GetDisplayedElement(slot);
                 if (element is DataGridRowGroupHeader header)
                 {
-                    var rowGroupInfo = RowGroupHeadersTable.GetValueAt(slot) ?? header.RowGroupInfo;
+                    var rowGroupInfo = RowGroupHeadersTable.GetValueAt(slot);
+                    if (rowGroupInfo == null)
+                    {
+                        resetDisplayedRows = true;
+                        break;
+                    }
+
                     if (rowGroupInfo != null)
                     {
                         SyncRowGroupHeaderInfo(header, rowGroupInfo);
@@ -766,7 +775,13 @@ namespace Avalonia.Controls
                 }
                 else if (element is DataGridRowGroupFooter footer)
                 {
-                    var rowGroupInfo = RowGroupFootersTable.GetValueAt(slot) ?? footer.RowGroupInfo;
+                    var rowGroupInfo = RowGroupFootersTable.GetValueAt(slot);
+                    if (rowGroupInfo == null)
+                    {
+                        resetDisplayedRows = true;
+                        break;
+                    }
+
                     if (rowGroupInfo != null)
                     {
                         if (!ReferenceEquals(footer.RowGroupInfo, rowGroupInfo))
@@ -787,6 +802,18 @@ namespace Avalonia.Controls
                 slot = GetNextVisibleSlot(slot);
             }
 
+            if (resetDisplayedRows)
+            {
+                if (!_pendingGroupingIndentationReset)
+                {
+                    _pendingGroupingIndentationReset = true;
+                    ResetDisplayedRows();
+                }
+                RequestGroupingIndentationRefresh();
+                return;
+            }
+
+            _pendingGroupingIndentationReset = false;
             InvalidateRowsMeasure(invalidateIndividualElements: true);
             InvalidateRowsArrange();
         }

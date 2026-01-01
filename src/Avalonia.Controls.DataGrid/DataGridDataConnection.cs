@@ -1087,10 +1087,17 @@ namespace Avalonia.Controls
                 // Notify the summary service about the collection change
                 _owner.OnCollectionChangedForSummaries(e);
 
-                if (_pendingGroupingRefresh && e.Action == NotifyCollectionChangedAction.Reset)
+                if (e.Action == NotifyCollectionChangedAction.Reset)
                 {
-                    _pendingGroupingRefresh = false;
-                    _owner.RefreshGroupingAfterDescriptionsChange();
+                    if (_pendingGroupingRefresh || IsGrouping)
+                    {
+                        _pendingGroupingRefresh = false;
+                        _owner.RefreshGroupingAfterDescriptionsChange();
+                    }
+                    else
+                    {
+                        _pendingGroupingRefresh = false;
+                    }
                 }
 
                 // Ensure the visual selection state matches the restored selection after mutations

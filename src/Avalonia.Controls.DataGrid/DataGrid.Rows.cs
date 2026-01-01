@@ -513,6 +513,14 @@ internal
                 ClearRowGroupHeadersTable();
                 PopulateRowGroupHeadersTable();
             }
+            if (DataConnection?.CollectionView is IDataGridCollectionView view && view.IsGrouping)
+            {
+                RequestGroupingIndentationRefresh();
+            }
+            else
+            {
+                _pendingGroupingIndentationReset = false;
+            }
         }
 
         internal void RemoveRowAt(int rowIndex, object item)

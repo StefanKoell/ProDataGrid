@@ -142,6 +142,53 @@ public class DataGridProgrammaticGroupingIndentationTests
     }
 
     [AvaloniaFact]
+    public void ProgrammaticGrouping_Reapplies_Indentation_After_Toggling_Configurations()
+    {
+        var items = new ObservableCollection<Item>(new[]
+        {
+            new Item("Prices", "Identification", "Base price", "es-ES"),
+            new Item("Prices", "Identification", "Wholesale", "en-US"),
+            new Item("Prices", "Encoding", "Currency", "es-ES"),
+            new Item("Prices", "Encoding", "Currency", "en-US"),
+            new Item("Metadata", "Identification", "Name", "es-ES"),
+            new Item("Metadata", "Identification", "Name", "en-US"),
+            new Item("Metadata", "Encoding", "Language", "es-ES"),
+            new Item("Metadata", "Encoding", "Language", "en-US"),
+        });
+
+        var view = new DataGridCollectionView(items);
+        var (root, grid) = CreateGrid(view, width: 520, height: 220);
+
+        try
+        {
+            for (var i = 0; i < 3; i++)
+            {
+                SetGroupDescriptions(view, groups =>
+                {
+                    groups.Add(new DataGridPathGroupDescription(nameof(Item.Category)));
+                    groups.Add(new DataGridPathGroupDescription(nameof(Item.Group)));
+                });
+                grid.ExpandAllGroups();
+                PumpLayout(grid);
+                AssertDisplayedGroupHeaderIndentation(grid);
+
+                SetGroupDescriptions(view, groups =>
+                {
+                    groups.Add(new DataGridPathGroupDescription(nameof(Item.Group)));
+                    groups.Add(new DataGridPathGroupDescription(nameof(Item.Category)));
+                });
+                grid.ExpandAllGroups();
+                PumpLayout(grid);
+                AssertDisplayedGroupHeaderIndentation(grid);
+            }
+        }
+        finally
+        {
+            root.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void ProgrammaticGrouping_Indentation_Is_Correct_For_All_Visible_Headers_Across_Mutations()
     {
         var items = new ObservableCollection<Item>(new[]
@@ -399,6 +446,61 @@ public class DataGridProgrammaticGroupingIndentationTests
 
             Assert.Equal(expected, GetIndentSpacerWidth(header), precision: 3);
         }
+    }
+
+    private static void AssertDisplayedGroupHeaderIndentation(DataGrid grid)
+    {
+        var rowGroupInfos = GetRowGroupInfos(grid);
+        if (rowGroupInfos.Count == 0)
+        {
+            for (var attempt = 0; attempt < 3 && rowGroupInfos.Count == 0; attempt++)
+            {
+                PumpLayout(grid);
+                rowGroupInfos = GetRowGroupInfos(grid);
+            }
+        }
+        Assert.NotEmpty(rowGroupInfos);
+
+        var indents = grid.RowGroupSublevelIndents ?? System.Array.Empty<double>();
+        var displayedInfos = GetDisplayedGroupInfos(grid, rowGroupInfos);
+        if (displayedInfos.Count == 0)
+        {
+            ScrollSlotIntoView(grid, rowGroupInfos[0].Slot);
+            displayedInfos = GetDisplayedGroupInfos(grid, rowGroupInfos);
+        }
+
+        Assert.NotEmpty(displayedInfos);
+
+        foreach (var info in displayedInfos)
+        {
+            if (grid.DisplayData.GetDisplayedElement(info.Slot) is not DataGridRowGroupHeader header)
+            {
+                throw new InvalidOperationException("Group header was not realized.");
+            }
+
+            var level = info.Level;
+            var expected = level <= 0 || indents.Length == 0
+                ? 0
+                : indents[Math.Min(level - 1, indents.Length - 1)];
+
+            Assert.Equal(expected, GetIndentSpacerWidth(header), precision: 3);
+        }
+    }
+
+    private static List<DataGridRowGroupInfo> GetDisplayedGroupInfos(
+        DataGrid grid,
+        IReadOnlyList<DataGridRowGroupInfo> rowGroupInfos)
+    {
+        var firstSlot = grid.DisplayData.FirstScrollingSlot;
+        var lastSlot = grid.DisplayData.LastScrollingSlot;
+        if (firstSlot < 0 || lastSlot < firstSlot)
+        {
+            return new List<DataGridRowGroupInfo>();
+        }
+
+        return rowGroupInfos
+            .Where(info => info.Slot >= firstSlot && info.Slot <= lastSlot && grid.IsSlotVisible(info.Slot))
+            .ToList();
     }
 
     private static void ScrollSlotIntoView(DataGrid grid, int slot)

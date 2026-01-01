@@ -307,6 +307,7 @@ internal
         private bool _pendingHierarchicalIndentationRefresh;
         private bool _pendingGroupingIndentationRefresh;
         private bool _groupingIndentationRefreshQueued;
+        private bool _pendingGroupingIndentationReset;
         private IEnumerable _hierarchicalItemsSource;
         private bool _ownsHierarchicalItemsSource;
         private IDataGridRowDropHandler _rowDropHandler;

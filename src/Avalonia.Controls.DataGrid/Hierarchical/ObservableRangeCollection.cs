@@ -50,9 +50,10 @@ namespace Avalonia.Controls.DataGridHierarchical
                 Items.Insert(index + i, materialized[i]);
             }
 
+            var notifyItems = materialized as IList ?? materialized.ToList();
             RaiseChange(new NotifyCollectionChangedEventArgs(
                 NotifyCollectionChangedAction.Add,
-                materialized,
+                notifyItems,
                 index));
         }
 
@@ -92,9 +93,10 @@ namespace Avalonia.Controls.DataGridHierarchical
                 Items.RemoveAt(index);
             }
 
+            var notifyItems = (IList)removed;
             RaiseChange(new NotifyCollectionChangedEventArgs(
                 NotifyCollectionChangedAction.Remove,
-                removed,
+                notifyItems,
                 index));
         }
 

@@ -8,6 +8,7 @@ Highlights include:
 - Bindable columns, auto-generation, and `DataTable.DefaultView` binding.
 - Sorting/filtering/search models, grouping, and paging.
 - Selection stability, selection origin logging, and current cell tracking.
+- Selection units and highlighting (row vs cell visuals).
 - Clipboard export formats and export customization.
 - Hierarchical data, hierarchical drag/drop, and tree-like mimics.
 - Virtualization and scrolling diagnostics (large datasets, row height estimators, recycling).

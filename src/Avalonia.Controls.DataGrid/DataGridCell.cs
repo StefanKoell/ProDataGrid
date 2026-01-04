@@ -22,7 +22,7 @@ namespace Avalonia.Controls
     /// Represents an individual <see cref="T:Avalonia.Controls.DataGrid" /> cell.
     /// </summary>
     [TemplatePart(DATAGRIDCELL_elementRightGridLine, typeof(Rectangle))]
-    [PseudoClasses(":selected", ":current", ":edited", ":invalid", ":warning", ":info", ":focus", ":searchmatch", ":searchcurrent")]
+    [PseudoClasses(":selected", ":row-selected", ":cell-selected", ":current", ":edited", ":invalid", ":warning", ":info", ":focus", ":searchmatch", ":searchcurrent")]
 #if !DATAGRID_INTERNAL
 public
 #else
@@ -295,11 +295,13 @@ internal
             }
 
             bool rowSelected = OwningRow.IsSelected;
-            bool cellSelected = OwningGrid.SelectionUnit == DataGridSelectionUnit.FullRow
+            bool cellSelected = OwningGrid.SelectionUnit != DataGridSelectionUnit.FullRow
+                && OwningGrid.GetCellSelectionFromSlot(OwningRow.Slot, ColumnIndex);
+            bool isSelected = OwningGrid.SelectionUnit == DataGridSelectionUnit.FullRow
                 ? rowSelected
-                : OwningGrid.GetCellSelectionFromSlot(OwningRow.Slot, ColumnIndex);
+                : cellSelected;
 
-            PseudoClassesHelper.Set(PseudoClasses, ":selected", cellSelected);
+            PseudoClassesHelper.Set(PseudoClasses, ":selected", isSelected);
             PseudoClassesHelper.Set(PseudoClasses, ":row-selected", rowSelected);
             PseudoClassesHelper.Set(PseudoClasses, ":cell-selected", cellSelected);
             PseudoClassesHelper.Set(PseudoClasses, ":current", IsCurrent);

@@ -370,6 +370,7 @@ internal
                 if (element is DataGridRow row)
                 {
                     row.ApplyState();
+                    row.ApplyCellsState();
                 }
                 else if (element is DataGridRowGroupHeader groupHeader)
                 {
@@ -1323,12 +1324,44 @@ internal
 
         private void RaiseSelectedCellsChanged(IReadOnlyList<DataGridCellInfo> addedCells, IReadOnlyList<DataGridCellInfo> removedCells)
         {
-            if ((addedCells.Count == 0 && removedCells.Count == 0) || SelectedCellsChanged == null)
+            if (addedCells.Count == 0 && removedCells.Count == 0)
             {
                 return;
             }
 
+            UpdateSelectionVisuals(addedCells);
+            UpdateSelectionVisuals(removedCells);
+
             SelectedCellsChanged?.Invoke(this, new DataGridSelectedCellsChangedEventArgs(addedCells, removedCells));
+        }
+
+        private void UpdateSelectionVisuals(IReadOnlyList<DataGridCellInfo> cells)
+        {
+            if (cells.Count == 0 || DisplayData == null)
+            {
+                return;
+            }
+
+            foreach (var cell in cells)
+            {
+                if (!cell.IsValid)
+                {
+                    continue;
+                }
+
+                int slot = SlotFromRowIndex(cell.RowIndex);
+                if (!IsSlotVisible(slot))
+                {
+                    continue;
+                }
+
+                if (DisplayData.GetDisplayedElement(slot) is DataGridRow row &&
+                    cell.ColumnIndex >= 0 &&
+                    cell.ColumnIndex < row.Cells.Count)
+                {
+                    row.Cells[cell.ColumnIndex].UpdatePseudoClasses();
+                }
+            }
         }
 
         internal bool IsCellSelected(int rowIndex, int columnIndex)

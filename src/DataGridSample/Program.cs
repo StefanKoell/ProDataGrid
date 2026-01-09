@@ -98,7 +98,9 @@ public static class Program
             ActivitySourceNames = new[] { "ProDataGrid.Diagnostic.Source", "Avalonia.Diagnostic.Source" },
             MeterNames = new[] { "ProDataGrid.Diagnostic.Meter", "Avalonia.Diagnostic.Meter" }
         });
-        _diagnosticsExporter.Start();
+
+        // NOTE: Enable to use ProDiagnostics.Viewer
+        // _diagnosticsExporter.Start();
 
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 

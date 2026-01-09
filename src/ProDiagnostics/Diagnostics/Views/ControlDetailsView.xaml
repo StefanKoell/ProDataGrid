@@ -4,6 +4,7 @@
              xmlns:local="using:Avalonia.Diagnostics.Views"
              xmlns:vm="using:Avalonia.Diagnostics.ViewModels"
              xmlns:lb="using:Avalonia.Diagnostics.Behaviors"
+             xmlns:filtering="using:Avalonia.Controls.DataGridFiltering"
              x:Class="Avalonia.Diagnostics.Views.ControlDetailsView"
              x:Name="Main"
              x:DataType="vm:ControlDetailsViewModel">
@@ -70,6 +71,9 @@
                 SelectedItem="{Binding SelectedProperty, Mode=TwoWay}"
                 CanUserResizeColumns="true"
                 DoubleTapped="PropertiesGrid_OnDoubleTapped">
+        <DataGrid.FilteringModel>
+          <filtering:FilteringModel OwnsViewFilter="False" />
+        </DataGrid.FilteringModel>
         <DataGrid.Columns>
           <DataGridTemplateColumn Header="Property"  IsReadOnly="True" x:DataType="vm:PropertyViewModel">
             <DataGridTemplateColumn.CellTemplate>
@@ -103,10 +107,12 @@
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>
-          <DataGridTemplateColumn Header="Value" Width="100">
-              <DataTemplate>
+          <DataGridTemplateColumn Header="Value" Width="100" ReuseCellContent="True">
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate DataType="vm:PropertyViewModel">
                 <local:PropertyValueEditorView />
               </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>
           <DataGridTextColumn Header="Type" Binding="{Binding Type}"
                               IsReadOnly="True"

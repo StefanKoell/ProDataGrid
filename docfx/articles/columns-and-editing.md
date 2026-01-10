@@ -108,6 +108,8 @@ For a full walkthrough, see [Column Definitions](column-definitions.md) and [Col
 - Bindings use `DataGridBindingDefinition.Create<TItem, TValue>(...)` to generate compiled bindings and INPC-aware value accessors; expression-based overloads require dynamic code generation.
 - For AOT, use the overload that accepts a prebuilt `CompiledBindingPath` (or property info) with typed delegates to avoid runtime expression compilation.
 - `ValueAccessor`/`ValueType` still allow explicit overrides for sorting, filtering, searching, and conditional formatting.
+- Use `ColumnKey` for stable column ids and `DataGridColumnDefinitionOptions` to attach search/filter/sort metadata.
+- `DataGridColumnDefinitionBuilder` offers typed helpers for common column definitions.
 
 ```xml
 <DataGrid ItemsSource="{Binding Items}"

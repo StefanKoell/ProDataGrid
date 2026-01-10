@@ -5,7 +5,7 @@ Column definitions are data objects that the grid maps to real columns. Model-dr
 ## Fast path rules of thumb
 
 - Use `DataGridBindingDefinition` (or `ValueAccessor`) so models can read values without reflection.
-- Use the `DataGridColumnDefinition` instance as the column id in model descriptors.
+- Use the `DataGridColumnDefinition` instance as the column id in model descriptors, or assign `ColumnKey` and use that key for stable ids.
 - Avoid string property paths unless you need them for external tooling or persistence.
 
 ## Sorting model
@@ -34,7 +34,19 @@ sortingModel.Apply(new[]
 });
 ```
 
+If you need ids that survive recreation, assign `ColumnKey` and pass the key instead of the definition instance:
+
+```csharp
+firstNameColumn.ColumnKey = "first-name";
+sortingModel.Apply(new[]
+{
+    new SortingDescriptor("first-name", ListSortDirection.Ascending)
+});
+```
+
 If you set `ValueAccessor` or use `DataGridBindingDefinition`, sorting uses the typed accessor instead of reflection. `SortMemberPath` is still supported as a fallback.
+
+If the sort key should differ from the displayed binding, set `DataGridColumnDefinitionOptions.SortValueAccessor` on the definition.
 
 ## Filtering model
 
@@ -57,9 +69,36 @@ filteringModel.SetOrUpdate(new FilteringDescriptor(
 
 For fast path filtering, ensure the column definition provides a value accessor (via binding or `ValueAccessor`).
 
+If the filtering value should differ from the displayed value, set `DataGridColumnDefinitionOptions.FilterValueAccessor` on the definition to supply a dedicated filter accessor.
+
 ### Accessor-only adapters
 
-If you want to avoid the reflection fallback in filtering/searching, provide adapter factories that rely on accessors only. The sample pages include adapter factories that resolve values through `DataGridColumnMetadata.GetValueAccessor` and `DataGridColumnSearch.GetTextProvider`. Use the same pattern in your app.
+If you want to avoid the reflection fallback in filtering/searching, enable the built-in accessor-only adapters:
+
+```xml
+<DataGrid FilteringModel="{Binding FilteringModel}"
+          SearchModel="{Binding SearchModel}">
+  <DataGrid.FastPathOptions>
+    <DataGridFastPathOptions UseAccessorsOnly="True"
+                             ThrowOnMissingAccessor="True" />
+  </DataGrid.FastPathOptions>
+</DataGrid>
+```
+
+`FastPathOptions` is a CLR property. If you need to bind or reuse an instance from a view model, assign it in code-behind:
+
+```csharp
+public MyPage()
+{
+    InitializeComponent();
+    if (DataContext is MyViewModel vm)
+    {
+        Grid.FastPathOptions = vm.FastPathOptions;
+    }
+}
+```
+
+You can also wire the factories explicitly (useful if you want custom adapters later):
 
 ```xml
 <DataGrid FilteringModel="{Binding FilteringModel}"
@@ -67,6 +106,8 @@ If you want to avoid the reflection fallback in filtering/searching, provide ada
           FilteringAdapterFactory="{StaticResource AccessorFilteringAdapterFactory}"
           SearchAdapterFactory="{StaticResource AccessorSearchAdapterFactory}" />
 ```
+
+Define the resources using `DataGridAccessorFilteringAdapterFactory` and `DataGridAccessorSearchAdapterFactory`.
 
 ## Search model
 
@@ -85,6 +126,10 @@ searchModel.Apply(new[]
 ```
 
 The search adapter uses the value accessor when present, avoiding reflection-based getters.
+
+For template columns or custom text, set `DataGridColumnDefinitionOptions.SearchTextProvider` (or the attached `DataGridColumnSearch.TextProvider`) to supply search text without reflection.
+
+You can also use `DataGridColumnDefinitionOptions.SearchMemberPath` and `SearchFormatProvider` to align search with a specific formatted value.
 
 ## Hierarchical models
 
@@ -121,3 +166,11 @@ Summary calculators use the column value accessor when available. If you define 
 ## Clipboard and export
 
 Use `ClipboardContentBinding` on definitions to control exported values. AOT-friendly bindings work the same way as display/edit bindings and preserve type information.
+
+## Related articles
+
+- [Column Definitions](column-definitions.md)
+- [Column Definitions (AOT-Friendly Bindings)](column-definitions-aot.md)
+- [Column Definitions (Hot Path Integration)](column-definitions-hot-path.md)
+- [Column Definitions (Hierarchical Columns)](column-definitions-hierarchical.md)
+- [Column Definitions: Fast Path Overview](column-definitions-fast-path-overview.md)

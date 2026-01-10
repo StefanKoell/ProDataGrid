@@ -110,4 +110,5 @@ For frequent updates, use observable root collections and keep the hierarchical 
 - [Column Definitions](column-definitions.md)
 - [Column Definitions (Model Integration)](column-definitions-models.md)
 - [Column Definitions (Hot Path Integration)](column-definitions-hot-path.md)
+- [Column Definitions: Fast Path Overview](column-definitions-fast-path-overview.md)
 - [Hierarchical Data](hierarchical-data.md)

@@ -54,7 +54,21 @@ filteringModel.SetOrUpdate(new FilteringDescriptor(
 
 ## 3. Avoid reflection in filtering and searching
 
-Filtering and searching adapters fall back to property-path reflection when no accessor is available. Use adapter factories that rely on accessors (example names shown; implement these in your app):
+Filtering and searching adapters fall back to property-path reflection when no accessor is available. You can enforce accessor-only behavior with `FastPathOptions`:
+
+```xml
+<DataGrid FilteringModel="{Binding FilteringModel}"
+          SearchModel="{Binding SearchModel}">
+  <DataGrid.FastPathOptions>
+    <DataGridFastPathOptions UseAccessorsOnly="True"
+                             ThrowOnMissingAccessor="True" />
+  </DataGrid.FastPathOptions>
+</DataGrid>
+```
+
+If you need to bind or reuse a `DataGridFastPathOptions` instance from a view model, assign it in code-behind because it is a CLR property (not an AvaloniaProperty).
+
+You can also use the built-in adapter factories directly:
 
 ```xml
 <DataGrid FilteringModel="{Binding FilteringModel}"
@@ -64,7 +78,24 @@ Filtering and searching adapters fall back to property-path reflection when no a
           ColumnDefinitionsSource="{Binding ColumnDefinitions}" />
 ```
 
-An accessor-only adapter can be implemented by overriding `TryApplyModelToView` and resolving values via `DataGridColumnMetadata.GetValueAccessor` or `DataGridColumnSearch.GetTextProvider`.
+The factories can be instantiated with `DataGridAccessorFilteringAdapterFactory` and `DataGridAccessorSearchAdapterFactory`. If you want custom behavior, implement your own adapter by overriding `TryApplyModelToView` and resolving values via `DataGridColumnMetadata.GetValueAccessor` or `DataGridColumnSearch.GetTextProvider`.
+
+If filtering should target a different value than the displayed binding, set `DataGridColumnDefinitionOptions.FilterValueAccessor` (or `DataGridColumnFilter.SetValueAccessor`) on the column definition.
+For custom operators, use `DataGridColumnDefinitionOptions.FilterPredicateFactory` to supply a predicate builder.
+
+### Diagnostics and strict mode
+
+If you want diagnostics when a fast-path accessor is missing, subscribe to `DataGridFastPathOptions.MissingAccessor`. For a strict mode that enforces accessors and throws, set `StrictMode`:
+
+```csharp
+grid.FastPathOptions = new DataGridFastPathOptions
+{
+    StrictMode = true
+};
+
+grid.FastPathOptions.MissingAccessor += (_, args) =>
+    Debug.WriteLine($"Missing accessor for {args.Feature}: {args.Message}");
+```
 
 ## 4. Sorting without path reflection
 
@@ -72,10 +103,35 @@ Sorting uses accessors automatically when present. If you work directly with col
 
 ```csharp
 var accessor = DataGridColumnMetadata.GetValueAccessor(nameColumn);
-view.SortDescriptions.Add(DataGridSortDescription.FromAccessor(accessor));
+view.SortDescriptions.Add(DataGridSortDescription.FromAccessor(accessor, propertyPath: "Name"));
 ```
 
 Avoid `DataGridSortDescription.FromPath` in AOT scenarios.
+
+When the accessor implements `IDataGridColumnValueAccessor<TItem, TValue>`, sorting uses a typed comparer (`DataGridColumnValueAccessorComparer<TItem, TValue>`) to avoid boxing for value types.
+
+If you already have a typed accessor, you can use the generic overload:
+
+```csharp
+var ageAccessor = new DataGridColumnValueAccessor<Person, int>(p => p.Age);
+view.SortDescriptions.Add(DataGridSortDescription.FromAccessor(ageAccessor, propertyPath: nameof(Person.Age)));
+```
+
+`DataGridSortDescription.FromComparer` has an overload that keeps the property path even when you provide a custom comparer. This helps state persistence and model resolution.
+
+For computed sort keys, prefer `DataGridColumnDefinitionOptions.SortValueAccessor` to keep the displayed binding and sort key independent:
+
+```csharp
+new DataGridTextColumnDefinition
+{
+    Header = "Total",
+    Binding = DataGridBindingDefinition.Create<Order, decimal>(o => o.Total),
+    Options = new DataGridColumnDefinitionOptions
+    {
+        SortValueAccessor = new DataGridColumnValueAccessor<Order, decimal>(o => o.Price * o.Quantity)
+    }
+};
+```
 
 ## 5. Searching text sources
 
@@ -118,3 +174,4 @@ formattingModel.Apply(new[]
 - [Column Definitions (AOT-Friendly Bindings)](column-definitions-aot.md)
 - [Column Definitions (Model Integration)](column-definitions-models.md)
 - [Column Definitions (Hierarchical Columns)](column-definitions-hierarchical.md)
+- [Column Definitions: Fast Path Overview](column-definitions-fast-path-overview.md)

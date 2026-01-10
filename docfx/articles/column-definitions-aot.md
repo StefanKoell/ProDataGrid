@@ -48,6 +48,13 @@ var nameProperty = new ClrPropertyInfo(
 var nameBinding = DataGridBindingDefinition.Create<Person, string>(nameProperty, GetName, SetName);
 ```
 
+You can pair this with `DataGridColumnDefinitionBuilder` to keep column construction typed and AOT-friendly:
+
+```csharp
+var builder = DataGridColumnDefinitionBuilder.For<Person>();
+var nameColumn = builder.Text(\"Name\", nameProperty, GetName, SetName);
+```
+
 ## Editing and binding modes
 
 - Provide a setter when the column is editable.
@@ -79,3 +86,4 @@ var totalColumn = new DataGridTextColumnDefinition
 ```
 
 For model integration details, see [Column Definitions: Model Integration and Fast Path](column-definitions-models.md).
+For an end-to-end fast path guide, see [Column Definitions: Fast Path Overview](column-definitions-fast-path-overview.md).

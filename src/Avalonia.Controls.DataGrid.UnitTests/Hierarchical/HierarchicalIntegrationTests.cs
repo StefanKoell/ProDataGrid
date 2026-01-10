@@ -1446,6 +1446,67 @@ public class HierarchicalIntegrationTests
     }
 
     [Fact]
+    public void FilteringModel_Filters_Hierarchical_View_When_Predicate_Provided()
+    {
+        var root = new Item("root");
+        var alpha = new Item("alpha");
+        var beta = new Item("beta");
+        var alphabet = new Item("alphabet");
+        root.Children.Add(alpha);
+        root.Children.Add(beta);
+        root.Children.Add(alphabet);
+
+        var model = new HierarchicalModel(new HierarchicalOptions
+        {
+            ChildrenSelector = o => ((Item)o).Children,
+            AutoExpandRoot = true,
+            MaxAutoExpandDepth = 1
+        });
+        model.SetRoot(root);
+        model.Expand(model.Root!);
+
+        var filtering = new FilteringModel();
+
+        var grid = new DataGrid
+        {
+            HierarchicalModel = model,
+            HierarchicalRowsEnabled = true,
+            FilteringModel = filtering,
+            AutoGenerateColumns = false,
+            ItemsSource = model.ObservableFlattened
+        };
+
+        var column = new DataGridHierarchicalColumn
+        {
+            Header = "Name",
+            Binding = new Avalonia.Data.Binding("Item.Name")
+        };
+        grid.ColumnsInternal.Add(column);
+
+        var matches = new HashSet<Item> { root, alpha, alphabet };
+        filtering.SetOrUpdate(new FilteringDescriptor(
+            columnId: column,
+            @operator: FilteringOperator.Custom,
+            predicate: item =>
+            {
+                if (item is HierarchicalNode node && node.Item is Item typed)
+                {
+                    return matches.Contains(typed);
+                }
+
+                return false;
+            }));
+
+        Assert.NotNull(grid.DataConnection?.CollectionView);
+        Assert.Equal(3, grid.DataConnection!.Count);
+        var items = grid.DataConnection.CollectionView
+            .Cast<HierarchicalNode>()
+            .Select(node => ((Item)node.Item).Name)
+            .ToArray();
+        Assert.Equal(new[] { "root", "alpha", "alphabet" }, items);
+    }
+
+    [Fact]
     public void SelectedItem_Maps_To_Underlying_Item_In_Hierarchical_Mode()
     {
         var root = new Item("root");

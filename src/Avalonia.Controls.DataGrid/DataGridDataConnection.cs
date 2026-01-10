@@ -250,7 +250,15 @@ namespace Avalonia.Controls
         {
             if (IsHierarchicalItemsSource() && _owner?.HierarchicalModel is { } model)
             {
-                count = model.Count;
+                if (DataSource is DataGridCollectionView filteredView && filteredView.Filter != null)
+                {
+                    count = filteredView.Count;
+                }
+                else
+                {
+                    count = model.Count;
+                }
+
                 if (CanAddNew)
                 {
                     count++;
@@ -457,6 +465,18 @@ namespace Avalonia.Controls
 
             if (IsHierarchicalItemsSource() && _owner?.HierarchicalModel is { } model)
             {
+                if (DataSource is DataGridCollectionView filteredView && filteredView.Filter != null)
+                {
+                    if (index < filteredView.Count)
+                    {
+                        return filteredView.GetItemAt(index);
+                    }
+
+                    return CanAddNew && index == filteredView.Count
+                        ? DataGridCollectionView.NewItemPlaceholder
+                        : null;
+                }
+
                 if (index < model.Count)
                 {
                     return model.GetNode(index);
@@ -574,6 +594,28 @@ namespace Avalonia.Controls
 
             if (!isNewItemPlaceholder && IsHierarchicalItemsSource())
             {
+                if (DataSource is DataGridCollectionView filteredView && filteredView.Filter != null)
+                {
+                    if (dataItem is Avalonia.Controls.DataGridHierarchical.HierarchicalNode filteredNodeItem)
+                    {
+                        return filteredView.IndexOf(filteredNodeItem);
+                    }
+
+                    if (dataItem is Avalonia.Controls.DataGridHierarchical.IHierarchicalNodeItem nodeItem)
+                    {
+                        dataItem = nodeItem.Item;
+                    }
+
+                    if (dataItem != null && _owner?.HierarchicalModel is { } filteredModel)
+                    {
+                        var filteredNode = filteredModel.FindNode(dataItem);
+                        if (filteredNode != null)
+                        {
+                            return filteredView.IndexOf(filteredNode);
+                        }
+                    }
+                }
+
                 var model = _owner.HierarchicalModel;
                 if (dataItem is Avalonia.Controls.DataGridHierarchical.HierarchicalNode node)
                 {

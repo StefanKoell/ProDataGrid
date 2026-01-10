@@ -1,0 +1,91 @@
+<!--
+  Copyright (c) Wieslaw Soltes. All rights reserved.
+  Licensed under the MIT license. See LICENSE file in the project root for details.
+-->
+<UserControl
+    x:Class="DataGridSample.Pages.ColumnDefinitionsBuilderPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:DataGridSample.Models"
+    xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+    x:DataType="viewModels:ColumnDefinitionsBuilderViewModel"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    mc:Ignorable="d">
+
+  <UserControl.DataContext>
+    <viewModels:ColumnDefinitionsBuilderViewModel />
+  </UserControl.DataContext>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,*"
+        ColumnDefinitions="3*,2*"
+        ColumnSpacing="12"
+        RowSpacing="8">
+    <StackPanel Grid.ColumnSpan="2" Spacing="4">
+      <TextBlock Classes="h2">Column Definitions Builder</TextBlock>
+      <TextBlock TextWrapping="Wrap"
+                 Text="Build columns from view models with typed accessors, compiled bindings, and template keys. Column keys can be reused across filtering, sorting, and search models." />
+    </StackPanel>
+
+    <DataGrid Grid.Row="1"
+              Grid.Column="0"
+              ItemsSource="{Binding Items}"
+              ColumnDefinitionsSource="{Binding ColumnDefinitions}"
+              AutoGenerateColumns="False"
+              HeadersVisibility="All"
+              CanUserResizeColumns="True"
+              CanUserReorderColumns="True"
+              GridLinesVisibility="Horizontal"
+              RowHeight="38">
+      <DataGrid.Resources>
+        <DataTemplate x:Key="StatusBadgeTemplate"
+                      x:DataType="models:Person">
+          <Border Padding="6,2"
+                  Margin="4,2"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  CornerRadius="8"
+                  Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                  BorderThickness="1">
+            <TextBlock Text="{Binding Status}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center" />
+          </Border>
+        </DataTemplate>
+      </DataGrid.Resources>
+    </DataGrid>
+
+    <Border Grid.Row="1"
+            Grid.Column="1"
+            Padding="10"
+            Background="#08000000"
+            CornerRadius="6">
+      <StackPanel Spacing="8">
+        <TextBlock Text="Column Keys" FontWeight="SemiBold" />
+        <ItemsControl ItemsSource="{Binding ColumnKeys}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Vertical" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="viewModels:ColumnDefinitionsBuilderViewModel+ColumnKeyInfo">
+              <Border Padding="4" Margin="0 2" Background="#0A000000" CornerRadius="4">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <TextBlock Text="{Binding Header}" />
+                  <TextBlock Text="->" />
+                  <TextBlock Text="{Binding Key}" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

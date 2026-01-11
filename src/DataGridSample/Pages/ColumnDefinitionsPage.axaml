@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid"
+             xmlns:models="clr-namespace:DataGridSample.Models"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.ColumnDefinitionsPage"
+             x:DataType="viewModels:ColumnDefinitionsViewModel">
+  <UserControl.DataContext>
+    <viewModels:ColumnDefinitionsViewModel/>
+  </UserControl.DataContext>
+
+  <Grid RowDefinitions="Auto,*"
+        Margin="12"
+        RowSpacing="10">
+    <StackPanel Spacing="4">
+      <TextBlock Classes="h2">Column Definitions</TextBlock>
+      <TextBlock Text="Define columns in view models using DataGridColumnDefinition and string template keys. The grid materializes the built-in columns and keeps them in sync."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <DataGrid Grid.Row="1"
+              ItemsSource="{Binding Items}"
+              ColumnDefinitionsSource="{Binding ColumnDefinitions}"
+              AutoGenerateColumns="False"
+              HeadersVisibility="All"
+              CanUserResizeColumns="True"
+              CanUserReorderColumns="True"
+              RowHeight="38"
+              Height="460">
+      <DataGrid.Styles>
+        <Style Selector="DataGridCell.profile-cell">
+          <Setter Property="Padding" Value="8,0" />
+        </Style>
+      </DataGrid.Styles>
+      <DataGrid.Resources>
+        <DataTemplate x:Key="StatusBadgeTemplate"
+                      x:DataType="models:Person">
+          <Border Padding="6,2"
+                  Margin="4,2"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  CornerRadius="8"
+                  Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                  BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                  BorderThickness="1">
+            <TextBlock Text="{Binding Status}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center" />
+          </Border>
+        </DataTemplate>
+      </DataGrid.Resources>
+    </DataGrid>
+  </Grid>
+</UserControl>

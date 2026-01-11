@@ -18,7 +18,8 @@ namespace Avalonia.Controls
 
         public object? Calculate(IEnumerable items, DataGridColumn column, string? propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName))
+            var accessor = DataGridColumnMetadata.GetValueAccessor(column);
+            if (accessor == null && string.IsNullOrEmpty(propertyName))
             {
                 return null;
             }
@@ -28,7 +29,9 @@ namespace Avalonia.Controls
 
             foreach (var item in items)
             {
-                var value = GetPropertyValue(item, propertyName);
+                var value = accessor != null
+                    ? accessor.GetValue(item)
+                    : GetPropertyValue(item, propertyName);
                 if (value != null)
                 {
                     try
@@ -48,7 +51,7 @@ namespace Avalonia.Controls
 
         public IDataGridSummaryState? CreateState() => new SumState();
 
-        private static object? GetPropertyValue(object? item, string propertyName)
+        private static object? GetPropertyValue(object? item, string? propertyName)
         {
             return TypeHelper.GetNestedPropertyValue(item, propertyName);
         }
@@ -111,7 +114,8 @@ namespace Avalonia.Controls
 
         public object? Calculate(IEnumerable items, DataGridColumn column, string? propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName))
+            var accessor = DataGridColumnMetadata.GetValueAccessor(column);
+            if (accessor == null && string.IsNullOrEmpty(propertyName))
             {
                 return null;
             }
@@ -121,7 +125,9 @@ namespace Avalonia.Controls
 
             foreach (var item in items)
             {
-                var value = GetPropertyValue(item, propertyName);
+                var value = accessor != null
+                    ? accessor.GetValue(item)
+                    : GetPropertyValue(item, propertyName);
                 if (value != null)
                 {
                     try
@@ -141,7 +147,7 @@ namespace Avalonia.Controls
 
         public IDataGridSummaryState? CreateState() => new AverageState();
 
-        private static object? GetPropertyValue(object? item, string propertyName)
+        private static object? GetPropertyValue(object? item, string? propertyName)
         {
             return TypeHelper.GetNestedPropertyValue(item, propertyName);
         }
@@ -239,7 +245,8 @@ namespace Avalonia.Controls
 
         public object? Calculate(IEnumerable items, DataGridColumn column, string? propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName))
+            var accessor = DataGridColumnMetadata.GetValueAccessor(column);
+            if (accessor == null && string.IsNullOrEmpty(propertyName))
             {
                 return null;
             }
@@ -248,7 +255,9 @@ namespace Avalonia.Controls
 
             foreach (var item in items)
             {
-                var value = GetPropertyValue(item, propertyName);
+                var value = accessor != null
+                    ? accessor.GetValue(item)
+                    : GetPropertyValue(item, propertyName);
                 if (value != null)
                 {
                     distinctValues.Add(value);
@@ -260,7 +269,7 @@ namespace Avalonia.Controls
 
         public IDataGridSummaryState? CreateState() => null;
 
-        private static object? GetPropertyValue(object? item, string propertyName)
+        private static object? GetPropertyValue(object? item, string? propertyName)
         {
             return TypeHelper.GetNestedPropertyValue(item, propertyName);
         }
@@ -277,7 +286,8 @@ namespace Avalonia.Controls
 
         public object? Calculate(IEnumerable items, DataGridColumn column, string? propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName))
+            var accessor = DataGridColumnMetadata.GetValueAccessor(column);
+            if (accessor == null && string.IsNullOrEmpty(propertyName))
             {
                 return null;
             }
@@ -287,7 +297,9 @@ namespace Avalonia.Controls
 
             foreach (var item in items)
             {
-                var value = GetPropertyValue(item, propertyName);
+                var value = accessor != null
+                    ? accessor.GetValue(item)
+                    : GetPropertyValue(item, propertyName);
                 if (value is IComparable comparable)
                 {
                     if (minComparable == null || comparable.CompareTo(minComparable) < 0)
@@ -303,7 +315,7 @@ namespace Avalonia.Controls
 
         public IDataGridSummaryState? CreateState() => null;
 
-        private static object? GetPropertyValue(object? item, string propertyName)
+        private static object? GetPropertyValue(object? item, string? propertyName)
         {
             return TypeHelper.GetNestedPropertyValue(item, propertyName);
         }
@@ -320,7 +332,8 @@ namespace Avalonia.Controls
 
         public object? Calculate(IEnumerable items, DataGridColumn column, string? propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName))
+            var accessor = DataGridColumnMetadata.GetValueAccessor(column);
+            if (accessor == null && string.IsNullOrEmpty(propertyName))
             {
                 return null;
             }
@@ -330,7 +343,9 @@ namespace Avalonia.Controls
 
             foreach (var item in items)
             {
-                var value = GetPropertyValue(item, propertyName);
+                var value = accessor != null
+                    ? accessor.GetValue(item)
+                    : GetPropertyValue(item, propertyName);
                 if (value is IComparable comparable)
                 {
                     if (maxComparable == null || comparable.CompareTo(maxComparable) > 0)
@@ -346,7 +361,7 @@ namespace Avalonia.Controls
 
         public IDataGridSummaryState? CreateState() => null;
 
-        private static object? GetPropertyValue(object? item, string propertyName)
+        private static object? GetPropertyValue(object? item, string? propertyName)
         {
             return TypeHelper.GetNestedPropertyValue(item, propertyName);
         }
@@ -363,14 +378,17 @@ namespace Avalonia.Controls
 
         public object? Calculate(IEnumerable items, DataGridColumn column, string? propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName))
+            var accessor = DataGridColumnMetadata.GetValueAccessor(column);
+            if (accessor == null && string.IsNullOrEmpty(propertyName))
             {
                 return null;
             }
 
             foreach (var item in items)
             {
-                return GetPropertyValue(item, propertyName);
+                return accessor != null
+                    ? accessor.GetValue(item)
+                    : GetPropertyValue(item, propertyName);
             }
 
             return null;
@@ -378,7 +396,7 @@ namespace Avalonia.Controls
 
         public IDataGridSummaryState? CreateState() => null;
 
-        private static object? GetPropertyValue(object? item, string propertyName)
+        private static object? GetPropertyValue(object? item, string? propertyName)
         {
             return TypeHelper.GetNestedPropertyValue(item, propertyName);
         }
@@ -395,7 +413,8 @@ namespace Avalonia.Controls
 
         public object? Calculate(IEnumerable items, DataGridColumn column, string? propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName))
+            var accessor = DataGridColumnMetadata.GetValueAccessor(column);
+            if (accessor == null && string.IsNullOrEmpty(propertyName))
             {
                 return null;
             }
@@ -403,7 +422,9 @@ namespace Avalonia.Controls
             object? last = null;
             foreach (var item in items)
             {
-                last = GetPropertyValue(item, propertyName);
+                last = accessor != null
+                    ? accessor.GetValue(item)
+                    : GetPropertyValue(item, propertyName);
             }
 
             return last;
@@ -411,7 +432,7 @@ namespace Avalonia.Controls
 
         public IDataGridSummaryState? CreateState() => null;
 
-        private static object? GetPropertyValue(object? item, string propertyName)
+        private static object? GetPropertyValue(object? item, string? propertyName)
         {
             return TypeHelper.GetNestedPropertyValue(item, propertyName);
         }

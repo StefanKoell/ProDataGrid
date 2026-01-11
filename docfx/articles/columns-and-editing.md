@@ -97,6 +97,79 @@ Bind `Columns` to an `ObservableCollection<DataGridColumn>` to drive columns fro
           HeadersVisibility="All" />
 ```
 
+## MVVM Column Definitions
+
+`ColumnDefinitionsSource` lets you define columns in view-models without creating Avalonia controls. Bind an `IList<DataGridColumnDefinition>` and the grid materializes the corresponding built-in columns. Use `DataGridColumnDefinitionList` when you want `AddRange` and `SuspendNotifications()` for batch updates.
+
+For a full walkthrough, see [Column Definitions](column-definitions.md) and [Column Definitions: AOT-Friendly Bindings](column-definitions-aot.md).
+
+- Use `DataGridTextColumnDefinition`, `DataGridCheckBoxColumnDefinition`, and the other `*ColumnDefinition` types.
+- Template and theme references are string keys (`HeaderTemplateKey`, `CellTemplateKey`, `CellEditingTemplateKey`, `HeaderThemeKey`, `CellThemeKey`, `FilterThemeKey`).
+- Bindings use `DataGridBindingDefinition.Create<TItem, TValue>(...)` to generate compiled bindings and INPC-aware value accessors; expression-based overloads require dynamic code generation.
+- For AOT, use the overload that accepts a prebuilt `CompiledBindingPath` (or property info) with typed delegates to avoid runtime expression compilation.
+- `ValueAccessor`/`ValueType` still allow explicit overrides for sorting, filtering, searching, and conditional formatting.
+- Use `ColumnKey` for stable column ids and `DataGridColumnDefinitionOptions` to attach search/filter/sort metadata.
+- `DataGridColumnDefinitionBuilder` offers typed helpers for common column definitions.
+
+```xml
+<DataGrid ItemsSource="{Binding Items}"
+          ColumnDefinitionsSource="{Binding ColumnDefinitions}"
+          AutoGenerateColumns="False"
+          HeadersVisibility="All">
+  <DataGrid.Resources>
+    <DataTemplate x:Key="StatusCellTemplate">
+      <TextBlock Text="{Binding Status}" />
+    </DataTemplate>
+  </DataGrid.Resources>
+</DataGrid>
+```
+
+```csharp
+public DataGridColumnDefinitionList ColumnDefinitions { get; } = new()
+{
+    new DataGridTextColumnDefinition
+    {
+        Header = "Name",
+        Binding = DataGridBindingDefinition.Create<Person, string>(p => p.Name)
+    },
+    new DataGridTemplateColumnDefinition
+    {
+        Header = "Status",
+        CellTemplateKey = "StatusCellTemplate"
+    },
+    new DataGridTextColumnDefinition
+    {
+        Header = "Score",
+        ValueAccessor = new DataGridColumnValueAccessor<Person, int>(p => p.Score)
+    }
+};
+```
+
+```csharp
+static string GetName(Person person) => person.Name;
+
+static void SetName(Person person, string value) => person.Name = value;
+
+var nameInfo = new ClrPropertyInfo(
+    nameof(Person.Name),
+    target => ((Person)target).Name,
+    (target, value) => ((Person)target).Name = (string)value,
+    typeof(string));
+
+var namePath = new CompiledBindingPathBuilder()
+    .Property(nameInfo, PropertyInfoAccessorFactory.CreateInpcPropertyAccessor)
+    .Build();
+
+var aotColumns = new ObservableCollection<DataGridColumnDefinition>
+{
+    new DataGridTextColumnDefinition
+    {
+        Header = "Name",
+        Binding = DataGridBindingDefinition.Create<Person, string>(namePath, GetName, SetName)
+    }
+};
+```
+
 ## Editing and Row Operations
 
 - `IsReadOnly` on the grid or column disables editing.

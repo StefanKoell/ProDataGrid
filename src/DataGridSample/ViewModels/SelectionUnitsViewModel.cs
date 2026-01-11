@@ -14,7 +14,7 @@ namespace DataGridSample.ViewModels
         public SelectionUnitsViewModel()
         {
             Items = new ObservableCollection<Country>(Countries.All.Take(18).ToList());
-            SelectionModes = Enum.GetValues(typeof(DataGridSelectionMode));
+            SelectionModes = Enum.GetValues<DataGridSelectionMode>();
         }
 
         public ObservableCollection<Country> Items { get; }

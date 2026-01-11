@@ -8,6 +8,7 @@ using System.Linq;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.DataGridSearching;
+using DataGridSample.Helpers;
 using DataGridSample.Mvvm;
 
 namespace DataGridSample.ViewModels
@@ -53,6 +54,8 @@ namespace DataGridSample.ViewModels
             NextCommand = new RelayCommand(_ => SearchModel.MoveNext(), _ => SearchModel.Results.Count > 0);
             PreviousCommand = new RelayCommand(_ => SearchModel.MovePrevious(), _ => SearchModel.Results.Count > 0);
             ClearCommand = new RelayCommand(_ => Query = string.Empty);
+
+            ColumnDefinitions = CreateColumnDefinitions();
         }
 
         public ObservableCollection<SearchItem> Items { get; }
@@ -60,6 +63,8 @@ namespace DataGridSample.ViewModels
         public DataGridCollectionView View { get; }
 
         public SearchModel SearchModel { get; }
+
+        public ObservableCollection<DataGridColumnDefinition> ColumnDefinitions { get; }
 
         public ObservableCollection<SearchResultSummary> Results { get; } = new();
 
@@ -274,6 +279,72 @@ namespace DataGridSample.ViewModels
                 wholeWord: _wholeWord,
                 normalizeWhitespace: _normalizeWhitespace,
                 ignoreDiacritics: _ignoreDiacritics));
+        }
+
+        private static ObservableCollection<DataGridColumnDefinition> CreateColumnDefinitions()
+        {
+            var createdBinding = ColumnDefinitionBindingFactory.CreateBinding<SearchItem, DateTimeOffset>(nameof(SearchItem.Created), s => s.Created);
+            createdBinding.StringFormat = "{0:yyyy-MM-dd}";
+
+            return new ObservableCollection<DataGridColumnDefinition>
+            {
+                new DataGridTextColumnDefinition
+                {
+                    Header = "ID",
+                    Binding = ColumnDefinitionBindingFactory.CreateBinding<SearchItem, int>(nameof(SearchItem.Id), s => s.Id),
+                    SortMemberPath = nameof(SearchItem.Id),
+                    Width = new DataGridLength(0.6, DataGridLengthUnitType.Star)
+                },
+                new DataGridTextColumnDefinition
+                {
+                    Header = "Title",
+                    Binding = ColumnDefinitionBindingFactory.CreateBinding<SearchItem, string>(nameof(SearchItem.Title), s => s.Title),
+                    SortMemberPath = nameof(SearchItem.Title),
+                    Width = new DataGridLength(1.4, DataGridLengthUnitType.Star)
+                },
+                new DataGridTextColumnDefinition
+                {
+                    Header = "Owner",
+                    Binding = ColumnDefinitionBindingFactory.CreateBinding<SearchItem, string>(nameof(SearchItem.Owner), s => s.Owner),
+                    SortMemberPath = nameof(SearchItem.Owner),
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Star)
+                },
+                new DataGridTextColumnDefinition
+                {
+                    Header = "Category",
+                    Binding = ColumnDefinitionBindingFactory.CreateBinding<SearchItem, string>(nameof(SearchItem.Category), s => s.Category),
+                    SortMemberPath = nameof(SearchItem.Category),
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Star)
+                },
+                new DataGridTextColumnDefinition
+                {
+                    Header = "Status",
+                    Binding = ColumnDefinitionBindingFactory.CreateBinding<SearchItem, string>(nameof(SearchItem.Status), s => s.Status),
+                    SortMemberPath = nameof(SearchItem.Status),
+                    Width = new DataGridLength(0.9, DataGridLengthUnitType.Star)
+                },
+                new DataGridTextColumnDefinition
+                {
+                    Header = "Score",
+                    Binding = ColumnDefinitionBindingFactory.CreateBinding<SearchItem, int>(nameof(SearchItem.Score), s => s.Score),
+                    SortMemberPath = nameof(SearchItem.Score),
+                    Width = new DataGridLength(0.7, DataGridLengthUnitType.Star)
+                },
+                new DataGridTextColumnDefinition
+                {
+                    Header = "Created",
+                    Binding = createdBinding,
+                    SortMemberPath = nameof(SearchItem.Created),
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Star)
+                },
+                new DataGridTextColumnDefinition
+                {
+                    Header = "Notes",
+                    Binding = ColumnDefinitionBindingFactory.CreateBinding<SearchItem, string>(nameof(SearchItem.Notes), s => s.Notes),
+                    SortMemberPath = nameof(SearchItem.Notes),
+                    Width = new DataGridLength(1.6, DataGridLengthUnitType.Star)
+                }
+            };
         }
 
         private void SearchModelOnResultsChanged(object? sender, SearchResultsChangedEventArgs e)

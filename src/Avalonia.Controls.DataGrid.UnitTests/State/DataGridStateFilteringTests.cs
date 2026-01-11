@@ -54,4 +54,48 @@ public class DataGridStateFilteringTests
             root.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void CaptureAndRestoreFilteringState_Resolves_Definition_Columns()
+    {
+        var items = StateTestHelper.CreateItems(10);
+        var (grid, root, definitions) = StateTestHelper.CreateGridWithDefinitions(items);
+
+        try
+        {
+            var nameDefinition = definitions[1];
+
+            grid.FilteringModel.OwnsViewFilter = true;
+            grid.FilteringModel.Apply(new[]
+            {
+                new FilteringDescriptor(
+                    nameDefinition,
+                    FilteringOperator.Contains,
+                    nameof(StateTestItem.Name),
+                    "Item 1",
+                    stringComparison: StringComparison.Ordinal),
+            });
+
+            var options = StateTestHelper.CreateItemKeyOptions(items);
+            var state = grid.CaptureFilteringState(options);
+
+            Assert.NotNull(state);
+            Assert.Same(nameDefinition, state.Descriptors[0].ColumnId);
+
+            grid.FilteringModel.Clear();
+            grid.FilteringModel.OwnsViewFilter = false;
+
+            grid.RestoreFilteringState(state, options);
+
+            Assert.True(grid.FilteringModel.OwnsViewFilter);
+            var restored = Assert.Single(grid.FilteringModel.Descriptors);
+            Assert.Same(nameDefinition, restored.ColumnId);
+            Assert.Equal(FilteringOperator.Contains, restored.Operator);
+            Assert.Equal("Item 1", restored.Value);
+        }
+        finally
+        {
+            root.Close();
+        }
+    }
 }

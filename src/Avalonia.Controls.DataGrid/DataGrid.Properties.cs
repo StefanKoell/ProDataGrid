@@ -1255,6 +1255,21 @@ internal
                 defaultBindingMode: BindingMode.OneWay);
 
         /// <summary>
+        /// Identifies the ColumnDefinitionsSource direct property.
+        /// </summary>
+#if !DATAGRID_INTERNAL
+        public
+#else
+        internal
+#endif
+        static readonly DirectProperty<DataGrid, IList<DataGridColumnDefinition>> ColumnDefinitionsSourceProperty =
+            AvaloniaProperty.RegisterDirect<DataGrid, IList<DataGridColumnDefinition>>(
+                nameof(ColumnDefinitionsSource),
+                o => o.ColumnDefinitionsSource,
+                (o, v) => o.ColumnDefinitionsSource = v,
+                defaultBindingMode: BindingMode.OneWay);
+
+        /// <summary>
         /// Identifies the ColumnsSynchronizationMode styled property.
         /// </summary>
 #if !DATAGRID_INTERNAL

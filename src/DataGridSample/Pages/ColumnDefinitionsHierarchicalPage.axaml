@@ -1,0 +1,108 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:adapters="clr-namespace:DataGridSample.Adapters"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.ColumnDefinitionsHierarchicalPage"
+             x:DataType="viewModels:ColumnDefinitionsHierarchicalViewModel">
+  <UserControl.DataContext>
+    <viewModels:ColumnDefinitionsHierarchicalViewModel />
+  </UserControl.DataContext>
+
+  <UserControl.Resources>
+    <adapters:HierarchicalSortingAdapterFactory x:Key="HierarchicalSortingAdapterFactory" />
+    <adapters:HierarchicalFilteringAdapterFactory x:Key="HierarchicalFilteringAdapterFactory" />
+    <adapters:HierarchicalSearchAdapterFactory x:Key="HierarchicalSearchAdapterFactory" />
+  </UserControl.Resources>
+
+  <Grid RowDefinitions="Auto,Auto,Auto,*"
+        Margin="12"
+        RowSpacing="8">
+    <StackPanel Spacing="4">
+      <TextBlock Classes="h2">Column Definitions - Hierarchical</TextBlock>
+      <TextBlock Text="Drive hierarchical grids from view-model column definitions and keyed templates. The hierarchical column uses fast-path accessors with no reflection."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <WrapPanel Grid.Row="1"
+               Margin="0 2">
+      <TextBlock Text="Filter"
+                 Margin="0 0 8 8"
+                 VerticalAlignment="Center" />
+      <TextBox Width="220"
+               Margin="0 0 8 8"
+               Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" />
+      <Button Content="Clear"
+              Margin="0 0 12 8"
+              Command="{Binding ClearFilterCommand}" />
+      <Button Content="Clear Sorts"
+              Margin="0 0 12 8"
+              Command="{Binding ClearSortsCommand}" />
+      <Button Content="Expand All"
+              Margin="0 0 8 8"
+              Command="{Binding ExpandAllCommand}" />
+      <Button Content="Collapse All"
+              Margin="0 0 8 8"
+              Command="{Binding CollapseAllCommand}" />
+    </WrapPanel>
+
+    <WrapPanel Grid.Row="2"
+               Margin="0 2">
+      <TextBlock Text="Search"
+                 Margin="0 0 8 8"
+                 VerticalAlignment="Center" />
+      <TextBox Width="220"
+               Margin="0 0 8 8"
+               Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" />
+      <Button Content="Clear"
+              Margin="0 0 8 8"
+              Command="{Binding ClearSearchCommand}" />
+      <Button Content="Previous"
+              Margin="0 0 8 8"
+              Command="{Binding PreviousCommand}" />
+      <Button Content="Next"
+              Margin="0 0 12 8"
+              Command="{Binding NextCommand}" />
+      <TextBlock Text="{Binding ResultSummary}"
+                 Margin="0 0 8 8"
+                 VerticalAlignment="Center"
+                 Opacity="0.7" />
+    </WrapPanel>
+
+    <DataGrid Grid.Row="3"
+              AutoGenerateColumns="False"
+              ColumnDefinitionsSource="{Binding ColumnDefinitions}"
+              HierarchicalModel="{Binding Model}"
+              HierarchicalRowsEnabled="True"
+              SortingModel="{Binding SortingModel}"
+              FilteringModel="{Binding FilteringModel}"
+              SearchModel="{Binding SearchModel}"
+              SortingAdapterFactory="{StaticResource HierarchicalSortingAdapterFactory}"
+              FilteringAdapterFactory="{StaticResource HierarchicalFilteringAdapterFactory}"
+              SearchAdapterFactory="{StaticResource HierarchicalSearchAdapterFactory}"
+              HeadersVisibility="All"
+              IsReadOnly="True"
+              RowHeight="32"
+              Height="420">
+      <DataGrid.Resources>
+        <DataTemplate x:Key="ColumnDefinitionsHierarchyNameTemplate"
+                      x:DataType="viewModels:ColumnDefinitionsHierarchicalViewModel+TreeItem">
+          <StackPanel Orientation="Horizontal"
+                      Spacing="6"
+                      VerticalAlignment="Center">
+            <TextBlock Text="{Binding Name}"
+                       FontWeight="SemiBold" />
+            <Border Padding="6,1"
+                    CornerRadius="6"
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                    BorderThickness="1">
+              <TextBlock Text="{Binding Kind}"
+                         FontSize="11" />
+            </Border>
+          </StackPanel>
+        </DataTemplate>
+      </DataGrid.Resources>
+    </DataGrid>
+  </Grid>
+</UserControl>

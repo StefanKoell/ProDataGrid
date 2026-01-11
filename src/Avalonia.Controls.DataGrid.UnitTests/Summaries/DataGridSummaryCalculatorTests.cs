@@ -56,6 +56,28 @@ public class DataGridSummaryCalculatorTests
     }
 
     [Fact]
+    public void SumCalculator_Uses_ValueAccessor_When_No_Path()
+    {
+        var items = new List<TestItem>
+        {
+            new() { Value = 5 },
+            new() { Value = 7 }
+        };
+
+        var description = new DataGridAggregateSummaryDescription
+        {
+            Aggregate = DataGridAggregateType.Sum
+        };
+
+        var column = new DataGridTextColumn();
+        DataGridColumnMetadata.SetValueAccessor(column, new DataGridColumnValueAccessor<TestItem, int>(x => x.Value));
+
+        var result = description.Calculate(items, column);
+
+        Assert.Equal(12m, result);
+    }
+
+    [Fact]
     public void SumCalculator_Returns_Null_For_Empty_Collection()
     {
         var items = new List<TestItem>();

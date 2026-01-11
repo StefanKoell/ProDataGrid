@@ -7,6 +7,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.DataGridTests;
 using Avalonia.Data;
+using Avalonia.Data.Core;
 using Avalonia.Threading;
 
 namespace Avalonia.Controls.DataGridTests.State;
@@ -100,6 +101,59 @@ internal static class StateTestHelper
         return (grid, root);
     }
 
+    public static (DataGrid grid, Window root, IReadOnlyList<DataGridColumnDefinition> definitions) CreateGridWithDefinitions(
+        IList<StateTestItem> items,
+        Action<DataGrid> configure = null,
+        int width = 600,
+        int height = 400)
+    {
+        var root = new Window
+        {
+            Width = width,
+            Height = height,
+        };
+
+        root.SetThemeStyles();
+
+        var grid = new DataGrid
+        {
+            ItemsSource = items,
+            HeadersVisibility = DataGridHeadersVisibility.Column,
+            AutoGenerateColumns = false,
+            SelectionMode = DataGridSelectionMode.Extended,
+            SelectionUnit = DataGridSelectionUnit.FullRow,
+        };
+
+        var definitions = new List<DataGridColumnDefinition>
+        {
+            CreateTextDefinition("Id", nameof(StateTestItem.Id), item => item.Id),
+            CreateTextDefinition("Name", nameof(StateTestItem.Name), item => item.Name),
+            CreateTextDefinition("Category", nameof(StateTestItem.Category), item => item.Category),
+            CreateTextDefinition("Group", nameof(StateTestItem.Group), item => item.Group),
+        };
+
+        grid.ColumnDefinitionsSource = definitions;
+
+        configure?.Invoke(grid);
+
+        root.Content = grid;
+        root.Show();
+
+        grid.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        return (grid, root, definitions);
+    }
+
+    public static DataGridStateOptions CreateItemKeyOptions(IList<StateTestItem> items)
+    {
+        return new DataGridStateOptions
+        {
+            ItemKeySelector = item => item is StateTestItem test ? test.Id : null,
+            ItemKeyResolver = key => key is int id ? items.FirstOrDefault(item => item.Id == id) : null,
+        };
+    }
+
     public static DataGridStateOptions CreateKeyedOptions(DataGrid grid, IList<StateTestItem> items)
     {
         return new DataGridStateOptions
@@ -109,6 +163,24 @@ internal static class StateTestHelper
             ColumnKeySelector = column => column.Header?.ToString(),
             ColumnKeyResolver = key => grid.ColumnsInternal.FirstOrDefault(
                 column => string.Equals(column.Header?.ToString(), key?.ToString(), StringComparison.Ordinal)),
+        };
+    }
+
+    private static DataGridTextColumnDefinition CreateTextDefinition<TValue>(
+        string header,
+        string propertyName,
+        System.Func<StateTestItem, TValue> getter)
+    {
+        var propertyInfo = new ClrPropertyInfo(
+            propertyName,
+            target => getter((StateTestItem)target),
+            setter: null,
+            typeof(TValue));
+
+        return new DataGridTextColumnDefinition
+        {
+            Header = header,
+            Binding = DataGridBindingDefinition.Create<StateTestItem, TValue>(propertyInfo, getter)
         };
     }
 }

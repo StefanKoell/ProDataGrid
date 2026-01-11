@@ -35,13 +35,30 @@ namespace Avalonia.Controls.DataGridHierarchical
             IHierarchicalModel model,
             ISortingModel sortingModel,
             Func<IEnumerable<DataGridColumn>> columnProvider,
+            DataGridFastPathOptions options,
             IComparer<object>? defaultComparer = null,
             Action? beforeViewRefresh = null,
             Action? afterViewRefresh = null)
-            : base(sortingModel, columnProvider, beforeViewRefresh, afterViewRefresh)
+            : base(sortingModel, columnProvider, options, beforeViewRefresh, afterViewRefresh)
         {
             _model = model ?? throw new ArgumentNullException(nameof(model));
             _defaultComparer = defaultComparer;
+        }
+
+#if !DATAGRID_INTERNAL
+        public
+#else
+        internal
+#endif
+        HierarchicalSortingAdapter(
+            IHierarchicalModel model,
+            ISortingModel sortingModel,
+            Func<IEnumerable<DataGridColumn>> columnProvider,
+            IComparer<object>? defaultComparer = null,
+            Action? beforeViewRefresh = null,
+            Action? afterViewRefresh = null)
+            : this(model, sortingModel, columnProvider, options: null, defaultComparer, beforeViewRefresh, afterViewRefresh)
+        {
         }
 
         protected override bool TryApplyModelToView(

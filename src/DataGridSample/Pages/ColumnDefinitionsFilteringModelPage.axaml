@@ -1,0 +1,68 @@
+<!--
+  Copyright (c) Wiesław Šoltés. All rights reserved.
+  Licensed under the MIT license. See LICENSE file in the project root for details.
+-->
+<UserControl
+    x:Class="DataGridSample.Pages.ColumnDefinitionsFilteringModelPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:adapters="clr-namespace:DataGridSample.Adapters"
+    xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+    x:DataType="viewModels:FilteringModelSampleViewModel"
+    d:DesignHeight="720"
+    d:DesignWidth="1100"
+    mc:Ignorable="d">
+
+  <UserControl.DataContext>
+    <viewModels:FilteringModelSampleViewModel />
+  </UserControl.DataContext>
+
+  <UserControl.Resources>
+    <adapters:AccessorFilteringAdapterFactory x:Key="AccessorFilteringAdapterFactory" />
+  </UserControl.Resources>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,*"
+        ColumnDefinitions="3*,2*"
+        ColumnSpacing="12"
+        RowSpacing="8">
+    <StackPanel Grid.ColumnSpan="2"
+                Spacing="4">
+      <TextBlock Classes="h2">Column Definitions + FilteringModel</TextBlock>
+      <TextBlock TextWrapping="Wrap"
+                 Text="Filter using model descriptors while columns are defined in view models. Filters are applied through the shared editor templates without per-column flyouts." />
+    </StackPanel>
+
+    <DataGrid Grid.Row="1"
+              Grid.Column="0"
+              ItemsSource="{Binding View}"
+              FilteringModel="{Binding FilteringModel}"
+              FilteringAdapterFactory="{StaticResource AccessorFilteringAdapterFactory}"
+              ColumnDefinitionsSource="{Binding ColumnDefinitions}"
+              AutoGenerateColumns="False"
+              CanUserSortColumns="True"
+              GridLinesVisibility="Horizontal"
+              SelectionMode="Extended" />
+
+    <Border Grid.Row="1"
+            Grid.Column="1"
+            Padding="10"
+            Background="#08000000"
+            CornerRadius="6">
+      <StackPanel Spacing="10">
+        <Button Content="Clear all filters"
+                Command="{Binding ClearAllCommand}" />
+        <ContentControl Content="{Binding CustomerFilter}"
+                        ContentTemplate="{StaticResource DataGridFilterTextEditorTemplate}" />
+        <ContentControl Content="{Binding StatusFilter}"
+                        ContentTemplate="{StaticResource DataGridFilterEnumEditorTemplate}" />
+        <ContentControl Content="{Binding DateFilter}"
+                        ContentTemplate="{StaticResource DataGridFilterDateEditorTemplate}" />
+        <ContentControl Content="{Binding TotalFilter}"
+                        ContentTemplate="{StaticResource DataGridFilterNumberEditorTemplate}" />
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

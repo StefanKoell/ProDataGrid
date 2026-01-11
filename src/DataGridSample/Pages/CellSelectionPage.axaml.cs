@@ -15,7 +15,7 @@ namespace DataGridSample.Pages
             Items = new ObservableCollection<Country>(Countries.All.Take(20).ToList());
             SelectedCells = new ObservableCollection<DataGridCellInfo>();
             SelectionLog = new ObservableCollection<string>();
-            SelectionUnits = Enum.GetValues(typeof(DataGridSelectionUnit));
+            SelectionUnits = Enum.GetValues<DataGridSelectionUnit>();
 
             InitializeComponent();
             DataContext = this;

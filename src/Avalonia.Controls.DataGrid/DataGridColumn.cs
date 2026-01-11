@@ -366,13 +366,22 @@ internal
                 {
                     return CanUserSortInternal.Value;
                 }
-                else if (OwningGrid != null)
+            else if (OwningGrid != null)
+            {
+                var explicitType = DataGridColumnMetadata.GetValueType(this);
+                if (explicitType != null)
                 {
-                    string propertyPath = GetSortPropertyName();
-                    Type propertyType = OwningGrid.DataConnection.DataType.GetNestedPropertyType(propertyPath);
+                    var compareType = TypeHelper.IsNullableType(explicitType)
+                        ? TypeHelper.GetNonNullableType(explicitType)
+                        : explicitType;
+                    return typeof(IComparable).IsAssignableFrom(compareType);
+                }
 
-                    // If we can't resolve the property type (e.g. nested paths on object-typed nodes),
-                    // fall back to the grid default instead of disabling sorting entirely.
+                string propertyPath = GetSortPropertyName();
+                Type propertyType = OwningGrid.DataConnection.DataType.GetNestedPropertyType(propertyPath);
+
+                // If we can't resolve the property type (e.g. nested paths on object-typed nodes),
+                // fall back to the grid default instead of disabling sorting entirely.
                     if (propertyType == null)
                     {
                         return DataGrid.DATAGRID_defaultCanUserSortColumns;

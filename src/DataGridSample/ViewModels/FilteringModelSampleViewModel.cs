@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.DataGridFiltering;
+using DataGridSample.Helpers;
 using DataGridSample.Mvvm;
 
 namespace DataGridSample.ViewModels
@@ -21,6 +22,11 @@ namespace DataGridSample.ViewModels
     {
         private readonly ObservableCollection<Order> _items;
         private readonly RelayCommand _clearAllCommand;
+        private readonly DataGridColumnDefinition _customerColumn;
+        private readonly DataGridColumnDefinition _statusColumn;
+        private readonly DataGridColumnDefinition _regionColumn;
+        private readonly DataGridColumnDefinition _orderedColumn;
+        private readonly DataGridColumnDefinition _totalColumn;
 
         public FilteringModelSampleViewModel()
         {
@@ -34,13 +40,13 @@ namespace DataGridSample.ViewModels
 
             CustomerFilter = new TextFilterContext(
                 "Customer contains",
-                apply: text => ApplyTextFilter("Customer", text),
-                clear: () => ClearFilter("Customer", () => CustomerFilter.Text = string.Empty));
+                apply: text => ApplyTextFilter(_customerColumn, text),
+                clear: () => ClearFilter(_customerColumn, () => CustomerFilter.Text = string.Empty));
 
             TotalFilter = new NumberFilterContext(
                 "Total between",
                 apply: (min, max) => ApplyNumberFilter(min, max),
-                clear: () => ClearFilter("Total", () =>
+                clear: () => ClearFilter(_totalColumn, () =>
                 {
                     TotalFilter.MinValue = null;
                     TotalFilter.MaxValue = null;
@@ -49,7 +55,7 @@ namespace DataGridSample.ViewModels
             DateFilter = new DateFilterContext(
                 "Ordered between",
                 apply: (from, to) => ApplyDateFilter(from, to),
-                clear: () => ClearFilter("Ordered", () =>
+                clear: () => ClearFilter(_orderedColumn, () =>
                 {
                     DateFilter.From = null;
                     DateFilter.To = null;
@@ -65,13 +71,48 @@ namespace DataGridSample.ViewModels
                     "Delivered",
                     "Canceled"
                 },
-                apply: selected => ApplyEnumFilter("Status", selected),
-                clear: () => ClearFilter("Status", () => StatusFilter.SelectNone()));
+                apply: selected => ApplyEnumFilter(_statusColumn, selected),
+                clear: () => ClearFilter(_statusColumn, () => StatusFilter.SelectNone()));
+
+            _customerColumn = new DataGridTextColumnDefinition
+            {
+                Header = "Customer",
+                Binding = ColumnDefinitionBindingFactory.CreateBinding<Order, string>(nameof(Order.Customer), o => o.Customer),
+                SortMemberPath = nameof(Order.Customer),
+                Width = new DataGridLength(1.4, DataGridLengthUnitType.Star)
+            };
+            _statusColumn = new DataGridTextColumnDefinition
+            {
+                Header = "Status",
+                Binding = ColumnDefinitionBindingFactory.CreateBinding<Order, string>(nameof(Order.Status), o => o.Status),
+                SortMemberPath = nameof(Order.Status),
+                Width = new DataGridLength(1.1, DataGridLengthUnitType.Star)
+            };
+            _regionColumn = new DataGridTextColumnDefinition
+            {
+                Header = "Region",
+                Binding = ColumnDefinitionBindingFactory.CreateBinding<Order, string>(nameof(Order.Region), o => o.Region),
+                SortMemberPath = nameof(Order.Region),
+                Width = new DataGridLength(1, DataGridLengthUnitType.Star)
+            };
+            _orderedColumn = CreateOrderedColumnDefinition();
+            _totalColumn = CreateTotalColumnDefinition();
+
+            ColumnDefinitions = new ObservableCollection<DataGridColumnDefinition>
+            {
+                _customerColumn,
+                _statusColumn,
+                _regionColumn,
+                _orderedColumn,
+                _totalColumn
+            };
         }
 
         public DataGridCollectionView View { get; }
 
         public FilteringModel FilteringModel { get; }
+
+        public ObservableCollection<DataGridColumnDefinition> ColumnDefinitions { get; }
 
         public ICommand ClearAllCommand { get; }
 
@@ -83,7 +124,34 @@ namespace DataGridSample.ViewModels
 
         public EnumFilterContext StatusFilter { get; }
 
-        private void ApplyTextFilter(string columnId, string? text)
+        private static DataGridColumnDefinition CreateOrderedColumnDefinition()
+        {
+            var orderedBinding = ColumnDefinitionBindingFactory.CreateBinding<Order, DateTimeOffset>(nameof(Order.Ordered), o => o.Ordered);
+            orderedBinding.StringFormat = "{0:MM-dd}";
+            return new DataGridTextColumnDefinition
+            {
+                Header = "Ordered (UTC)",
+                Binding = orderedBinding,
+                SortMemberPath = nameof(Order.Ordered),
+                Width = new DataGridLength(0.9, DataGridLengthUnitType.Star)
+            };
+        }
+
+        private static DataGridColumnDefinition CreateTotalColumnDefinition()
+        {
+            var totalBinding = ColumnDefinitionBindingFactory.CreateBinding<Order, double>(nameof(Order.Total), o => o.Total);
+            totalBinding.StringFormat = "{0:C2}";
+            return new DataGridNumericColumnDefinition
+            {
+                Header = "Total",
+                Binding = totalBinding,
+                SortMemberPath = nameof(Order.Total),
+                Width = new DataGridLength(0.9, DataGridLengthUnitType.Star),
+                FormatString = "C2"
+            };
+        }
+
+        private void ApplyTextFilter(DataGridColumnDefinition columnId, string? text)
         {
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -94,7 +162,6 @@ namespace DataGridSample.ViewModels
             FilteringModel.SetOrUpdate(new FilteringDescriptor(
                 columnId: columnId,
                 @operator: FilteringOperator.Contains,
-                propertyPath: columnId,
                 value: text,
                 stringComparison: StringComparison.OrdinalIgnoreCase));
         }
@@ -103,7 +170,7 @@ namespace DataGridSample.ViewModels
         {
             if (min == null && max == null)
             {
-                FilteringModel.Remove("Total");
+                FilteringModel.Remove(_totalColumn);
                 return;
             }
 
@@ -111,9 +178,8 @@ namespace DataGridSample.ViewModels
             var upper = max ?? double.MaxValue;
 
             FilteringModel.SetOrUpdate(new FilteringDescriptor(
-                columnId: "Total",
+                columnId: _totalColumn,
                 @operator: FilteringOperator.Between,
-                propertyPath: "Total",
                 values: new object[] { lower, upper }));
         }
 
@@ -121,7 +187,7 @@ namespace DataGridSample.ViewModels
         {
             if (from == null && to == null)
             {
-                FilteringModel.Remove("Ordered");
+                FilteringModel.Remove(_orderedColumn);
                 return;
             }
 
@@ -129,13 +195,12 @@ namespace DataGridSample.ViewModels
             var end = to ?? DateTimeOffset.MaxValue;
 
             FilteringModel.SetOrUpdate(new FilteringDescriptor(
-                columnId: "Ordered",
+                columnId: _orderedColumn,
                 @operator: FilteringOperator.Between,
-                propertyPath: "Ordered",
                 values: new object[] { start, end }));
         }
 
-        private void ApplyEnumFilter(string columnId, IReadOnlyList<string> selected)
+        private void ApplyEnumFilter(DataGridColumnDefinition columnId, IReadOnlyList<string> selected)
         {
             if (selected.Count == 0)
             {
@@ -146,11 +211,10 @@ namespace DataGridSample.ViewModels
             FilteringModel.SetOrUpdate(new FilteringDescriptor(
                 columnId: columnId,
                 @operator: FilteringOperator.In,
-                propertyPath: columnId,
                 values: selected.Cast<object>().ToArray()));
         }
 
-        private void ClearFilter(string columnId, Action reset)
+        private void ClearFilter(DataGridColumnDefinition columnId, Action reset)
         {
             reset();
             FilteringModel.Remove(columnId);

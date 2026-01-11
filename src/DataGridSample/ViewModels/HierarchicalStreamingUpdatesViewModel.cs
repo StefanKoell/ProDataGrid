@@ -38,6 +38,11 @@ namespace DataGridSample.ViewModels
             public bool IsExpanded { get; set; }
 
             public ObservableRangeCollection<TreeItem> Children { get; }
+
+            public override string ToString()
+            {
+                return Name;
+            }
         }
 
         private readonly DispatcherTimer _timer;

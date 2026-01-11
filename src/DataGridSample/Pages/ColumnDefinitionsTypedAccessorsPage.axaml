@@ -1,0 +1,92 @@
+<!--
+  Copyright (c) Wieslaw Soltes. All rights reserved.
+  Licensed under the MIT license. See LICENSE file in the project root for details.
+-->
+<UserControl
+    x:Class="DataGridSample.Pages.ColumnDefinitionsTypedAccessorsPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Controls.DataGrid"
+    xmlns:models="clr-namespace:DataGridSample.Models"
+    xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+    x:DataType="viewModels:ColumnDefinitionsTypedAccessorsViewModel"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    mc:Ignorable="d">
+
+  <UserControl.DataContext>
+    <viewModels:ColumnDefinitionsTypedAccessorsViewModel />
+  </UserControl.DataContext>
+
+  <UserControl.Resources>
+    <DataTemplate x:Key="FullNameTemplate"
+                  x:DataType="models:Person">
+      <TextBlock>
+        <Run Text="{Binding FirstName}" />
+        <Run Text=" " />
+        <Run Text="{Binding LastName}" />
+      </TextBlock>
+    </DataTemplate>
+  </UserControl.Resources>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,*"
+        ColumnDefinitions="3*,2*"
+        ColumnSpacing="12"
+        RowSpacing="8">
+    <StackPanel Grid.ColumnSpan="2" Spacing="4">
+      <TextBlock Classes="h2">Typed Accessors and Comparers</TextBlock>
+      <TextBlock TextWrapping="Wrap"
+                 Text="Programmatic sorting uses typed accessors and comparers to avoid reflection while still producing DataGridSortDescriptions." />
+    </StackPanel>
+
+    <WrapPanel Grid.Row="1"
+               Grid.ColumnSpan="2"
+               VerticalAlignment="Center">
+      <Button Content="Sort age asc" Command="{Binding SortAgeAscendingCommand}" />
+      <Button Content="Sort age desc" Command="{Binding SortAgeDescendingCommand}" />
+      <Button Content="Sort full name" Command="{Binding SortNameCommand}" />
+      <Button Content="Sort status order" Command="{Binding SortStatusCommand}" />
+      <Button Content="Clear" Command="{Binding ClearSortsCommand}" />
+    </WrapPanel>
+
+    <DataGrid Grid.Row="2"
+              Grid.Column="0"
+              ItemsSource="{Binding ItemsView}"
+              ColumnDefinitionsSource="{Binding ColumnDefinitions}"
+              AutoGenerateColumns="False"
+              CanUserSortColumns="False"
+              GridLinesVisibility="Horizontal"
+              SelectionMode="Extended" />
+
+    <Border Grid.Row="2"
+            Grid.Column="1"
+            Padding="10"
+            Background="#08000000"
+            CornerRadius="6">
+      <StackPanel Spacing="8">
+        <TextBlock Text="Active Sort Descriptions" FontWeight="SemiBold" />
+        <ItemsControl ItemsSource="{Binding ItemsView.SortDescriptions}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Vertical" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="collections:DataGridSortDescription">
+              <Border Padding="4" Margin="0 2" Background="#0A000000" CornerRadius="4">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <TextBlock Text="{Binding PropertyPath}" />
+                  <TextBlock Text="->" />
+                  <TextBlock Text="{Binding Direction}" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

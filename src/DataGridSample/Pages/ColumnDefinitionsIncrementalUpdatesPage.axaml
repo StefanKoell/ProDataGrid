@@ -1,0 +1,112 @@
+<!--
+  Copyright (c) Wieslaw Soltes. All rights reserved.
+  Licensed under the MIT license. See LICENSE file in the project root for details.
+-->
+<UserControl
+    x:Class="DataGridSample.Pages.ColumnDefinitionsIncrementalUpdatesPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid"
+    xmlns:models="clr-namespace:DataGridSample.Models"
+    xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+    x:DataType="viewModels:ColumnDefinitionsIncrementalUpdatesViewModel"
+    d:DesignHeight="640"
+    d:DesignWidth="1100"
+    mc:Ignorable="d">
+
+  <UserControl.DataContext>
+    <viewModels:ColumnDefinitionsIncrementalUpdatesViewModel />
+  </UserControl.DataContext>
+
+  <UserControl.Resources>
+    <DataTemplate x:Key="FullNameTemplate"
+                  x:DataType="models:Person">
+      <TextBlock>
+        <Run Text="{Binding FirstName}" />
+        <Run Text=" " />
+        <Run Text="{Binding LastName}" />
+      </TextBlock>
+    </DataTemplate>
+
+    <DataTemplate x:Key="StatusBadgeTemplate"
+                  x:DataType="models:Person">
+      <Border Padding="6,2"
+              Margin="4,2"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              CornerRadius="8"
+              Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+              BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+              BorderThickness="1">
+        <TextBlock Text="{Binding Status}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   TextAlignment="Center" />
+      </Border>
+    </DataTemplate>
+  </UserControl.Resources>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,*"
+        ColumnDefinitions="3*,2*"
+        ColumnSpacing="12"
+        RowSpacing="8">
+    <StackPanel Grid.ColumnSpan="2" Spacing="4">
+      <TextBlock Classes="h2">Incremental Column Updates</TextBlock>
+      <TextBlock TextWrapping="Wrap"
+                 Text="ColumnDefinitionsSource listens for collection changes, so insert, remove, move, and replace operations update the live grid without rebuilding it. Property changes on definitions apply incrementally as well." />
+    </StackPanel>
+
+    <WrapPanel Grid.Row="1"
+               Grid.ColumnSpan="2"
+               VerticalAlignment="Center">
+      <Button Content="Add column" Command="{Binding AddColumnCommand}" />
+      <Button Content="Remove last" Command="{Binding RemoveLastCommand}" />
+      <Button Content="Move first to end" Command="{Binding MoveFirstToEndCommand}" />
+      <Button Content="Replace second" Command="{Binding ReplaceSecondCommand}" />
+      <Button Content="Toggle first header" Command="{Binding ToggleFirstNameHeaderCommand}" />
+      <Button Content="Toggle age read-only" Command="{Binding ToggleAgeReadOnlyCommand}" />
+      <Button Content="Reset" Command="{Binding ResetColumnsCommand}" />
+    </WrapPanel>
+
+    <DataGrid Grid.Row="2"
+              Grid.Column="0"
+              ItemsSource="{Binding Items}"
+              ColumnDefinitionsSource="{Binding ColumnDefinitions}"
+              AutoGenerateColumns="False"
+              CanUserReorderColumns="False"
+              GridLinesVisibility="Horizontal"
+              SelectionMode="Extended" />
+
+    <Border Grid.Row="2"
+            Grid.Column="1"
+            Padding="10"
+            Background="#08000000"
+            CornerRadius="6">
+      <StackPanel Spacing="10">
+        <StackPanel Spacing="4">
+          <TextBlock Text="Current Columns" FontWeight="SemiBold" />
+          <ItemsControl ItemsSource="{Binding ColumnDefinitions}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Vertical" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="controls:DataGridColumnDefinition">
+                <TextBlock Text="{Binding Header}" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+          <TextBlock Text="Activity" FontWeight="SemiBold" />
+          <ListBox ItemsSource="{Binding ActivityLog}" Height="240" />
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

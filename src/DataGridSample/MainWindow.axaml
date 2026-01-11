@@ -230,6 +230,42 @@
     <TabItem Header="Bindable Columns">
       <pages:BindableColumnsPage />
     </TabItem>
+    <TabItem Header="Column Definitions">
+      <pages:ColumnDefinitionsPage />
+    </TabItem>
+    <TabItem Header="Column Definitions - Builder">
+      <pages:ColumnDefinitionsBuilderPage />
+    </TabItem>
+    <TabItem Header="Column Definitions - Typed Accessors">
+      <pages:ColumnDefinitionsTypedAccessorsPage />
+    </TabItem>
+    <TabItem Header="Column Definitions - Incremental Updates">
+      <pages:ColumnDefinitionsIncrementalUpdatesPage />
+    </TabItem>
+    <TabItem Header="Column Definitions - Options &amp; Diagnostics">
+      <pages:ColumnDefinitionsOptionsDiagnosticsPage />
+    </TabItem>
+    <TabItem Header="Column Definitions - Fast Path Showcase">
+      <pages:ColumnDefinitionsFastPathShowcasePage />
+    </TabItem>
+    <TabItem Header="Column Definitions - Filtering">
+      <pages:ColumnDefinitionsFilteringModelPage />
+    </TabItem>
+    <TabItem Header="Column Definitions - Sorting">
+      <pages:ColumnDefinitionsSortingModelPage />
+    </TabItem>
+    <TabItem Header="Column Definitions - Search">
+      <pages:ColumnDefinitionsSearchModelPage />
+    </TabItem>
+    <TabItem Header="Column Definitions - Streaming Models">
+      <pages:ColumnDefinitionsStreamingModelsPage />
+    </TabItem>
+    <TabItem Header="Column Definitions - Hierarchical">
+      <pages:ColumnDefinitionsHierarchicalPage />
+    </TabItem>
+    <TabItem Header="Column Definitions - Hierarchical Streaming">
+      <pages:ColumnDefinitionsHierarchicalStreamingPage />
+    </TabItem>
     <TabItem Header="Programmatic Columns">
       <pages:DynamicColumnsPage />
     </TabItem>

@@ -60,7 +60,7 @@ public class RecycleDiagnosticsViewModel : ObservableObject
         set => SetProperty(ref _recycledContainerHidingMode, value);
     }
 
-    public Array RecycleHidingModes { get; } = Enum.GetValues(typeof(DataGridRecycleHidingMode));
+    public Array RecycleHidingModes { get; } = Enum.GetValues<DataGridRecycleHidingMode>();
 
     private void Populate(int count)
     {

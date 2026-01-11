@@ -1,0 +1,132 @@
+<!--
+  Copyright (c) Wiesław Šoltés. All rights reserved.
+  Licensed under the MIT license. See LICENSE file in the project root for details.
+-->
+<UserControl
+    x:Class="DataGridSample.Pages.ColumnDefinitionsStreamingModelsPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:adapters="clr-namespace:DataGridSample.Adapters"
+    xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+    x:DataType="viewModels:ColumnDefinitionsStreamingModelsViewModel"
+    d:DesignHeight="720"
+    d:DesignWidth="1100"
+    mc:Ignorable="d">
+
+  <UserControl.DataContext>
+    <viewModels:ColumnDefinitionsStreamingModelsViewModel />
+  </UserControl.DataContext>
+
+  <UserControl.Resources>
+    <adapters:AccessorFilteringAdapterFactory x:Key="AccessorFilteringAdapterFactory" />
+    <adapters:AccessorSearchAdapterFactory x:Key="AccessorSearchAdapterFactory" />
+  </UserControl.Resources>
+
+  <UserControl.Styles>
+    <Style Selector="WrapPanel#ControlRow > Control">
+      <Setter Property="Margin" Value="0 0 8 8" />
+    </Style>
+    <Style Selector="WrapPanel#SearchRow > Control">
+      <Setter Property="Margin" Value="0 0 8 8" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,Auto,*"
+        ColumnDefinitions="3*,2*"
+        ColumnSpacing="12"
+        RowSpacing="8">
+    <StackPanel Grid.ColumnSpan="2" Spacing="4">
+      <TextBlock Classes="h2">Column Definitions + Streaming Models</TextBlock>
+      <TextBlock TextWrapping="Wrap"
+                 Text="Streaming updates with FilteringModel, SortingModel, and SearchModel using fast-path column definitions." />
+    </StackPanel>
+
+    <WrapPanel Grid.Row="1"
+               Grid.ColumnSpan="2"
+               x:Name="ControlRow"
+               VerticalAlignment="Center">
+      <Button Content="Start" Command="{Binding StartCommand}" />
+      <Button Content="Stop" Command="{Binding StopCommand}" />
+      <Button Content="Reset" Command="{Binding ResetCommand}" />
+      <TextBlock Text="Target" VerticalAlignment="Center" />
+      <TextBox Width="84" Text="{Binding TargetCount, UpdateSourceTrigger=PropertyChanged}" />
+      <TextBlock Text="Batch" VerticalAlignment="Center" />
+      <TextBox Width="56" Text="{Binding BatchSize, UpdateSourceTrigger=PropertyChanged}" />
+      <TextBlock Text="Interval (ms)" VerticalAlignment="Center" />
+      <TextBox Width="72" Text="{Binding IntervalMs, UpdateSourceTrigger=PropertyChanged}" />
+    </WrapPanel>
+
+    <WrapPanel Grid.Row="2"
+               Grid.ColumnSpan="2"
+               x:Name="SearchRow"
+               VerticalAlignment="Center">
+      <TextBlock VerticalAlignment="Center" Text="Search" />
+      <TextBox Width="240"
+               Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" />
+      <Button Content="Clear"
+              Command="{Binding ClearSearchCommand}" />
+      <Button Content="Previous"
+              Command="{Binding PreviousCommand}" />
+      <Button Content="Next"
+              Command="{Binding NextCommand}" />
+      <TextBlock VerticalAlignment="Center"
+                 Text="{Binding ResultSummary}" />
+    </WrapPanel>
+
+    <DataGrid Grid.Row="3"
+              Grid.Column="0"
+              ItemsSource="{Binding View}"
+              FilteringModel="{Binding FilteringModel}"
+              SearchModel="{Binding SearchModel}"
+              SortingModel="{Binding SortingModel}"
+              FilteringAdapterFactory="{StaticResource AccessorFilteringAdapterFactory}"
+              SearchAdapterFactory="{StaticResource AccessorSearchAdapterFactory}"
+              ColumnDefinitionsSource="{Binding ColumnDefinitions}"
+              AutoGenerateColumns="False"
+              CanUserReorderColumns="False"
+              CanUserResizeColumns="False"
+              HeadersVisibility="Column"
+              UseLogicalScrollable="True"
+              RowHeight="24"
+              RowHeightEstimator="{x:Null}"
+              GridLinesVisibility="None"
+              SelectionMode="Single"
+              IsReadOnly="True" />
+
+    <Border Grid.Row="3"
+            Grid.Column="1"
+            Padding="10"
+            Background="#08000000"
+            CornerRadius="6">
+      <StackPanel Spacing="10">
+        <StackPanel Spacing="4">
+          <TextBlock Text="Streaming stats" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding ItemsCount, StringFormat='Items: {0}'}" />
+          <TextBlock Text="{Binding Updates, StringFormat='Updates: {0}'}" />
+          <TextBlock Text="{Binding RunState, StringFormat='State: {0}'}" />
+        </StackPanel>
+
+        <StackPanel Spacing="6">
+          <TextBlock Text="Filters" FontWeight="SemiBold" />
+          <ContentControl Content="{Binding SymbolFilter}"
+                          ContentTemplate="{StaticResource DataGridFilterTextEditorTemplate}" />
+          <ContentControl Content="{Binding PriceFilter}"
+                          ContentTemplate="{StaticResource DataGridFilterNumberEditorTemplate}" />
+          <Button Content="Clear filters"
+                  Command="{Binding ClearFiltersCommand}" />
+        </StackPanel>
+
+        <StackPanel Spacing="6">
+          <TextBlock Text="Sorting" FontWeight="SemiBold" />
+          <TextBlock TextWrapping="Wrap"
+                     Text="Click headers to sort or Shift+click for multi-sort." />
+          <Button Content="Clear sorts"
+                  Command="{Binding ClearSortsCommand}" />
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

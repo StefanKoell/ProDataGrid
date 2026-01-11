@@ -78,6 +78,70 @@ public class DataGridStateSearchTests
     }
 
     [AvaloniaFact]
+    public void CaptureAndRestoreSearchState_Resolves_Definition_Columns()
+    {
+        var items = StateTestHelper.CreateItems(20);
+        var (grid, root, definitions) = StateTestHelper.CreateGridWithDefinitions(items);
+
+        try
+        {
+            var nameDefinition = definitions[1];
+
+            grid.SearchModel.HighlightMode = SearchHighlightMode.TextAndCell;
+            grid.SearchModel.HighlightCurrent = true;
+            grid.SearchModel.UpdateSelectionOnNavigate = true;
+            grid.SearchModel.WrapNavigation = true;
+
+            grid.SearchModel.Apply(new[]
+            {
+                new SearchDescriptor(
+                    "Item 1",
+                    SearchMatchMode.Contains,
+                    SearchTermCombineMode.Any,
+                    SearchScope.ExplicitColumns,
+                    new[] { nameDefinition }),
+            });
+
+            Dispatcher.UIThread.RunJobs();
+            Assert.NotEmpty(grid.SearchModel.Results);
+            grid.SearchModel.MoveTo(0);
+            Assert.Equal(0, grid.SearchModel.CurrentIndex);
+
+            var options = StateTestHelper.CreateItemKeyOptions(items);
+            var state = grid.CaptureSearchState(options);
+
+            Assert.NotNull(state);
+            Assert.NotNull(state.Descriptors[0].ColumnIds);
+            Assert.Same(nameDefinition, state.Descriptors[0].ColumnIds[0]);
+            Assert.Same(nameDefinition, state.Current.ColumnKey);
+
+            grid.SearchModel.Clear();
+            grid.SearchModel.HighlightMode = SearchHighlightMode.None;
+            grid.SearchModel.HighlightCurrent = false;
+            grid.SearchModel.UpdateSelectionOnNavigate = false;
+            grid.SearchModel.WrapNavigation = false;
+
+            grid.RestoreSearchState(state, options);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(SearchHighlightMode.TextAndCell, grid.SearchModel.HighlightMode);
+            Assert.True(grid.SearchModel.HighlightCurrent);
+            Assert.True(grid.SearchModel.UpdateSelectionOnNavigate);
+            Assert.True(grid.SearchModel.WrapNavigation);
+
+            var restored = Assert.Single(grid.SearchModel.Descriptors);
+            Assert.NotNull(restored.ColumnIds);
+            var restoredColumn = Assert.Single(restored.ColumnIds);
+            Assert.Same(nameDefinition, restoredColumn);
+            Assert.Equal(0, grid.SearchModel.CurrentIndex);
+        }
+        finally
+        {
+            root.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void RestoreSearchState_DefersCurrentUntilResultsAvailable()
     {
         var items = StateTestHelper.CreateItems(20);

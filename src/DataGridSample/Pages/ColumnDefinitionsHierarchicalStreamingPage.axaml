@@ -1,0 +1,124 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:adapters="clr-namespace:DataGridSample.Adapters"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.ColumnDefinitionsHierarchicalStreamingPage"
+             x:DataType="viewModels:ColumnDefinitionsHierarchicalStreamingViewModel">
+  <UserControl.DataContext>
+    <viewModels:ColumnDefinitionsHierarchicalStreamingViewModel />
+  </UserControl.DataContext>
+
+  <UserControl.Resources>
+    <adapters:HierarchicalSortingAdapterFactory x:Key="HierarchicalSortingAdapterFactory" />
+    <adapters:HierarchicalFilteringAdapterFactory x:Key="HierarchicalFilteringAdapterFactory" />
+    <adapters:HierarchicalSearchAdapterFactory x:Key="HierarchicalSearchAdapterFactory" />
+  </UserControl.Resources>
+
+  <Grid RowDefinitions="Auto,Auto,Auto,*"
+        ColumnDefinitions="*,Auto"
+        Margin="12"
+        ColumnSpacing="12"
+        RowSpacing="8">
+    <StackPanel Grid.Row="0"
+                Grid.ColumnSpan="2"
+                Spacing="4">
+      <TextBlock Classes="h2">Column Definitions - Hierarchical Streaming</TextBlock>
+      <TextBlock Text="Streaming hierarchical updates with column definitions and keyed templates. Columns are materialized from fast-path accessors."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1"
+                Grid.Column="0"
+                Orientation="Horizontal"
+                Spacing="8"
+                VerticalAlignment="Center">
+      <Button Content="Start" Command="{Binding StartCommand}" />
+      <Button Content="Stop" Command="{Binding StopCommand}" />
+      <Button Content="Reset" Command="{Binding ResetCommand}" />
+      <TextBlock Text="Roots" VerticalAlignment="Center" />
+      <TextBox Width="84" Text="{Binding TargetRootCount, UpdateSourceTrigger=PropertyChanged}" />
+      <TextBlock Text="Children" VerticalAlignment="Center" />
+      <TextBox Width="56" Text="{Binding ChildrenPerRoot, UpdateSourceTrigger=PropertyChanged}" />
+      <TextBlock Text="Batch" VerticalAlignment="Center" />
+      <TextBox Width="56" Text="{Binding BatchSize, UpdateSourceTrigger=PropertyChanged}" />
+      <TextBlock Text="Interval (ms)" VerticalAlignment="Center" />
+      <TextBox Width="72" Text="{Binding IntervalMs, UpdateSourceTrigger=PropertyChanged}" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1"
+                Grid.Column="1"
+                Spacing="4">
+      <TextBlock Text="{Binding RootCount, StringFormat='Roots: {0}'}" />
+      <TextBlock Text="{Binding VisibleCount, StringFormat='Visible nodes: {0}'}" />
+      <TextBlock Text="{Binding Updates, StringFormat='Updates: {0}'}" />
+      <TextBlock Text="{Binding RunState, StringFormat='State: {0}'}" />
+    </StackPanel>
+
+    <WrapPanel Grid.Row="2"
+               Grid.ColumnSpan="2"
+               Margin="0 2">
+      <TextBlock Text="Filter"
+                 Margin="0 0 8 8"
+                 VerticalAlignment="Center" />
+      <TextBox Width="200"
+               Margin="0 0 8 8"
+               Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" />
+      <Button Content="Clear"
+              Margin="0 0 12 8"
+              Command="{Binding ClearFilterCommand}" />
+      <Button Content="Clear Sorts"
+              Margin="0 0 12 8"
+              Command="{Binding ClearSortsCommand}" />
+      <TextBlock Text="Search"
+                 Margin="0 0 8 8"
+                 VerticalAlignment="Center" />
+      <TextBox Width="200"
+               Margin="0 0 8 8"
+               Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" />
+      <Button Content="Clear"
+              Margin="0 0 8 8"
+              Command="{Binding ClearSearchCommand}" />
+      <Button Content="Previous"
+              Margin="0 0 8 8"
+              Command="{Binding PreviousCommand}" />
+      <Button Content="Next"
+              Margin="0 0 12 8"
+              Command="{Binding NextCommand}" />
+      <TextBlock Text="{Binding ResultSummary}"
+                 Margin="0 0 8 8"
+                 VerticalAlignment="Center"
+                 Opacity="0.7" />
+    </WrapPanel>
+
+    <DataGrid Grid.Row="3"
+              Grid.ColumnSpan="2"
+              AutoGenerateColumns="False"
+              ColumnDefinitionsSource="{Binding ColumnDefinitions}"
+              HierarchicalModel="{Binding Model}"
+              HierarchicalRowsEnabled="True"
+              SortingModel="{Binding SortingModel}"
+              FilteringModel="{Binding FilteringModel}"
+              SearchModel="{Binding SearchModel}"
+              SortingAdapterFactory="{StaticResource HierarchicalSortingAdapterFactory}"
+              FilteringAdapterFactory="{StaticResource HierarchicalFilteringAdapterFactory}"
+              SearchAdapterFactory="{StaticResource HierarchicalSearchAdapterFactory}"
+              Classes="hierarchical"
+              UseLogicalScrollable="True"
+              RowHeight="24"
+              RowHeightEstimator="{x:Null}"
+              SelectionMode="Single"
+              SelectionUnit="FullRow"
+              CanUserReorderColumns="False"
+              CanUserResizeColumns="False"
+              HeadersVisibility="Column"
+              GridLinesVisibility="None"
+              IsReadOnly="True">
+      <DataGrid.Resources>
+        <DataTemplate x:Key="ColumnDefinitionsHierarchyStreamingNameTemplate"
+                      x:DataType="viewModels:HierarchicalStreamingUpdatesViewModel+TreeItem">
+          <TextBlock Text="{Binding Name}" />
+        </DataTemplate>
+      </DataGrid.Resources>
+    </DataGrid>
+  </Grid>
+</UserControl>

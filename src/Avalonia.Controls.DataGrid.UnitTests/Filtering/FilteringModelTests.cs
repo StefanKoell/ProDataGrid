@@ -127,6 +127,18 @@ public class FilteringModelTests
         Assert.True(model.OwnsViewFilter);
     }
 
+    [Fact]
+    public void Descriptor_Allows_Custom_ColumnId_Without_Path()
+    {
+        var descriptor = new FilteringDescriptor(
+            columnId: "custom-key",
+            @operator: FilteringOperator.Contains,
+            value: "A");
+
+        Assert.Equal("custom-key", descriptor.ColumnId);
+        Assert.Null(descriptor.PropertyPath);
+    }
+
     private static FilteringDescriptor CreateDescriptor(
         object columnId,
         FilteringOperator @operator,

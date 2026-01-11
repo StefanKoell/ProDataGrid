@@ -97,6 +97,39 @@ public class DataGridFilteringAdapterTests
     }
 
     [Fact]
+    public void Adapter_Reuses_Predicate_For_Equivalent_Descriptors()
+    {
+        var items = new[]
+        {
+            new Person("A", 1),
+            new Person("B", 2)
+        };
+        var view = new DataGridCollectionView(items);
+        var model = new FilteringModel();
+        var adapter = new DataGridFilteringAdapter(model, () => Array.Empty<DataGridColumn>());
+        adapter.AttachView(view);
+
+        model.SetOrUpdate(new FilteringDescriptor(
+            columnId: "Score",
+            @operator: FilteringOperator.Equals,
+            propertyPath: "Score",
+            value: 2));
+
+        var first = view.Filter;
+
+        model.SetOrUpdate(new FilteringDescriptor(
+            columnId: "Score",
+            @operator: FilteringOperator.Equals,
+            propertyPath: "Score",
+            value: 2));
+
+        var second = view.Filter;
+
+        Assert.NotNull(first);
+        Assert.Same(first, second);
+    }
+
+    [Fact]
     public void Custom_Predicate_Is_Used()
     {
         var items = new[]
@@ -146,6 +179,124 @@ public class DataGridFilteringAdapterTests
         var names = view.Cast<Person>().Select(p => p.Name).ToArray();
 
         Assert.Equal(new[] { "alpha" }, names);
+    }
+
+    [Fact]
+    public void Column_ValueAccessor_Is_Used_When_Filtering()
+    {
+        var items = new[]
+        {
+            new Person("A", 1),
+            new Person("B", 2)
+        };
+        var view = new DataGridCollectionView(items);
+        var model = new FilteringModel();
+
+        var column = new DataGridTextColumn();
+        DataGridColumnMetadata.SetValueAccessor(column, new DataGridColumnValueAccessor<Person, int>(p => p.Score));
+
+        var adapter = new DataGridFilteringAdapter(model, () => new[] { column });
+        adapter.AttachView(view);
+
+        model.SetOrUpdate(new FilteringDescriptor(
+            columnId: column,
+            @operator: FilteringOperator.Equals,
+            propertyPath: "Missing",
+            value: 2));
+
+        var scores = view.Cast<Person>().Select(p => p.Score).ToArray();
+
+        Assert.Equal(new[] { 2 }, scores);
+    }
+
+    [Fact]
+    public void Column_FilterValueAccessor_Is_Used_When_Filtering()
+    {
+        var items = new[]
+        {
+            new Person("Alpha", 1),
+            new Person("Beta", 2)
+        };
+        var view = new DataGridCollectionView(items);
+        var model = new FilteringModel();
+
+        var column = new DataGridTextColumn();
+        DataGridColumnFilter.SetValueAccessor(column, new DataGridColumnValueAccessor<Person, int>(p => p.Score));
+
+        var adapter = new DataGridFilteringAdapter(model, () => new[] { column });
+        adapter.AttachView(view);
+
+        model.SetOrUpdate(new FilteringDescriptor(
+            columnId: column,
+            @operator: FilteringOperator.Equals,
+            propertyPath: "Name",
+            value: 2));
+
+        var scores = view.Cast<Person>().Select(p => p.Score).ToArray();
+
+        Assert.Equal(new[] { 2 }, scores);
+    }
+
+    [Fact]
+    public void Custom_Predicate_Is_Used_When_ValueAccessor_Is_Available()
+    {
+        var items = new[]
+        {
+            new Person("A", 1),
+            new Person("B", 2)
+        };
+        var view = new DataGridCollectionView(items);
+        var model = new FilteringModel();
+
+        var column = new DataGridTextColumn();
+        DataGridColumnMetadata.SetValueAccessor(column, new DataGridColumnValueAccessor<Person, int>(p => p.Score));
+
+        var adapter = new DataGridFilteringAdapter(model, () => new[] { column });
+        adapter.AttachView(view);
+
+        model.SetOrUpdate(new FilteringDescriptor(
+            columnId: column,
+            @operator: FilteringOperator.Custom,
+            predicate: o => ((Person)o).Name == "B"));
+
+        var names = view.Cast<Person>().Select(p => p.Name).ToArray();
+
+        Assert.Equal(new[] { "B" }, names);
+    }
+
+    [AvaloniaFact]
+    public void Column_Definition_Id_Uses_ValueAccessor()
+    {
+        var items = new[]
+        {
+            new Person("A", 1),
+            new Person("B", 2)
+        };
+        var view = new DataGridCollectionView(items);
+        var model = new FilteringModel();
+
+        var definition = new DataGridTextColumnDefinition
+        {
+            Header = "Score",
+            Binding = DataGridBindingDefinition.Create<Person, int>(p => p.Score)
+        };
+
+        var grid = new DataGrid
+        {
+            ColumnDefinitionsSource = new[] { definition }
+        };
+
+        var adapter = new DataGridFilteringAdapter(model, () => grid.Columns);
+        adapter.AttachView(view);
+
+        model.SetOrUpdate(new FilteringDescriptor(
+            columnId: definition,
+            @operator: FilteringOperator.Equals,
+            value: 2));
+
+        var scores = view.Cast<Person>().Select(p => p.Score).ToArray();
+
+        Assert.Equal(new[] { 2 }, scores);
     }
 
     [Fact]

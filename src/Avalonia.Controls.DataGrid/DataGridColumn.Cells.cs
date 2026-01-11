@@ -16,10 +16,11 @@ using Avalonia.Layout;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Styling;
 using Avalonia.VisualTree;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
-using System;
 
 namespace Avalonia.Controls
 {
@@ -278,11 +279,32 @@ namespace Avalonia.Controls
                 {
                     if (descriptor.HasComparer)
                     {
+                        if (descriptor.Comparer is IDataGridColumnValueAccessorComparer)
+                        {
+                            var propertyPath = descriptor.PropertyPath;
+                            if (string.IsNullOrEmpty(propertyPath))
+                            {
+                                propertyPath = GetSortPropertyName();
+                            }
+
+                            return !string.IsNullOrEmpty(propertyPath)
+                                ? DataGridSortDescription.FromComparer(descriptor.Comparer, descriptor.Direction, propertyPath)
+                                : DataGridSortDescription.FromComparer(descriptor.Comparer, descriptor.Direction);
+                        }
+
                         return DataGridSortDescription.FromComparer(descriptor.Comparer, descriptor.Direction);
                     }
 
                     if (descriptor.HasPropertyPath)
                     {
+                        var accessor = DataGridColumnMetadata.GetValueAccessor(this);
+                        if (accessor != null)
+                        {
+                            var culture = descriptor.Culture ?? CultureInfo.InvariantCulture;
+                            var comparer = DataGridColumnValueAccessorComparer.Create(accessor, culture);
+                            return DataGridSortDescription.FromComparer(comparer, descriptor.Direction, descriptor.PropertyPath);
+                        }
+
                         return DataGridSortDescription.FromPath(descriptor.PropertyPath, descriptor.Direction, descriptor.Culture);
                     }
                 }
@@ -295,6 +317,19 @@ namespace Avalonia.Controls
                         return OwningGrid.DataConnection.SortDescriptions
                             .OfType<DataGridComparerSortDescription>()
                             .FirstOrDefault(s => s.SourceComparer == CustomSortComparer);
+                    }
+
+                    var accessor = DataGridColumnMetadata.GetValueAccessor(this);
+                    if (accessor != null)
+                    {
+                        var match = OwningGrid.DataConnection.SortDescriptions
+                            .OfType<DataGridComparerSortDescription>()
+                            .FirstOrDefault(s => s.SourceComparer is IDataGridColumnValueAccessorComparer accessorComparer
+                                && ReferenceEquals(accessorComparer.Accessor, accessor));
+                        if (match != null)
+                        {
+                            return match;
+                        }
                     }
 
                     string propertyName = GetSortPropertyName();

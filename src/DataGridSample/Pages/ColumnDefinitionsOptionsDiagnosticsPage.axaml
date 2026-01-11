@@ -1,0 +1,144 @@
+<!--
+  Copyright (c) Wieslaw Soltes. All rights reserved.
+  Licensed under the MIT license. See LICENSE file in the project root for details.
+-->
+<UserControl
+    x:Class="DataGridSample.Pages.ColumnDefinitionsOptionsDiagnosticsPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="clr-namespace:DataGridSample.Converters"
+    xmlns:models="clr-namespace:DataGridSample.Models"
+    xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+    x:DataType="viewModels:ColumnDefinitionsOptionsDiagnosticsViewModel"
+    d:DesignHeight="720"
+    d:DesignWidth="1100"
+    mc:Ignorable="d">
+
+  <UserControl.DataContext>
+    <viewModels:ColumnDefinitionsOptionsDiagnosticsViewModel />
+  </UserControl.DataContext>
+
+  <UserControl.Resources>
+    <converters:AgeGroupConverter x:Key="AgeGroupConverter" />
+
+    <DataTemplate x:Key="FullNameTemplate"
+                  x:DataType="models:Person">
+      <TextBlock>
+        <Run Text="{Binding FirstName}" />
+        <Run Text=" " />
+        <Run Text="{Binding LastName}" />
+      </TextBlock>
+    </DataTemplate>
+
+    <DataTemplate x:Key="AgeGroupTemplate"
+                  x:DataType="models:Person">
+      <TextBlock Text="{Binding Age, Converter={StaticResource AgeGroupConverter}}" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="StatusBadgeTemplate"
+                  x:DataType="models:Person">
+      <Border Padding="6,2"
+              Margin="4,2"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              CornerRadius="8"
+              Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+              BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+              BorderThickness="1">
+        <TextBlock Text="{Binding Status}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   TextAlignment="Center" />
+      </Border>
+    </DataTemplate>
+  </UserControl.Resources>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,*"
+        ColumnDefinitions="3*,2*"
+        ColumnSpacing="12"
+        RowSpacing="8">
+    <StackPanel Grid.ColumnSpan="2" Spacing="4">
+      <TextBlock Classes="h2">Options and Diagnostics</TextBlock>
+      <TextBlock TextWrapping="Wrap"
+                 Text="Column definition options supply fast-path metadata for search, filtering, and sorting. Diagnostics capture missing accessors when fast-path adapters run." />
+    </StackPanel>
+
+    <WrapPanel Grid.Row="1"
+               Grid.ColumnSpan="2"
+               VerticalAlignment="Center">
+      <TextBlock VerticalAlignment="Center" Text="Search" />
+      <TextBox Width="240"
+               Margin="6 0"
+               Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" />
+      <Button Content="Clear" Command="{Binding ClearSearchCommand}" />
+      <Button Content="Previous" Command="{Binding PreviousCommand}" />
+      <Button Content="Next" Command="{Binding NextCommand}" />
+      <TextBlock VerticalAlignment="Center" Text="{Binding ResultSummary}" />
+    </WrapPanel>
+
+    <DataGrid x:Name="OptionsGrid"
+              Grid.Row="2"
+              Grid.Column="0"
+              ItemsSource="{Binding View}"
+              FilteringModel="{Binding FilteringModel}"
+              SearchModel="{Binding SearchModel}"
+              SortingModel="{Binding SortingModel}"
+              ColumnDefinitionsSource="{Binding ColumnDefinitions}"
+              AutoGenerateColumns="False"
+              CanUserSortColumns="True"
+              GridLinesVisibility="Horizontal"
+              SelectionMode="Extended" />
+
+    <Border Grid.Row="2"
+            Grid.Column="1"
+            Padding="10"
+            Background="#08000000"
+            CornerRadius="6">
+      <StackPanel Spacing="12">
+        <StackPanel Spacing="6">
+          <TextBlock Text="Fast path" FontWeight="SemiBold" />
+          <CheckBox Content="Use accessors only"
+                    IsChecked="{Binding FastPathOptions.UseAccessorsOnly, Mode=TwoWay}" />
+          <CheckBox Content="Throw on missing accessor"
+                    IsChecked="{Binding FastPathOptions.ThrowOnMissingAccessor, Mode=TwoWay}" />
+          <CheckBox Content="Include badge in search"
+                    IsChecked="{Binding IncludeBadgeInSearch, Mode=TwoWay}" />
+        </StackPanel>
+
+        <StackPanel Spacing="6">
+          <TextBlock Text="Filters" FontWeight="SemiBold" />
+          <ContentControl Content="{Binding NameFilter}"
+                          ContentTemplate="{StaticResource DataGridFilterTextEditorTemplate}" />
+          <ContentControl Content="{Binding AgeFilter}"
+                          ContentTemplate="{StaticResource DataGridFilterNumberEditorTemplate}" />
+          <ContentControl Content="{Binding StatusFilter}"
+                          ContentTemplate="{StaticResource DataGridFilterEnumEditorTemplate}" />
+          <Button Content="Clear filters"
+                  Command="{Binding ClearFiltersCommand}" />
+        </StackPanel>
+
+        <StackPanel Spacing="6">
+          <TextBlock Text="Diagnostics" FontWeight="SemiBold" />
+          <Button Content="Clear diagnostics"
+                  Command="{Binding ClearDiagnosticsCommand}" />
+          <ListBox ItemsSource="{Binding Diagnostics}" Height="220">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="viewModels:ColumnDefinitionsOptionsDiagnosticsViewModel+FastPathDiagnostic">
+                <Border Padding="4" Margin="0 2" Background="#0A000000" CornerRadius="4">
+                  <StackPanel Spacing="2">
+                    <TextBlock Text="{Binding Feature}" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding Column, StringFormat=Column: {0}}" />
+                    <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

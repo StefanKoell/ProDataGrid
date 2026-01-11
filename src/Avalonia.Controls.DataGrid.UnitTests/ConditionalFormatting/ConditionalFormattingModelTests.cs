@@ -100,6 +100,40 @@ public class ConditionalFormattingModelTests
     }
 
     [AvaloniaFact]
+    public void Uses_ValueAccessor_When_Binding_Path_Is_Invalid()
+    {
+        var theme = new ControlTheme(typeof(DataGridCell));
+
+        var (grid, root, column, items) = CreateGrid();
+        try
+        {
+            column.Binding = new Binding("Missing");
+            DataGridColumnMetadata.SetValueAccessor(column, new DataGridColumnValueAccessor<ConditionalItem, double>(i => i.Value));
+
+            var model = new ConditionalFormattingModel();
+            model.Apply(new[]
+            {
+                new ConditionalFormattingDescriptor(
+                    ruleId: "positive",
+                    @operator: ConditionalFormattingOperator.GreaterThan,
+                    columnId: column,
+                    value: 0d,
+                    theme: theme)
+            });
+
+            grid.ConditionalFormattingModel = model;
+            grid.UpdateLayout();
+
+            var cell = GetCellForItem(grid, items[0], column);
+            Assert.Same(theme, cell.Theme);
+        }
+        finally
+        {
+            root.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Applies_Row_Theme_When_Rule_Matches()
     {
         var rowTheme = new ControlTheme(typeof(DataGridRow));

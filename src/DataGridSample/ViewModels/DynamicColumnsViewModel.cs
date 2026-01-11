@@ -193,7 +193,7 @@ namespace DataGridSample.ViewModels
         private static IEnumerable<Person> CreatePeople()
         {
             var random = new Random(1);
-            var statuses = Enum.GetValues(typeof(PersonStatus)).Cast<PersonStatus>().ToArray();
+            var statuses = Enum.GetValues<PersonStatus>();
 
             return Enumerable.Range(1, 8).Select(i => new Person
             {

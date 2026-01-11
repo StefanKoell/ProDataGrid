@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using Avalonia.Controls;
 using Avalonia.Controls.Utils;
 
 namespace Avalonia.Collections
@@ -296,6 +297,40 @@ internal
         {
             return new DataGridComparerSortDescription(comparer, direction);
         }
+
+        public static DataGridSortDescription FromComparer(IComparer comparer, ListSortDirection direction, string propertyPath)
+        {
+            return new DataGridComparerSortDescription(comparer, direction, propertyPath);
+        }
+
+        public static DataGridSortDescription FromAccessor(
+            IDataGridColumnValueAccessor accessor,
+            ListSortDirection direction = ListSortDirection.Ascending,
+            CultureInfo culture = null,
+            string propertyPath = null)
+        {
+            var comparer = DataGridColumnValueAccessorComparer.Create(accessor, culture);
+            return string.IsNullOrEmpty(propertyPath)
+                ? FromComparer(comparer, direction)
+                : FromComparer(comparer, direction, propertyPath);
+        }
+
+        public static DataGridSortDescription FromAccessor<TItem, TValue>(
+            IDataGridColumnValueAccessor<TItem, TValue> accessor,
+            ListSortDirection direction = ListSortDirection.Ascending,
+            CultureInfo culture = null,
+            string propertyPath = null)
+        {
+            if (accessor == null)
+            {
+                throw new ArgumentNullException(nameof(accessor));
+            }
+
+            var comparer = DataGridColumnValueAccessorComparer<TItem, TValue>.Create(accessor, culture);
+            return string.IsNullOrEmpty(propertyPath)
+                ? FromComparer(comparer, direction)
+                : FromComparer(comparer, direction, propertyPath);
+        }
     }
 
 #if !DATAGRID_INTERNAL
@@ -308,14 +343,23 @@ internal
         private readonly IComparer _innerComparer;
         private readonly ListSortDirection _direction;
         private readonly IComparer<object> _comparer;
+        private readonly string _propertyPath;
 
         public IComparer SourceComparer => _innerComparer;
         public override IComparer<object> Comparer => _comparer;
         public override ListSortDirection Direction => _direction;
+        public override string PropertyPath => _propertyPath;
+
         public DataGridComparerSortDescription(IComparer comparer, ListSortDirection direction)
+            : this(comparer, direction, null)
+        {
+        }
+
+        public DataGridComparerSortDescription(IComparer comparer, ListSortDirection direction, string propertyPath)
         {
             _innerComparer = comparer;
             _direction = direction;
+            _propertyPath = propertyPath;
             _comparer = Comparer<object>.Create((x, y) => Compare(x, y));
         }
 
@@ -331,7 +375,7 @@ internal
         public override DataGridSortDescription SwitchSortDirection()
         {
             var newDirection = _direction == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
-            return new DataGridComparerSortDescription(_innerComparer, newDirection);
+            return new DataGridComparerSortDescription(_innerComparer, newDirection, _propertyPath);
         }
     }
 

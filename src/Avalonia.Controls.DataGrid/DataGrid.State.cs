@@ -1057,7 +1057,26 @@ namespace Avalonia.Controls
 
             var selector = options?.ColumnKeySelector;
             var key = selector != null ? selector(column) : null;
-            return key ?? column;
+            if (key != null)
+            {
+                return key;
+            }
+
+            var definition = DataGridColumnMetadata.GetDefinition(column);
+            if (definition != null)
+            {
+                return DataGridColumnMetadata.GetDefinitionKey(definition);
+            }
+
+            foreach (var pair in _columnDefinitionMap)
+            {
+                if (ReferenceEquals(pair.Value, column))
+                {
+                    return DataGridColumnMetadata.GetDefinitionKey(pair.Key);
+                }
+            }
+
+            return column;
         }
 
         private object GetColumnKeyFromSearch(object columnId, DataGridStateOptions options)
@@ -1136,6 +1155,21 @@ namespace Avalonia.Controls
                 return column;
             }
 
+            if (key is DataGridColumnDefinition definition)
+            {
+                column = FindColumnByDefinition(definition);
+                if (column != null)
+                {
+                    return column;
+                }
+            }
+
+            column = FindColumnByDefinitionKey(key);
+            if (column != null)
+            {
+                return column;
+            }
+
             var resolver = options?.ColumnKeyResolver;
             if (resolver != null)
             {
@@ -1176,6 +1210,81 @@ namespace Avalonia.Controls
             if (fallbackIndex >= 0 && ColumnsItemsInternal != null && fallbackIndex < ColumnsItemsInternal.Count)
             {
                 return ColumnsItemsInternal[fallbackIndex];
+            }
+
+            return null;
+        }
+
+        private DataGridColumn FindColumnByDefinitionKey(object key)
+        {
+            if (key == null)
+            {
+                return null;
+            }
+
+            foreach (var pair in _columnDefinitionMap)
+            {
+                var definitionKey = pair.Key?.ColumnKey;
+                if (definitionKey != null && Equals(definitionKey, key))
+                {
+                    return pair.Value;
+                }
+            }
+
+            if (ColumnsItemsInternal == null)
+            {
+                return null;
+            }
+
+            foreach (var candidate in ColumnsItemsInternal)
+            {
+                if (candidate == null ||
+                    candidate == ColumnsInternal.FillerColumn ||
+                    candidate == ColumnsInternal.RowGroupSpacerColumn)
+                {
+                    continue;
+                }
+
+                var definition = DataGridColumnMetadata.GetDefinition(candidate);
+                if (definition?.ColumnKey != null && Equals(definition.ColumnKey, key))
+                {
+                    return candidate;
+                }
+            }
+
+            return null;
+        }
+
+        private DataGridColumn FindColumnByDefinition(DataGridColumnDefinition definition)
+        {
+            if (definition == null)
+            {
+                return null;
+            }
+
+            if (_columnDefinitionMap.TryGetValue(definition, out var column))
+            {
+                return column;
+            }
+
+            if (ColumnsItemsInternal == null)
+            {
+                return null;
+            }
+
+            foreach (var candidate in ColumnsItemsInternal)
+            {
+                if (candidate == null ||
+                    candidate == ColumnsInternal.FillerColumn ||
+                    candidate == ColumnsInternal.RowGroupSpacerColumn)
+                {
+                    continue;
+                }
+
+                if (ReferenceEquals(DataGridColumnMetadata.GetDefinition(candidate), definition))
+                {
+                    return candidate;
+                }
             }
 
             return null;
@@ -1240,10 +1349,13 @@ namespace Avalonia.Controls
             }
 
             var columnId = descriptor.ColumnId;
-            var resolved = ResolveColumnKey(columnId, options, descriptor.PropertyPath, -1);
-            if (resolved != null)
+            if (columnId is not DataGridColumnDefinition)
             {
-                columnId = resolved;
+                var resolved = ResolveColumnKey(columnId, options, descriptor.PropertyPath, -1);
+                if (resolved != null)
+                {
+                    columnId = resolved;
+                }
             }
 
             return new SortingDescriptor(columnId, descriptor.Direction, descriptor.PropertyPath, descriptor.Comparer, descriptor.Culture);
@@ -1281,10 +1393,13 @@ namespace Avalonia.Controls
             }
 
             var columnId = descriptor.ColumnId;
-            var resolved = ResolveColumnKey(columnId, options, descriptor.PropertyPath, -1);
-            if (resolved != null)
+            if (columnId is not DataGridColumnDefinition)
             {
-                columnId = resolved;
+                var resolved = ResolveColumnKey(columnId, options, descriptor.PropertyPath, -1);
+                if (resolved != null)
+                {
+                    columnId = resolved;
+                }
             }
 
             return new FilteringDescriptor(
@@ -1377,6 +1492,12 @@ namespace Avalonia.Controls
             var list = new List<object>(columnIds.Count);
             foreach (var id in columnIds)
             {
+                if (id is DataGridColumnDefinition)
+                {
+                    list.Add(id);
+                    continue;
+                }
+
                 var resolved = ResolveColumnKey(id, options, null, -1);
                 list.Add(resolved ?? id);
             }

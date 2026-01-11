@@ -55,6 +55,7 @@ public static class Program
     [DynamicDependency(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties, typeof(HierarchicalPathSelectionViewModel.TreeItem))]
     [DynamicDependency(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties, typeof(HierarchicalTemplatedCellViewModel.TreeItem))]
     [DynamicDependency(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties, typeof(HierarchicalStreamingUpdatesViewModel.TreeItem))]
+    [DynamicDependency(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties, typeof(ColumnDefinitionsHierarchicalViewModel.TreeItem))]
     [DynamicDependency(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties, typeof(DynamicDataHierarchicalSourceListViewModel.SortDescriptorSummary))]
     [DynamicDependency(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties, typeof(DynamicDataHierarchicalSourceListViewModel.FilterDescriptorSummary))]
     [DynamicDependency(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties, typeof(DynamicDataHierarchicalSourceCacheViewModel.SortDescriptorSummary))]

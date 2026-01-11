@@ -572,6 +572,10 @@ namespace Avalonia.Collections
             }
 
             var sort = SortDescriptions[0];
+            if (sort is DataGridComparerSortDescription)
+            {
+                return false;
+            }
             if (string.IsNullOrEmpty(sort.PropertyPath))
             {
                 return false;

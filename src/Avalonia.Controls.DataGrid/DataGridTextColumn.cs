@@ -11,6 +11,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using System;
 using System.ComponentModel;
+using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Controls.Documents;
@@ -233,7 +234,7 @@ internal
 
             if (Binding != null && dataItem != DataGridCollectionView.NewItemPlaceholder)
             {
-                textBlockElement.Bind(TextBlock.TextProperty, Binding);
+                textBlockElement.Bind(TextBlock.TextProperty, CreateDisplayBinding(Binding));
             }
             return textBlockElement;
         }
@@ -344,6 +345,57 @@ internal
 
             // Avoid permanently caching null before the column is attached to a grid.
             return OwningGrid == null ? null : themeCache.Value;
+        }
+
+        private static IBinding CreateDisplayBinding(IBinding binding)
+        {
+            return binding switch
+            {
+                Binding avaloniaBinding => new Binding
+                {
+                    Path = avaloniaBinding.Path,
+                    ElementName = avaloniaBinding.ElementName,
+                    RelativeSource = avaloniaBinding.RelativeSource,
+                    Source = avaloniaBinding.Source,
+                    TypeResolver = avaloniaBinding.TypeResolver,
+                    Delay = avaloniaBinding.Delay,
+                    Converter = avaloniaBinding.Converter,
+                    ConverterCulture = avaloniaBinding.ConverterCulture,
+                    ConverterParameter = avaloniaBinding.ConverterParameter,
+                    FallbackValue = avaloniaBinding.FallbackValue,
+                    TargetNullValue = avaloniaBinding.TargetNullValue,
+                    Priority = avaloniaBinding.Priority,
+                    StringFormat = avaloniaBinding.StringFormat,
+                    DefaultAnchor = avaloniaBinding.DefaultAnchor,
+                    NameScope = avaloniaBinding.NameScope,
+                    UpdateSourceTrigger = avaloniaBinding.UpdateSourceTrigger,
+                    Mode = GetDisplayMode(avaloniaBinding.Mode)
+                },
+                CompiledBindingExtension compiledBinding => new CompiledBindingExtension
+                {
+                    Path = compiledBinding.Path,
+                    Delay = compiledBinding.Delay,
+                    Converter = compiledBinding.Converter,
+                    ConverterCulture = compiledBinding.ConverterCulture,
+                    ConverterParameter = compiledBinding.ConverterParameter,
+                    FallbackValue = compiledBinding.FallbackValue,
+                    TargetNullValue = compiledBinding.TargetNullValue,
+                    Priority = compiledBinding.Priority,
+                    StringFormat = compiledBinding.StringFormat,
+                    Source = compiledBinding.Source,
+                    DataType = compiledBinding.DataType,
+                    DefaultAnchor = compiledBinding.DefaultAnchor,
+                    NameScope = compiledBinding.NameScope,
+                    UpdateSourceTrigger = compiledBinding.UpdateSourceTrigger,
+                    Mode = GetDisplayMode(compiledBinding.Mode)
+                },
+                _ => binding
+            };
+        }
+
+        private static BindingMode GetDisplayMode(BindingMode mode)
+        {
+            return mode == BindingMode.OneTime ? BindingMode.OneTime : BindingMode.OneWay;
         }
     }
 }

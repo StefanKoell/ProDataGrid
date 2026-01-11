@@ -40,6 +40,18 @@
   items:
   - name: Columns and Editing
     href: columns-and-editing.md
+  - name: Column Definitions
+    href: column-definitions.md
+  - name: Column Definitions (AOT-Friendly Bindings)
+    href: column-definitions-aot.md
+  - name: Column Definitions (Fast Path Overview)
+    href: column-definitions-fast-path-overview.md
+  - name: Column Definitions (Model Integration)
+    href: column-definitions-models.md
+  - name: Column Definitions (Hot Path Integration)
+    href: column-definitions-hot-path.md
+  - name: Column Definitions (Hierarchical Columns)
+    href: column-definitions-hierarchical.md
   - name: Column Types Reference
     href: column-types-reference.md
   - name: Editing Interaction Model

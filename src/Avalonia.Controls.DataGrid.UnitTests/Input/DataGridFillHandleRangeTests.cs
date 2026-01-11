@@ -3,13 +3,14 @@
 
 using System.Reflection;
 using Avalonia.Controls;
+using Avalonia.Headless.XUnit;
 using Xunit;
 
 namespace Avalonia.Controls.DataGridTests.Input;
 
 public class DataGridFillHandleRangeTests
 {
-    [Fact]
+    [AvaloniaFact]
     public void FillHandle_Shrinks_End_When_Target_Inside_Source()
     {
         var source = new DataGridCellRange(startRow: 0, endRow: 3, startColumn: 0, endColumn: 3);
@@ -22,7 +23,7 @@ public class DataGridFillHandleRangeTests
         Assert.Equal(new DataGridCellRange(1, 3, 2, 3), result);
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void FillHandle_Uses_Anchor_For_Diagonal_Target()
     {
         var source = new DataGridCellRange(startRow: 2, endRow: 3, startColumn: 2, endColumn: 3);
@@ -34,7 +35,7 @@ public class DataGridFillHandleRangeTests
         Assert.Equal(new DataGridCellRange(1, 3, 1, 3), result);
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void FillHandle_Extends_Target_Left_And_Down()
     {
         var source = new DataGridCellRange(startRow: 0, endRow: 1, startColumn: 2, endColumn: 3);
@@ -46,7 +47,7 @@ public class DataGridFillHandleRangeTests
         Assert.Equal(new DataGridCellRange(0, 2, 0, 3), result);
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void FillHandle_Extends_Target_Above_And_Right()
     {
         var source = new DataGridCellRange(startRow: 2, endRow: 3, startColumn: 0, endColumn: 1);

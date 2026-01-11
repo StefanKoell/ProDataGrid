@@ -25,6 +25,14 @@ namespace Avalonia.Controls.DataGridFiltering
                 "PredicateFactory",
                 typeof(DataGridColumnFilter));
 
+        /// <summary>
+        /// Allows a column to supply a value accessor for filtering predicates.
+        /// </summary>
+        public static readonly AttachedProperty<IDataGridColumnValueAccessor?> ValueAccessorProperty =
+            AvaloniaProperty.RegisterAttached<DataGridColumn, IDataGridColumnValueAccessor?>(
+                "ValueAccessor",
+                typeof(DataGridColumnFilter));
+
         public static void SetPredicateFactory(AvaloniaObject target, Func<FilteringDescriptor, Func<object, bool>>? value)
         {
             target.SetValue(PredicateFactoryProperty, value);
@@ -33,6 +41,16 @@ namespace Avalonia.Controls.DataGridFiltering
         public static Func<FilteringDescriptor, Func<object, bool>>? GetPredicateFactory(AvaloniaObject target)
         {
             return target.GetValue(PredicateFactoryProperty);
+        }
+
+        public static void SetValueAccessor(AvaloniaObject target, IDataGridColumnValueAccessor? value)
+        {
+            target.SetValue(ValueAccessorProperty, value);
+        }
+
+        public static IDataGridColumnValueAccessor? GetValueAccessor(AvaloniaObject target)
+        {
+            return target.GetValue(ValueAccessorProperty);
         }
     }
 }

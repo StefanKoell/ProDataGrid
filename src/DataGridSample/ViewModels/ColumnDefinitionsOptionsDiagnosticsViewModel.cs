@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -128,9 +127,10 @@ namespace DataGridSample.ViewModels
                         nameof(Person.Status),
                         p => p.Status,
                         (p, v) => p.Status = v),
-                    Options = new DataGridColumnDefinitionOptions
+                    Options = new DataGridColumnDefinitionOptions<Person>
                     {
-                        SortValueComparer = CreateStatusComparer()
+                        CompareAscending = CompareStatusAscending,
+                        CompareDescending = CompareStatusDescending
                     },
                     Width = new DataGridLength(1.1, DataGridLengthUnitType.Star)
                 }
@@ -409,22 +409,47 @@ namespace DataGridSample.ViewModels
             return "60+";
         }
 
-        private static IComparer CreateStatusComparer()
+        private static readonly IReadOnlyDictionary<PersonStatus, int> StatusOrder = new Dictionary<PersonStatus, int>
         {
-            var order = new Dictionary<PersonStatus, int>
-            {
-                [PersonStatus.Active] = 0,
-                [PersonStatus.New] = 1,
-                [PersonStatus.Suspended] = 2,
-                [PersonStatus.Disabled] = 3
-            };
+            [PersonStatus.Active] = 0,
+            [PersonStatus.New] = 1,
+            [PersonStatus.Suspended] = 2,
+            [PersonStatus.Disabled] = 3
+        };
 
-            return Comparer<PersonStatus>.Create((x, y) =>
+        private static int CompareStatusAscending(Person left, Person right)
+        {
+            return CompareStatus(left, right);
+        }
+
+        private static int CompareStatusDescending(Person left, Person right)
+        {
+            return CompareStatus(right, left);
+        }
+
+        private static int CompareStatus(Person left, Person right)
+        {
+            if (ReferenceEquals(left, right))
             {
-                order.TryGetValue(x, out var left);
-                order.TryGetValue(y, out var right);
-                return left.CompareTo(right);
-            });
+                return 0;
+            }
+
+            if (left is null)
+            {
+                return -1;
+            }
+
+            if (right is null)
+            {
+                return 1;
+            }
+
+            return GetStatusOrder(left.Status).CompareTo(GetStatusOrder(right.Status));
+        }
+
+        private static int GetStatusOrder(PersonStatus status)
+        {
+            return StatusOrder.TryGetValue(status, out var order) ? order : int.MaxValue;
         }
 
         private static ObservableCollection<Person> CreatePeople()

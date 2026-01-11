@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using Avalonia.Controls;
 using DataGridSample.Helpers;
 using DataGridSample.Models;
@@ -11,6 +12,9 @@ namespace DataGridSample.ViewModels
 {
     public class ColumnDefinitionsIncrementalUpdatesViewModel : ObservableObject
     {
+        private const string FirstNameKey = "first-name";
+        private const string AgeKey = "age";
+
         private readonly List<Func<DataGridColumnDefinition>> _extraFactories;
         private int _extraIndex;
         private readonly RelayCommand _addColumnCommand;
@@ -18,6 +22,9 @@ namespace DataGridSample.ViewModels
         private readonly RelayCommand _moveFirstToEndCommand;
         private readonly RelayCommand _replaceSecondCommand;
         private readonly RelayCommand _resetColumnsCommand;
+        private readonly RelayCommand _toggleFirstNameHeaderCommand;
+        private readonly RelayCommand _toggleAgeReadOnlyCommand;
+        private bool _useAlternateHeader;
 
         public ColumnDefinitionsIncrementalUpdatesViewModel()
         {
@@ -45,6 +52,8 @@ namespace DataGridSample.ViewModels
             _moveFirstToEndCommand = new RelayCommand(_ => MoveFirstToEnd(), _ => ColumnDefinitions.Count > 1);
             _replaceSecondCommand = new RelayCommand(_ => ReplaceSecond(), _ => ColumnDefinitions.Count > 1);
             _resetColumnsCommand = new RelayCommand(_ => ResetColumns());
+            _toggleFirstNameHeaderCommand = new RelayCommand(_ => ToggleFirstNameHeader(), _ => GetFirstNameDefinition() != null);
+            _toggleAgeReadOnlyCommand = new RelayCommand(_ => ToggleAgeReadOnly(), _ => GetAgeDefinition() != null);
 
             ColumnDefinitions.CollectionChanged += OnColumnsChanged;
             UpdateCommandStates();
@@ -65,6 +74,10 @@ namespace DataGridSample.ViewModels
         public RelayCommand ReplaceSecondCommand => _replaceSecondCommand;
 
         public RelayCommand ResetColumnsCommand => _resetColumnsCommand;
+
+        public RelayCommand ToggleFirstNameHeaderCommand => _toggleFirstNameHeaderCommand;
+
+        public RelayCommand ToggleAgeReadOnlyCommand => _toggleAgeReadOnlyCommand;
 
         private void AddColumn()
         {
@@ -119,6 +132,7 @@ namespace DataGridSample.ViewModels
         private void ResetColumns()
         {
             _extraIndex = 0;
+            _useAlternateHeader = false;
             ColumnDefinitions.Clear();
             ColumnDefinitions.Add(CreateFirstNameColumn());
             ColumnDefinitions.Add(CreateLastNameColumn());
@@ -138,6 +152,8 @@ namespace DataGridSample.ViewModels
             _removeLastCommand.RaiseCanExecuteChanged();
             _moveFirstToEndCommand.RaiseCanExecuteChanged();
             _replaceSecondCommand.RaiseCanExecuteChanged();
+            _toggleFirstNameHeaderCommand.RaiseCanExecuteChanged();
+            _toggleAgeReadOnlyCommand.RaiseCanExecuteChanged();
         }
 
         private void Log(string message)
@@ -149,11 +165,49 @@ namespace DataGridSample.ViewModels
             }
         }
 
+        private void ToggleFirstNameHeader()
+        {
+            var definition = GetFirstNameDefinition();
+            if (definition == null)
+            {
+                return;
+            }
+
+            _useAlternateHeader = !_useAlternateHeader;
+            definition.Header = _useAlternateHeader ? "Given Name" : "First Name";
+            Log("Toggled first name header");
+        }
+
+        private void ToggleAgeReadOnly()
+        {
+            var definition = GetAgeDefinition();
+            if (definition == null)
+            {
+                return;
+            }
+
+            definition.IsReadOnly = !(definition.IsReadOnly ?? false);
+            Log($"Age column read-only: {definition.IsReadOnly}");
+        }
+
+        private DataGridTextColumnDefinition? GetFirstNameDefinition()
+        {
+            return ColumnDefinitions.OfType<DataGridTextColumnDefinition>()
+                .FirstOrDefault(definition => Equals(definition.ColumnKey, FirstNameKey));
+        }
+
+        private DataGridNumericColumnDefinition? GetAgeDefinition()
+        {
+            return ColumnDefinitions.OfType<DataGridNumericColumnDefinition>()
+                .FirstOrDefault(definition => Equals(definition.ColumnKey, AgeKey));
+        }
+
         private static DataGridColumnDefinition CreateFirstNameColumn()
         {
             return new DataGridTextColumnDefinition
             {
                 Header = "First Name",
+                ColumnKey = FirstNameKey,
                 Binding = ColumnDefinitionBindingFactory.CreateBinding<Person, string>(
                     nameof(Person.FirstName),
                     p => p.FirstName,
@@ -191,6 +245,7 @@ namespace DataGridSample.ViewModels
             return new DataGridNumericColumnDefinition
             {
                 Header = "Age",
+                ColumnKey = AgeKey,
                 Binding = ColumnDefinitionBindingFactory.CreateBinding<Person, int>(
                     nameof(Person.Age),
                     p => p.Age,

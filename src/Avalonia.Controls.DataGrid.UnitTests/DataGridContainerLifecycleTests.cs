@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
@@ -146,6 +147,72 @@ public class DataGridContainerLifecycleTests
     }
 
     [AvaloniaFact]
+    public void UnloadElements_non_recycle_invokes_clear()
+    {
+        var items = new ObservableCollection<string>(Enumerable.Range(0, 2).Select(i => $"Item {i}"));
+        var grid = CreateGrid(items, out var window);
+        PumpLayout(grid);
+
+        var unload = typeof(DataGrid).GetMethod("UnloadElements", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                     ?? throw new InvalidOperationException("UnloadElements not found");
+        unload.Invoke(grid, new object[] { false });
+
+        Assert.Contains("Item 0", grid.ClearedItems);
+        Assert.Contains("Item 1", grid.ClearedItems);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Detaching_from_visual_tree_clears_row_containers()
+    {
+        var items = new ObservableCollection<string>(Enumerable.Range(0, 2).Select(i => $"Item {i}"));
+        var grid = CreateGrid(items, out var window);
+        PumpLayout(grid);
+
+        window.Content = null;
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Contains("Item 0", grid.ClearedItems);
+        Assert.Contains("Item 1", grid.ClearedItems);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Recycled_row_context_change_skips_template_refresh_without_visual_root()
+    {
+        var grid = new DataGrid();
+        var column = new TrackingTemplateColumn
+        {
+            CellTemplate = new FuncDataTemplate<object>((_, _) => new TextBlock())
+        };
+        grid.ColumnsInternal.Add(column);
+        column.Index = 0;
+
+        var row = new DataGridRow
+        {
+            OwningGrid = grid,
+            Index = 0,
+            Slot = 0
+        };
+
+        var cell = new DataGridCell
+        {
+            OwningColumn = column,
+            Content = new TextBlock { Text = "initial" }
+        };
+        row.Cells.Insert(0, cell);
+
+        row.DetachFromDataGrid(recycle: true);
+        Assert.True(row.IsRecycled);
+
+        row.DataContext = new object();
+
+        Assert.False(column.RefreshCalled);
+    }
+
+    [AvaloniaFact]
     public void Placeholder_recycle_regenerates_cells_for_real_item()
     {
         var grid = new TrackingDataGrid();
@@ -266,6 +333,17 @@ public class DataGridContainerLifecycleTests
         {
             GeneratedItems.Add(dataItem);
             return new TextBlock { Text = $"item:{dataItem}" };
+        }
+    }
+
+    private sealed class TrackingTemplateColumn : DataGridTemplateColumn
+    {
+        public bool RefreshCalled { get; private set; }
+
+        protected internal override void RefreshCellContent(Control element, string propertyName)
+        {
+            RefreshCalled = true;
+            base.RefreshCellContent(element, propertyName);
         }
     }
 }

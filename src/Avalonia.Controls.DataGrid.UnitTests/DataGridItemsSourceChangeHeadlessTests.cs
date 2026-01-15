@@ -214,10 +214,24 @@ public class DataGridItemsSourceChangeHeadlessTests
         selectionModel.Select(2);
         PumpLayout(grid);
 
+        Exception? selectionException = null;
+        selectionModel.SelectionChanged += (_, __) =>
+        {
+            try
+            {
+                _ = selectionModel.SelectedItems.Cast<object>().ToList();
+            }
+            catch (Exception ex)
+            {
+                selectionException = ex;
+            }
+        };
+
         var newItems = CreateItems("B", 1);
         grid.ItemsSource = newItems;
         PumpLayout(grid);
 
+        Assert.Null(selectionException);
         Assert.All(selectionModel.SelectedIndexes, index => Assert.InRange(index, 0, newItems.Count - 1));
         if (grid.SelectedItem != null)
         {

@@ -380,6 +380,8 @@ internal
         private ISelectionModel _selectionModelProxy;
         private DataGridSelection.DataGridPagedSelectionSource _pagedSelectionSource;
         private List<object> _selectionModelSnapshot;
+        private IReadOnlyList<object> _pendingHierarchicalSelectionSnapshot;
+        private IReadOnlyList<int> _pendingHierarchicalSelectionIndexes;
         private bool _suppressSelectionSnapshotUpdates;
         private bool _syncingSelectionModel;
         private bool _suppressSelectionUpdatesFromRows;
@@ -3209,23 +3211,88 @@ internal
 
             var model = _selectionModelAdapter.Model;
             var selected = model.SelectedIndexes;
-            if (selected == null || selected.Count == 0)
+            IReadOnlyList<int>? pendingIndexes = null;
+            IReadOnlyList<object>? selectionSnapshot = null;
+            if (_pendingHierarchicalSelectionSnapshot == null || _pendingHierarchicalSelectionSnapshot.Count == 0)
             {
-                return false;
-            }
-
-            var mapped = new List<int>(selected.Count);
-            var seen = new HashSet<int>();
-
-            foreach (var index in selected)
-            {
-                var mappedIndex = indexMap.MapOldIndexToNew(index);
-                if (mappedIndex >= 0 && seen.Add(mappedIndex))
+                var snapshotForReset = CaptureSelectionSnapshot();
+                if (snapshotForReset is { Count: > 0 })
                 {
-                    mapped.Add(mappedIndex);
+                    _pendingHierarchicalSelectionSnapshot = new List<object>(snapshotForReset);
                 }
             }
+            if (_pendingHierarchicalSelectionIndexes == null || _pendingHierarchicalSelectionIndexes.Count == 0)
+            {
+                if (selected is { Count: > 0 })
+                {
+                    _pendingHierarchicalSelectionIndexes = new List<int>(selected);
+                }
+            }
+            pendingIndexes = _pendingHierarchicalSelectionIndexes;
+            if ((pendingIndexes == null || pendingIndexes.Count == 0) &&
+                (selected == null || selected.Count == 0))
+            {
+                selectionSnapshot = _pendingHierarchicalSelectionSnapshot;
+                if (selectionSnapshot == null || selectionSnapshot.Count == 0)
+                {
+                    selectionSnapshot = CaptureSelectionSnapshot();
+                }
 
+                if (selectionSnapshot == null || selectionSnapshot.Count == 0)
+                {
+                    _pendingHierarchicalSelectionSnapshot = null;
+                    _pendingHierarchicalSelectionIndexes = null;
+                    return false;
+                }
+            }
+            var mapped = new List<int>(pendingIndexes?.Count ?? selected?.Count ?? selectionSnapshot?.Count ?? 0);
+            var seen = new HashSet<int>();
+
+            if (pendingIndexes != null && pendingIndexes.Count > 0)
+            {
+                foreach (var index in pendingIndexes)
+                {
+                    var mappedIndex = indexMap.MapOldIndexToNew(index);
+                    if (mappedIndex >= 0 && seen.Add(mappedIndex))
+                    {
+                        mapped.Add(mappedIndex);
+                    }
+                }
+            }
+            else if (selected != null && selected.Count > 0)
+            {
+                foreach (var index in selected)
+                {
+                    var mappedIndex = indexMap.MapOldIndexToNew(index);
+                    if (mappedIndex >= 0 && seen.Add(mappedIndex))
+                    {
+                        mapped.Add(mappedIndex);
+                    }
+                }
+            }
+            if (mapped.Count == 0)
+            {
+                if (selectionSnapshot == null || selectionSnapshot.Count == 0)
+                {
+                    selectionSnapshot = _pendingHierarchicalSelectionSnapshot;
+                    if (selectionSnapshot == null || selectionSnapshot.Count == 0)
+                    {
+                        selectionSnapshot = CaptureSelectionSnapshot();
+                    }
+                }
+
+                if (selectionSnapshot != null)
+                {
+                    foreach (var item in selectionSnapshot)
+                    {
+                        var mappedIndex = GetSelectionModelIndexOfItem(item);
+                        if (mappedIndex >= 0 && seen.Add(mappedIndex))
+                        {
+                            mapped.Add(mappedIndex);
+                        }
+                    }
+                }
+            }
             var preferredMapped = _preferredSelectionIndex >= 0
                 ? indexMap.MapOldIndexToNew(_preferredSelectionIndex)
                 : -1;
@@ -3285,6 +3352,7 @@ internal
                 }
 
                 PopSelectionSync(previous);
+                ClearPendingHierarchicalSelection();
             }
 
             return source != null && view != null;
@@ -4394,6 +4462,42 @@ internal
             }
 
             return DataConnection.IndexOf(item);
+        }
+
+        private void ClearPendingHierarchicalSelection()
+        {
+            _pendingHierarchicalSelectionSnapshot = null;
+            _pendingHierarchicalSelectionIndexes = null;
+        }
+
+        private static bool HasInvalidSelectionIndexes(ISelectionModel model)
+        {
+            if (model == null)
+            {
+                return false;
+            }
+
+            if (model.Source == null)
+            {
+                return false;
+            }
+
+            var selected = model.SelectedIndexes;
+            if (selected == null || selected.Count == 0)
+            {
+                return false;
+            }
+
+            var count = model.Count;
+            foreach (var index in selected)
+            {
+                if (index < 0 || index >= count)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool TryGetRowIndexFromItem(object? item, out int rowIndex)

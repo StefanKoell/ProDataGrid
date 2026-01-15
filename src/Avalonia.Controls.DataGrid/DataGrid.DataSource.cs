@@ -251,7 +251,27 @@ internal
                 return new List<object>(selected.Cast<object>());
             }
 
+            if (_hierarchicalRowsEnabled && _hierarchicalModel != null &&
+                _pendingHierarchicalSelectionSnapshot is { Count: > 0 })
+            {
+                return new List<object>(_pendingHierarchicalSelectionSnapshot);
+            }
+
             return null;
+        }
+
+        internal void CacheHierarchicalSelectionSnapshot(IReadOnlyList<object> snapshot)
+        {
+            _pendingHierarchicalSelectionSnapshot = snapshot != null && snapshot.Count > 0
+                ? new List<object>(snapshot)
+                : null;
+        }
+
+        internal void CacheHierarchicalSelectionIndexes(IReadOnlyList<int> indexes)
+        {
+            _pendingHierarchicalSelectionIndexes = indexes != null && indexes.Count > 0
+                ? new List<int>(indexes)
+                : null;
         }
 
         internal void RestoreSelectionFromSnapshot(IReadOnlyList<object> selectedItems)

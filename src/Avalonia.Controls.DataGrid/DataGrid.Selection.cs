@@ -282,6 +282,7 @@ internal
             finally
             {
                 _syncingSelectionModel = false;
+                ClearPendingHierarchicalSelection();
             }
         }
 
@@ -427,16 +428,32 @@ internal
 
         private void SelectionModel_SourceReset(object sender, EventArgs e)
         {
-            if (_syncingSelectionModel || _selectionModelAdapter == null)
+            if (_selectionModelAdapter == null)
             {
+                ClearPendingHierarchicalSelection();
                 return;
             }
 
-            var snapshot = _selectionModelSnapshot
-                ?? _selectionModelAdapter.SelectedItemsView.Cast<object>().ToList();
+            if (_syncingSelectionModel)
+            {
+                ClearPendingHierarchicalSelection();
+                return;
+            }
+
+            var snapshot = CaptureSelectionSnapshot();
+            if ((snapshot == null || snapshot.Count == 0) &&
+                _hierarchicalRowsEnabled && _hierarchicalModel != null &&
+                _pendingHierarchicalSelectionSnapshot is { Count: > 0 } pendingSnapshot)
+            {
+                snapshot = new List<object>(pendingSnapshot);
+            }
             if (snapshot == null || snapshot.Count == 0)
             {
-                return;
+                if (!HasInvalidSelectionIndexes(_selectionModelAdapter.Model))
+                {
+                    ClearPendingHierarchicalSelection();
+                    return;
+                }
             }
 
             try
@@ -446,12 +463,15 @@ internal
                 using (_selectionModelAdapter.Model.BatchUpdate())
                 {
                     _selectionModelAdapter.Model.Clear();
-                    foreach (var item in snapshot)
+                    if (snapshot is { Count: > 0 })
                     {
-                        int index = GetSelectionModelIndexOfItem(item);
-                        if (index >= 0)
+                        foreach (var item in snapshot)
                         {
-                            _selectionModelAdapter.Select(index);
+                            int index = GetSelectionModelIndexOfItem(item);
+                            if (index >= 0)
+                            {
+                                _selectionModelAdapter.Select(index);
+                            }
                         }
                     }
                 }
@@ -463,6 +483,7 @@ internal
             finally
             {
                 _syncingSelectionModel = false;
+                ClearPendingHierarchicalSelection();
             }
         }
 

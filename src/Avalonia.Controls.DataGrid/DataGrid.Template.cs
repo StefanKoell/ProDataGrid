@@ -195,7 +195,7 @@ internal
             try
             {
                 _noCurrentCellChangeCount++;
-                var selectionSnapshot = _selectionModelAdapter?.SelectedItemsView.Cast<object>().ToList();
+                var selectionSnapshot = CaptureSelectionSnapshot();
 
                 // The underlying collection has changed and our editing row (if there is one)
                 // is no longer relevant, so we should force a cancel edit.
@@ -246,7 +246,9 @@ internal
                     UpdateRowDetailsVisibilityMode(RowDetailsVisibilityMode);
                 }
 
-                if (_selectionModelAdapter != null && selectionSnapshot is { Count: > 0 })
+                if (_selectionModelAdapter != null &&
+                    (selectionSnapshot is { Count: > 0 } ||
+                     HasInvalidSelectionIndexes(_selectionModelAdapter.Model)))
                 {
                     _syncingSelectionModel = true;
                     try
@@ -254,12 +256,15 @@ internal
                         using (_selectionModelAdapter.Model.BatchUpdate())
                         {
                             _selectionModelAdapter.Model.Clear();
-                            foreach (var item in selectionSnapshot)
+                            if (selectionSnapshot is { Count: > 0 })
                             {
-                                int index = GetSelectionModelIndexOfItem(item);
-                                if (index >= 0)
+                                foreach (var item in selectionSnapshot)
                                 {
-                                    _selectionModelAdapter.Select(index);
+                                    int index = GetSelectionModelIndexOfItem(item);
+                                    if (index >= 0)
+                                    {
+                                        _selectionModelAdapter.Select(index);
+                                    }
                                 }
                             }
                         }

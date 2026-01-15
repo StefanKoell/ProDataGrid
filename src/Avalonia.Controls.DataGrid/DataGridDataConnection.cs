@@ -1014,6 +1014,11 @@ namespace Avalonia.Controls
                 }
 
                 List<object> selectionSnapshot = _owner.CaptureSelectionSnapshot();
+                if (_owner.HierarchicalRowsEnabled && _owner.HierarchicalModel != null)
+                {
+                    _owner.CacheHierarchicalSelectionSnapshot(selectionSnapshot);
+                    _owner.CacheHierarchicalSelectionIndexes(_owner.Selection?.SelectedIndexes);
+                }
                 bool restoreSyncingSelectionModel = false;
                 bool previousSyncingSelectionModel = false;
 

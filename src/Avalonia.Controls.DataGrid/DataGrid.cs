@@ -4470,6 +4470,44 @@ internal
             _pendingHierarchicalSelectionIndexes = null;
         }
 
+        internal void ClearInvalidSelectionIndexes()
+        {
+            if (_selectionModelAdapter?.Model is not { } model)
+            {
+                return;
+            }
+
+            if (!HasInvalidSelectionIndexes(model))
+            {
+                return;
+            }
+
+            var selected = model.SelectedIndexes;
+            if (selected == null || selected.Count == 0)
+            {
+                return;
+            }
+
+            var count = model.Count;
+            var valid = new List<int>();
+            foreach (var index in selected)
+            {
+                if (index >= 0 && index < count)
+                {
+                    valid.Add(index);
+                }
+            }
+
+            using (model.BatchUpdate())
+            {
+                model.Clear();
+                foreach (var index in valid)
+                {
+                    model.Select(index);
+                }
+            }
+        }
+
         private static bool HasInvalidSelectionIndexes(ISelectionModel model)
         {
             if (model == null)

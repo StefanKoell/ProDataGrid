@@ -1019,6 +1019,18 @@ namespace Avalonia.Controls
                     _owner.CacheHierarchicalSelectionSnapshot(selectionSnapshot);
                     _owner.CacheHierarchicalSelectionIndexes(_owner.Selection?.SelectedIndexes);
                 }
+                if (e.Action == NotifyCollectionChangedAction.Reset)
+                {
+                    var previousSelectionSync = _owner.PushSelectionSync();
+                    try
+                    {
+                        _owner.ClearInvalidSelectionIndexes();
+                    }
+                    finally
+                    {
+                        _owner.PopSelectionSync(previousSelectionSync);
+                    }
+                }
                 bool restoreSyncingSelectionModel = false;
                 bool previousSyncingSelectionModel = false;
 

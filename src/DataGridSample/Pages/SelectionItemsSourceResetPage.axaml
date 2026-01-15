@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:DataGridSample.Models"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.SelectionItemsSourceResetPage"
+             x:DataType="viewModels:SelectionItemsSourceResetViewModel">
+  <UserControl.DataContext>
+    <viewModels:SelectionItemsSourceResetViewModel />
+  </UserControl.DataContext>
+
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,*"
+        ColumnDefinitions="2*,*"
+        ColumnSpacing="12"
+        RowSpacing="8">
+    <StackPanel Grid.ColumnSpan="2" Spacing="4">
+      <TextBlock Classes="h2">Selection reset on ItemsSource changes</TextBlock>
+      <TextBlock Text="Select the last row, then filter it out or swap to a shorter list. SelectionChanged enumerates SelectedItems to validate safe resets."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Orientation="Horizontal"
+                Spacing="6"
+                VerticalAlignment="Center">
+      <Button Content="Select last row" Command="{Binding SelectLastRowCommand}" />
+      <Button Content="Filter out selected" Command="{Binding FilterOutSelectedCommand}" />
+      <Button Content="Clear filter" Command="{Binding ClearFilterCommand}" />
+      <Button Content="Use short list" Command="{Binding UseShortListCommand}" />
+      <Button Content="Use full list" Command="{Binding UseFullListCommand}" />
+      <TextBlock Text="{Binding Status}"
+                 Margin="12 0 0 0"
+                 VerticalAlignment="Center"
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <DataGrid Grid.Row="2"
+              Grid.Column="0"
+              ItemsSource="{Binding ItemsSource}"
+              Selection="{Binding SelectionModel}"
+              SelectionMode="Single"
+              SelectionUnit="FullRow"
+              AutoGenerateColumns="False"
+              HeadersVisibility="All"
+              Height="420">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="2*" x:DataType="models:SelectionFilterItem" />
+        <DataGridTextColumn Header="Group" Binding="{Binding Group}" Width="*" x:DataType="models:SelectionFilterItem" />
+        <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*" x:DataType="models:SelectionFilterItem" />
+      </DataGrid.Columns>
+    </DataGrid>
+
+    <StackPanel Grid.Row="2" Grid.Column="1" Spacing="6">
+      <TextBlock Classes="h3" Text="Selection log" />
+      <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+              BorderThickness="1"
+              CornerRadius="4"
+              Padding="4">
+        <ListBox ItemsSource="{Binding SelectionLog}" Height="320" />
+      </Border>
+      <TextBlock Text="Each selection change logs SelectedItems after the ItemsSource resets."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+  </Grid>
+</UserControl>

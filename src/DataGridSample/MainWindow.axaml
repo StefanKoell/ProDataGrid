@@ -134,6 +134,9 @@
     <TabItem Header="Selection Filter Reset">
       <pages:SelectionFilterResetPage />
     </TabItem>
+    <TabItem Header="Selection ItemsSource Reset">
+      <pages:SelectionItemsSourceResetPage />
+    </TabItem>
     <TabItem Header="Custom SelectionModel">
       <pages:CustomSelectionModelPage />
     </TabItem>

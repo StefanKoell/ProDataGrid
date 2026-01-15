@@ -599,23 +599,29 @@ internal
                     Focus();
                 }
 
-                PopulateCellContent(
-                    isCellEdited: !exitEditingMode,
-                    dataGridColumn: CurrentColumn,
-                    dataGridRow: editingRow,
-                    dataGridCell: editingCell);
+                if (!_suppressCellContentUpdates)
+                {
+                    PopulateCellContent(
+                        isCellEdited: !exitEditingMode,
+                        dataGridColumn: CurrentColumn,
+                        dataGridRow: editingRow,
+                        dataGridCell: editingCell);
+                }
 
                 if (editAction == DataGridEditAction.Commit && HasAnySummaries())
                 {
                     InvalidateSummaries();
                 }
 
-                editingRow.InvalidateDesiredHeight();
-                var column = editingCell.OwningColumn;
-                if (column.Width.IsSizeToCells || column.Width.IsAuto)
-                {// Invalidate desired width and force recalculation
-                    column.SetWidthDesiredValue(0);
-                    editingRow.OwningGrid.AutoSizeColumn(column, editingCell.DesiredSize.Width);
+                if (!_suppressCellContentUpdates)
+                {
+                    editingRow.InvalidateDesiredHeight();
+                    var column = editingCell.OwningColumn;
+                    if (column.Width.IsSizeToCells || column.Width.IsAuto)
+                    {// Invalidate desired width and force recalculation
+                        column.SetWidthDesiredValue(0);
+                        editingRow.OwningGrid.AutoSizeColumn(column, editingCell.DesiredSize.Width);
+                    }
                 }
             }
 
@@ -740,6 +746,10 @@ internal
             if (!DataConnection.CancelEdit(dataItem))
             {
                 return false;
+            }
+            if (_suppressCellContentUpdates)
+            {
+                return true;
             }
             foreach (DataGridColumn column in Columns)
             {
@@ -1387,6 +1397,7 @@ internal
             RaiseEvent(e);
         }
 
+        private bool _suppressCellContentUpdates;
         private int _editingColumnIndex;
 
         private object _uneditedValue; // Represents the original current cell value at the time it enters editing mode.

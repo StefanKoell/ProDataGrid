@@ -1031,8 +1031,6 @@ namespace Avalonia.Controls
                         else if (!IsGrouping)
                         {
                             // If we're grouping then we handle this through the CollectionViewGroup notifications
-                            // According to WPF, Add is a single item operation
-                            Debug.Assert(e.NewItems.Count == 1);
                             if (_onCollectionAddRemoveNewRowPlaceholder)
                             {
                                 if (_placeholderRowIndexDuringAdd.HasValue)
@@ -1042,7 +1040,17 @@ namespace Avalonia.Controls
                                 _placeholderRowIndexDuringAdd = null;
                                 _onCollectionAddRemoveNewRowPlaceholder = false;
                             }
-                            _owner.InsertRowAt(e.NewStartingIndex);
+                            if (e.NewStartingIndex < 0)
+                            {
+                                _owner.InitializeElements(false /*recycleRows*/);
+                            }
+                            else
+                            {
+                                for (var i = 0; i < e.NewItems.Count; i++)
+                                {
+                                    _owner.InsertRowAt(e.NewStartingIndex + i);
+                                }
+                            }
                         }
                         else
                         {

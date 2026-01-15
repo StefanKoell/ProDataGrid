@@ -16,6 +16,7 @@ using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Xunit;
 
@@ -200,6 +201,37 @@ public class DataGridEditingTests
 
             var templateCell = FindCell(grid, items[0], templateColumn.Index);
             Assert.False(((IPseudoClasses)templateCell.Classes).Contains(":edited"));
+        }
+        finally
+        {
+            root.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Detaching_From_VisualTree_While_Editing_Does_Not_Throw()
+    {
+        var (grid, root, items) = CreateGrid();
+        try
+        {
+            var slot = grid.SlotFromRowIndex(0);
+            var column = grid.ColumnsInternal[1];
+
+            Assert.True(grid.UpdateSelectionAndCurrency(column.Index, slot, DataGridSelectionAction.SelectCurrent, scrollIntoView: false));
+            grid.UpdateLayout();
+
+            Assert.True(grid.BeginEdit());
+            grid.UpdateLayout();
+
+            var cell = FindCell(grid, items[0], column.Index);
+            var editor = Assert.IsType<TextBox>(cell.Content);
+            editor.Text = "Beta";
+
+            root.Content = null;
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(-1, grid.EditingColumnIndex);
+            Assert.Null(grid.EditingRow);
         }
         finally
         {

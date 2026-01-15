@@ -180,6 +180,47 @@ public class DataGridContainerLifecycleTests
     }
 
     [AvaloniaFact]
+    public void Detaching_from_visual_tree_clears_row_details_subscription()
+    {
+        var items = new ObservableCollection<string> { "Item 0" };
+        var window = new Window
+        {
+            Width = 240,
+            Height = 120,
+        };
+
+        window.SetThemeStyles();
+
+        var grid = new DataGrid
+        {
+            ItemsSource = items,
+            RowDetailsVisibilityMode = DataGridRowDetailsVisibilityMode.Visible,
+            RowDetailsTemplate = new FuncDataTemplate<string>((_, _) => new Border())
+        };
+
+        grid.ColumnsInternal.Add(new DataGridTextColumn { Header = "Value", Binding = new Binding(".") });
+
+        window.Content = grid;
+        window.Show();
+        PumpLayout(grid);
+
+        var row = grid.GetSelfAndVisualDescendants().OfType<DataGridRow>().First();
+        var subscriptionField = typeof(DataGridRow).GetField(
+            "_detailsContentSizeSubscription",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+        Assert.NotNull(subscriptionField);
+        Assert.NotNull(subscriptionField.GetValue(row));
+
+        window.Content = null;
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Null(subscriptionField.GetValue(row));
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void Recycled_row_context_change_skips_template_refresh_without_visual_root()
     {
         var grid = new DataGrid();

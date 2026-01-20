@@ -260,6 +260,7 @@ namespace Avalonia.Controls
         {
             // Restore visibility for rows that were hidden during recycling
             row.ClearValue(Visual.IsVisibleProperty);
+            row.ClearValue(Visual.ClipProperty);
 
             // If the row has been recycled, reapply the BackgroundBrush
             if (row.IsRecycled)

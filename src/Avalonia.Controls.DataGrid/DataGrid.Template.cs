@@ -205,6 +205,9 @@ internal
             _rowDragDropController?.Dispose();
             _rowDragDropController = null;
 
+            _validationSubscription?.Dispose();
+            _validationSubscription = null;
+
             DetachRowGroupHandlers(resetTopLevelGroup: false);
             DetachExternalSubscriptions();
 

@@ -159,7 +159,16 @@ internal
             if (DataConnection.DataSource != null && !DataConnection.EventsWired)
             {
                 DataConnection.WireEvents(DataConnection.DataSource);
+                AttachExternalSubscriptions();
+                UpdateSortingAdapterView();
+                UpdateFilteringAdapterView();
+                UpdateSearchAdapterView();
+                UpdateConditionalFormattingAdapterView();
                 InitializeElements(true /*recycleRows*/);
+            }
+            else
+            {
+                AttachExternalSubscriptions();
             }
 
             if (_rowDragDropController == null && CanUserReorderRows)
@@ -196,11 +205,16 @@ internal
             _rowDragDropController?.Dispose();
             _rowDragDropController = null;
 
+            DetachRowGroupHandlers(resetTopLevelGroup: false);
+            DetachExternalSubscriptions();
+
             // When wired to INotifyCollectionChanged, the DataGrid will be cleaned up by GC
             if (DataConnection.DataSource != null && DataConnection.EventsWired)
             {
                 DataConnection.UnWireEvents(DataConnection.DataSource);
             }
+
+            DetachAdapterViews();
 
             DisposeSummaryService();
             UpdateKeyboardGestureSubscriptions();

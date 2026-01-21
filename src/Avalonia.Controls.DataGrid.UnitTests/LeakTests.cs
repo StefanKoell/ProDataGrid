@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -1023,6 +1024,318 @@ public class LeakTests
         GC.KeepAlive(result);
     }
 
+
+    [Fact]
+    [SuppressMessage("Usage", "xUnit1031:Do not use blocking task operations in test method", Justification = "Needed for dotMemoryUnit to work")]
+    public void DataGrid_ExternalEditingElement_DoesNotLeak()
+    {
+        if (!dotMemoryApi.IsEnabled)
+        {
+            return;
+        }
+
+        var items = new ObservableCollection<RowItem>
+        {
+            new RowItem("A")
+        };
+
+        var run = async () =>
+        {
+            using var session = HeadlessUnitTestSession.StartNew(typeof(Application));
+
+            return await session.Dispatch(
+                () =>
+                {
+                    var grid = new DataGrid
+                    {
+                        AutoGenerateColumns = false,
+                        ItemsSource = items
+                    };
+
+                    grid.Columns.Add(new DataGridTemplateColumn
+                    {
+                        Header = "Name",
+                        CellTemplate = new FuncDataTemplate<RowItem>((item, _) =>
+                        {
+                            var textBlock = new TextBlock();
+                            textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(RowItem.Name)));
+                            return textBlock;
+                        }),
+                        CellEditingTemplate = new FuncDataTemplate<RowItem>((item, _) =>
+                        {
+                            var textBox = new TextBox();
+                            textBox.Bind(TextBox.TextProperty, new Binding(nameof(RowItem.Name))
+                            {
+                                Mode = BindingMode.TwoWay
+                            });
+                            return textBox;
+                        })
+                    });
+
+                    var externalBox = new TextBox();
+
+                    var panel = new StackPanel();
+                    panel.Children.Add(grid);
+                    panel.Children.Add(externalBox);
+
+                    var window = new Window
+                    {
+                        Content = panel
+                    };
+
+                    window.SetThemeStyles();
+                    window.Show();
+                    Dispatcher.UIThread.RunJobs();
+
+                    grid.CurrentCell = new DataGridCellInfo(items[0], grid.Columns[0], 0, 0);
+                    grid.BeginEdit();
+                    Dispatcher.UIThread.RunJobs();
+
+                    externalBox.Focus();
+                    Dispatcher.UIThread.RunJobs();
+
+                    panel.Children.Remove(grid);
+                    Dispatcher.UIThread.RunJobs();
+
+                    return window;
+                },
+                CancellationToken.None);
+        };
+
+        var result = run().GetAwaiter().GetResult();
+
+        dotMemory.Check(memory =>
+            Assert.Equal(0, memory.GetObjects(where => where.Type.Is<DataGrid>()).ObjectsCount));
+
+        GC.KeepAlive(items);
+        GC.KeepAlive(result);
+    }
+
+    [Fact]
+    [SuppressMessage("Usage", "xUnit1031:Do not use blocking task operations in test method", Justification = "Needed for dotMemoryUnit to work")]
+    public void DataGrid_ValidationSubscription_DoesNotLeak()
+    {
+        if (!dotMemoryApi.IsEnabled)
+        {
+            return;
+        }
+
+        var items = new ObservableCollection<ValidatingRowItem>
+        {
+            new ValidatingRowItem("ok")
+        };
+
+        var run = async () =>
+        {
+            using var session = HeadlessUnitTestSession.StartNew(typeof(Application));
+
+            return await session.Dispatch(
+                () =>
+                {
+                    var grid = new DataGrid
+                    {
+                        AutoGenerateColumns = false,
+                        ItemsSource = items
+                    };
+
+                    grid.Columns.Add(new DataGridTextColumn
+                    {
+                        Header = "Name",
+                        Binding = new Binding(nameof(ValidatingRowItem.Name))
+                        {
+                            Mode = BindingMode.TwoWay
+                        }
+                    });
+
+                    var window = new Window
+                    {
+                        Content = grid
+                    };
+
+                    window.SetThemeStyles();
+                    window.Show();
+                    Dispatcher.UIThread.RunJobs();
+
+                    grid.SelectedItem = items[0];
+                    grid.CurrentCell = new DataGridCellInfo(items[0], grid.Columns[0], 0, 0);
+                    Dispatcher.UIThread.RunJobs();
+
+                    Assert.True(grid.BeginEdit());
+                    Dispatcher.UIThread.RunJobs();
+
+                    var row = grid.DisplayData.GetDisplayedElement(grid.CurrentSlot) as DataGridRow;
+                    Assert.NotNull(row);
+                    var cell = row!.Cells[grid.CurrentColumnIndex];
+                    var textBox = cell.Content as TextBox;
+                    Assert.NotNull(textBox);
+
+                    textBox!.Text = "bad";
+                    Dispatcher.UIThread.RunJobs();
+
+                    Assert.False(grid.CommitEdit());
+                    Dispatcher.UIThread.RunJobs();
+
+                    window.Content = null;
+                    Dispatcher.UIThread.RunJobs();
+
+                    return window;
+                },
+                CancellationToken.None);
+        };
+
+        var result = run().GetAwaiter().GetResult();
+
+        dotMemory.Check(memory =>
+            Assert.Equal(0, memory.GetObjects(where => where.Type.Is<DataGrid>()).ObjectsCount));
+
+        GC.KeepAlive(items);
+        GC.KeepAlive(result);
+    }
+
+    [Fact]
+    [SuppressMessage("Usage", "xUnit1031:Do not use blocking task operations in test method", Justification = "Needed for dotMemoryUnit to work")]
+    public void DataGrid_NotifyDataErrorInfoValidation_DoesNotLeak()
+    {
+        if (!dotMemoryApi.IsEnabled)
+        {
+            return;
+        }
+
+        var items = new ObservableCollection<NotifyDataErrorRowItem>
+        {
+            new NotifyDataErrorRowItem("A")
+        };
+        items[0].SetErrors(new[] { "Invalid" });
+
+        var run = async () =>
+        {
+            using var session = HeadlessUnitTestSession.StartNew(typeof(Application));
+
+            return await session.Dispatch(
+                () =>
+                {
+                    var grid = new DataGrid
+                    {
+                        AutoGenerateColumns = false,
+                        ItemsSource = items
+                    };
+
+                    grid.Columns.Add(new DataGridTextColumn
+                    {
+                        Header = "Name",
+                        Binding = new Binding(nameof(NotifyDataErrorRowItem.Name))
+                        {
+                            Mode = BindingMode.TwoWay
+                        }
+                    });
+
+                    var window = new Window
+                    {
+                        Content = grid
+                    };
+
+                    window.SetThemeStyles();
+                    window.Show();
+                    Dispatcher.UIThread.RunJobs();
+
+                    var slot = grid.DisplayData.FirstScrollingSlot;
+                    var row = slot >= 0 ? grid.DisplayData.GetDisplayedElement(slot) as DataGridRow : null;
+                    Assert.NotNull(row);
+                    Assert.False(row!.IsValid);
+
+                    window.Content = null;
+                    Dispatcher.UIThread.RunJobs();
+
+                    return window;
+                },
+                CancellationToken.None);
+        };
+
+        var result = run().GetAwaiter().GetResult();
+
+        dotMemory.Check(memory =>
+            Assert.Equal(0, memory.GetObjects(where => where.Type.Is<DataGrid>()).ObjectsCount));
+
+        GC.KeepAlive(items);
+        GC.KeepAlive(result);
+    }
+
+    [Fact]
+    [SuppressMessage("Usage", "xUnit1031:Do not use blocking task operations in test method", Justification = "Needed for dotMemoryUnit to work")]
+    public void DataGrid_NotifyDataErrorInfo_ErrorsChanged_DoesNotLeak()
+    {
+        if (!dotMemoryApi.IsEnabled)
+        {
+            return;
+        }
+
+        var items = new ObservableCollection<NotifyDataErrorRowItem>
+        {
+            new NotifyDataErrorRowItem("A")
+        };
+
+        var run = async () =>
+        {
+            using var session = HeadlessUnitTestSession.StartNew(typeof(Application));
+
+            return await session.Dispatch(
+                () =>
+                {
+                    var grid = new DataGrid
+                    {
+                        AutoGenerateColumns = false,
+                        ItemsSource = items
+                    };
+
+                    grid.Columns.Add(new DataGridTextColumn
+                    {
+                        Header = "Name",
+                        Binding = new Binding(nameof(NotifyDataErrorRowItem.Name))
+                        {
+                            Mode = BindingMode.TwoWay
+                        }
+                    });
+
+                    var window = new Window
+                    {
+                        Content = grid
+                    };
+
+                    window.SetThemeStyles();
+                    window.Show();
+                    Dispatcher.UIThread.RunJobs();
+
+                    grid.SelectedItem = items[0];
+                    grid.CurrentCell = new DataGridCellInfo(items[0], grid.Columns[0], 0, 0);
+                    Dispatcher.UIThread.RunJobs();
+                    Assert.True(grid.BeginEdit());
+                    Dispatcher.UIThread.RunJobs();
+
+                    items[0].SetErrors(new object[] { "Invalid" });
+                    Dispatcher.UIThread.RunJobs();
+                    items[0].SetErrors(Array.Empty<object>());
+                    Dispatcher.UIThread.RunJobs();
+
+                    grid.CancelEdit();
+                    Dispatcher.UIThread.RunJobs();
+
+                    window.Content = null;
+                    Dispatcher.UIThread.RunJobs();
+
+                    return window;
+                },
+                CancellationToken.None);
+        };
+
+        var result = run().GetAwaiter().GetResult();
+
+        dotMemory.Check(memory =>
+            Assert.Equal(0, memory.GetObjects(where => where.Type.Is<DataGrid>()).ObjectsCount));
+
+        GC.KeepAlive(items);
+        GC.KeepAlive(result);
+    }
+
     private sealed class SwapItem
     {
         public SwapItem(string name)
@@ -1055,6 +1368,78 @@ public class LeakTests
         }
 
         public bool IsChecked { get; set; }
+    }
+
+    private sealed class EditableRowItem
+    {
+        public EditableRowItem(string name)
+        {
+            Name = name;
+        }
+
+        public string Name { get; set; }
+    }
+
+    private sealed class ValidatingRowItem
+    {
+        private string _name;
+
+        public ValidatingRowItem(string name)
+        {
+            _name = name;
+        }
+
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (value == "bad")
+                {
+                    throw new DataValidationException("Invalid value.");
+                }
+
+                _name = value;
+            }
+        }
+    }
+
+    private sealed class NotifyDataErrorRowItem : INotifyDataErrorInfo
+    {
+        private readonly List<object> _errors = new();
+        private string _name;
+
+        public NotifyDataErrorRowItem(string name)
+        {
+            _name = name;
+        }
+
+        public string Name
+        {
+            get => _name;
+            set => _name = value;
+        }
+
+        public bool HasErrors => _errors.Count > 0;
+
+        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+
+        public IEnumerable GetErrors(string? propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName) || propertyName == nameof(Name))
+            {
+                return _errors;
+            }
+
+            return Array.Empty<object>();
+        }
+
+        public void SetErrors(IEnumerable<object> errors)
+        {
+            _errors.Clear();
+            _errors.AddRange(errors);
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(Name)));
+        }
     }
 
     private sealed class GroupedRowItem

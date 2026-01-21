@@ -1,7 +1,10 @@
 param(
     [string]$Configuration = "Release",
     [string]$Filter = "FullyQualifiedName~LeakTests",
-    [string]$ResultsDir = "artifacts/dotmemory"
+    [string]$ResultsDir = "artifacts/dotmemory",
+    [string]$DotMemoryLogLevel = "VERBOSE",
+    [string]$TestVerbosity = "detailed",
+    [string]$TestLogger = "console;verbosity=detailed"
 )
 
 Set-StrictMode -Version Latest
@@ -45,6 +48,7 @@ $resultsDirFull = Join-Path $repoRoot $ResultsDir
 New-Item -ItemType Directory -Path $resultsDirFull -Force | Out-Null
 
 $workspaceList = Join-Path $resultsDirFull "dotmemory-workspaces.txt"
+$dotMemoryLog = Join-Path $resultsDirFull "dotmemory-unit.log"
 
 $arguments = @(
     $dotnet
@@ -52,13 +56,24 @@ $arguments = @(
     "--workspace-dir=$resultsDirFull"
     "--output-file=$workspaceList"
     "--propagate-exit-code"
+    "--log-level=$DotMemoryLogLevel"
+    "--log-file=$dotMemoryLog"
     "--"
     "test"
     $testProject
     "-c"
     $Configuration
+    "-v"
+    $TestVerbosity
+    "--logger"
+    $TestLogger
     "--filter"
     $Filter
 )
+
+Write-Host "dotMemoryUnit: $dotMemoryUnit"
+Write-Host "dotnet: $dotnet"
+Write-Host "Test project: $testProject"
+Write-Host "dotMemory log: $dotMemoryLog"
 
 & $dotMemoryUnit @arguments

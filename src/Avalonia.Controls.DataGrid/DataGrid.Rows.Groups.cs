@@ -101,7 +101,10 @@ namespace Avalonia.Controls
                     {
                         if (group.Items != null)
                         {
-                            group.Items.CollectionChanged += CollectionViewGroup_CollectionChanged;
+                            WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGrid>(
+                                group.Items,
+                                nameof(INotifyCollectionChanged.CollectionChanged),
+                                CollectionViewGroup_CollectionChanged);
                         }
                         var newGroupInfo = new DataGridRowGroupInfo(group, true, parentGroupInfo.Level + 1, insertSlot, insertSlot);
                         InsertElementAt(insertSlot,
@@ -149,7 +152,10 @@ namespace Avalonia.Controls
                 {
                     if (removedGroup.Items != null)
                     {
-                        removedGroup.Items.CollectionChanged -= CollectionViewGroup_CollectionChanged;
+                        WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGrid>(
+                            removedGroup.Items,
+                            nameof(INotifyCollectionChanged.CollectionChanged),
+                            CollectionViewGroup_CollectionChanged);
                     }
                     DataGridRowGroupInfo groupInfo = RowGroupInfoFromCollectionViewGroup(removedGroup);
                     Debug.Assert(groupInfo != null);
@@ -217,19 +223,28 @@ namespace Avalonia.Controls
                 var group = groupInfo.CollectionViewGroup;
                 if (group?.Items != null)
                 {
-                    group.Items.CollectionChanged -= CollectionViewGroup_CollectionChanged;
+                    WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGrid>(
+                        group.Items,
+                        nameof(INotifyCollectionChanged.CollectionChanged),
+                        CollectionViewGroup_CollectionChanged);
                 }
 
                 if (group is INotifyPropertyChanged inpc)
                 {
-                    inpc.PropertyChanged -= CollectionViewGroup_PropertyChanged;
+                    WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, DataGrid>(
+                        inpc,
+                        nameof(INotifyPropertyChanged.PropertyChanged),
+                        CollectionViewGroup_PropertyChanged);
                 }
             }
 
             if (_topLevelGroup != null)
             {
                 // The PagedCollectionView reuses the top level group so we need to detach any existing or else we'll get duplicate handers here
-                _topLevelGroup.CollectionChanged -= CollectionViewGroup_CollectionChanged;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGrid>(
+                    _topLevelGroup,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    CollectionViewGroup_CollectionChanged);
                 if (resetTopLevelGroup)
                 {
                     _topLevelGroup = null;
@@ -282,7 +297,10 @@ namespace Avalonia.Controls
             {
                 if (collectionViewGroup.Items != null && collectionViewGroup.Items.Count > 0)
                 {
-                    collectionViewGroup.Items.CollectionChanged += CollectionViewGroup_CollectionChanged;
+                    WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGrid>(
+                        collectionViewGroup.Items,
+                        nameof(INotifyCollectionChanged.CollectionChanged),
+                        CollectionViewGroup_CollectionChanged);
                     if (collectionViewGroup.Items[0] is DataGridCollectionViewGroup)
                     {
                         foreach (object subGroup in collectionViewGroup.Items)
@@ -352,7 +370,10 @@ namespace Avalonia.Controls
             {
                 int totalSlots = 0;
                 _topLevelGroup = (INotifyCollectionChanged)DataConnection.CollectionView.Groups;
-                _topLevelGroup.CollectionChanged += CollectionViewGroup_CollectionChanged;
+                WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGrid>(
+                    _topLevelGroup,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    CollectionViewGroup_CollectionChanged);
                 foreach (object group in DataConnection.CollectionView.Groups)
                 {
                     totalSlots += CountAndPopulateGroupHeaders(group, totalSlots, 0);
@@ -712,8 +733,14 @@ namespace Avalonia.Controls
 
             if (rowGroupInfo.CollectionViewGroup is INotifyPropertyChanged inpc)
             {
-                inpc.PropertyChanged -= new PropertyChangedEventHandler(CollectionViewGroup_PropertyChanged);
-                inpc.PropertyChanged += new PropertyChangedEventHandler(CollectionViewGroup_PropertyChanged);
+                WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, DataGrid>(
+                    inpc,
+                    nameof(INotifyPropertyChanged.PropertyChanged),
+                    CollectionViewGroup_PropertyChanged);
+                WeakEventHandlerManager.Subscribe<INotifyPropertyChanged, PropertyChangedEventArgs, DataGrid>(
+                    inpc,
+                    nameof(INotifyPropertyChanged.PropertyChanged),
+                    CollectionViewGroup_PropertyChanged);
             }
             groupHeader.UpdateTitleElements();
 
@@ -807,7 +834,10 @@ namespace Avalonia.Controls
             {
                 if (groupHeader.RowGroupInfo?.CollectionViewGroup is INotifyPropertyChanged oldInpc)
                 {
-                    oldInpc.PropertyChanged -= new PropertyChangedEventHandler(CollectionViewGroup_PropertyChanged);
+                    WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, DataGrid>(
+                        oldInpc,
+                        nameof(INotifyPropertyChanged.PropertyChanged),
+                        CollectionViewGroup_PropertyChanged);
                 }
 
                 groupHeader.RowGroupInfo = rowGroupInfo;
@@ -815,8 +845,14 @@ namespace Avalonia.Controls
 
                 if (rowGroupInfo.CollectionViewGroup is INotifyPropertyChanged newInpc)
                 {
-                    newInpc.PropertyChanged -= new PropertyChangedEventHandler(CollectionViewGroup_PropertyChanged);
-                    newInpc.PropertyChanged += new PropertyChangedEventHandler(CollectionViewGroup_PropertyChanged);
+                    WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, DataGrid>(
+                        newInpc,
+                        nameof(INotifyPropertyChanged.PropertyChanged),
+                        CollectionViewGroup_PropertyChanged);
+                    WeakEventHandlerManager.Subscribe<INotifyPropertyChanged, PropertyChangedEventArgs, DataGrid>(
+                        newInpc,
+                        nameof(INotifyPropertyChanged.PropertyChanged),
+                        CollectionViewGroup_PropertyChanged);
                 }
             }
 

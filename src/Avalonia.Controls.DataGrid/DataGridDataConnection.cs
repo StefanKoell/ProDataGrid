@@ -798,18 +798,30 @@ namespace Avalonia.Controls
         {
             if (value is INotifyCollectionChanged notifyingDataSource)
             {
-                notifyingDataSource.CollectionChanged -= NotifyingDataSource_CollectionChanged;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGridDataConnection>(
+                    notifyingDataSource,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    NotifyingDataSource_CollectionChanged);
             }
 
             if (SortDescriptions != null)
             {
-                SortDescriptions.CollectionChanged -= CollectionView_SortDescriptions_CollectionChanged;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGridDataConnection>(
+                    SortDescriptions,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    CollectionView_SortDescriptions_CollectionChanged);
             }
 
             if (CollectionView != null)
             {
-                CollectionView.CurrentChanged -= CollectionView_CurrentChanged;
-                CollectionView.CurrentChanging -= CollectionView_CurrentChanging;
+                WeakEventHandlerManager.Unsubscribe<EventArgs, DataGridDataConnection>(
+                    CollectionView,
+                    nameof(IDataGridCollectionView.CurrentChanged),
+                    CollectionView_CurrentChanged);
+                WeakEventHandlerManager.Unsubscribe<DataGridCurrentChangingEventArgs, DataGridDataConnection>(
+                    CollectionView,
+                    nameof(IDataGridCollectionView.CurrentChanging),
+                    CollectionView_CurrentChanging);
             }
 
             UnWireGroupingEvents();
@@ -821,18 +833,30 @@ namespace Avalonia.Controls
         {
             if (value is INotifyCollectionChanged notifyingDataSource)
             {
-                notifyingDataSource.CollectionChanged += NotifyingDataSource_CollectionChanged;
+                WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGridDataConnection>(
+                    notifyingDataSource,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    NotifyingDataSource_CollectionChanged);
             }
 
             if (SortDescriptions != null)
             {
-                SortDescriptions.CollectionChanged += CollectionView_SortDescriptions_CollectionChanged;
+                WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGridDataConnection>(
+                    SortDescriptions,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    CollectionView_SortDescriptions_CollectionChanged);
             }
 
             if (CollectionView != null)
             {
-                CollectionView.CurrentChanged += CollectionView_CurrentChanged;
-                CollectionView.CurrentChanging += CollectionView_CurrentChanging;
+                WeakEventHandlerManager.Subscribe<IDataGridCollectionView, EventArgs, DataGridDataConnection>(
+                    CollectionView,
+                    nameof(IDataGridCollectionView.CurrentChanged),
+                    CollectionView_CurrentChanged);
+                WeakEventHandlerManager.Subscribe<IDataGridCollectionView, DataGridCurrentChangingEventArgs, DataGridDataConnection>(
+                    CollectionView,
+                    nameof(IDataGridCollectionView.CurrentChanging),
+                    CollectionView_CurrentChanging);
             }
 
             WireGroupingEvents();
@@ -855,13 +879,19 @@ namespace Avalonia.Controls
                 return;
             }
 
-            groupDescriptions.CollectionChanged += GroupDescriptions_CollectionChanged;
+            WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGridDataConnection>(
+                groupDescriptions,
+                nameof(INotifyCollectionChanged.CollectionChanged),
+                GroupDescriptions_CollectionChanged);
 
             foreach (var description in groupDescriptions)
             {
                 if (description is INotifyPropertyChanged inpc)
                 {
-                    inpc.PropertyChanged += GroupDescription_PropertyChanged;
+                    WeakEventHandlerManager.Subscribe<INotifyPropertyChanged, PropertyChangedEventArgs, DataGridDataConnection>(
+                        inpc,
+                        nameof(INotifyPropertyChanged.PropertyChanged),
+                        GroupDescription_PropertyChanged);
                 }
             }
         }
@@ -876,13 +906,19 @@ namespace Avalonia.Controls
             var groupDescriptions = _groupingCollectionView.GroupDescriptions;
             if (groupDescriptions != null)
             {
-                groupDescriptions.CollectionChanged -= GroupDescriptions_CollectionChanged;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGridDataConnection>(
+                    groupDescriptions,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    GroupDescriptions_CollectionChanged);
 
                 foreach (var description in groupDescriptions)
                 {
                     if (description is INotifyPropertyChanged inpc)
                     {
-                        inpc.PropertyChanged -= GroupDescription_PropertyChanged;
+                        WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, DataGridDataConnection>(
+                            inpc,
+                            nameof(INotifyPropertyChanged.PropertyChanged),
+                            GroupDescription_PropertyChanged);
                     }
                 }
             }
@@ -899,7 +935,10 @@ namespace Avalonia.Controls
                 {
                     if (item is INotifyPropertyChanged inpc)
                     {
-                        inpc.PropertyChanged -= GroupDescription_PropertyChanged;
+                        WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, DataGridDataConnection>(
+                            inpc,
+                            nameof(INotifyPropertyChanged.PropertyChanged),
+                            GroupDescription_PropertyChanged);
                     }
                 }
             }
@@ -910,7 +949,10 @@ namespace Avalonia.Controls
                 {
                     if (item is INotifyPropertyChanged inpc)
                     {
-                        inpc.PropertyChanged += GroupDescription_PropertyChanged;
+                        WeakEventHandlerManager.Subscribe<INotifyPropertyChanged, PropertyChangedEventArgs, DataGridDataConnection>(
+                            inpc,
+                            nameof(INotifyPropertyChanged.PropertyChanged),
+                            GroupDescription_PropertyChanged);
                     }
                 }
             }

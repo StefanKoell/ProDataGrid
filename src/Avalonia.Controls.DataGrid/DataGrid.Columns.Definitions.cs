@@ -10,6 +10,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using Avalonia.Threading;
+using Avalonia.Utilities;
 
 namespace Avalonia.Controls
 {
@@ -94,7 +95,10 @@ namespace Avalonia.Controls
             _columnDefinitionsNotifications = definitions as INotifyCollectionChanged;
             if (_columnDefinitionsNotifications != null)
             {
-                _columnDefinitionsNotifications.CollectionChanged += ColumnDefinitions_CollectionChanged;
+                WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGrid>(
+                    _columnDefinitionsNotifications,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    ColumnDefinitions_CollectionChanged);
             }
             else
             {
@@ -129,8 +133,14 @@ namespace Avalonia.Controls
             _columnDefinitionsNotifications = _columnDefinitionsSource as INotifyCollectionChanged;
             if (_columnDefinitionsNotifications != null)
             {
-                _columnDefinitionsNotifications.CollectionChanged -= ColumnDefinitions_CollectionChanged;
-                _columnDefinitionsNotifications.CollectionChanged += ColumnDefinitions_CollectionChanged;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGrid>(
+                    _columnDefinitionsNotifications,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    ColumnDefinitions_CollectionChanged);
+                WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGrid>(
+                    _columnDefinitionsNotifications,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    ColumnDefinitions_CollectionChanged);
             }
             else
             {
@@ -149,7 +159,10 @@ namespace Avalonia.Controls
         {
             if (_columnDefinitionsNotifications != null)
             {
-                _columnDefinitionsNotifications.CollectionChanged -= ColumnDefinitions_CollectionChanged;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGrid>(
+                    _columnDefinitionsNotifications,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    ColumnDefinitions_CollectionChanged);
                 _columnDefinitionsNotifications = null;
             }
 
@@ -212,7 +225,10 @@ namespace Avalonia.Controls
         {
             if (definition is INotifyPropertyChanged notifier)
             {
-                notifier.PropertyChanged += ColumnDefinition_PropertyChanged;
+                WeakEventHandlerManager.Subscribe<INotifyPropertyChanged, PropertyChangedEventArgs, DataGrid>(
+                    notifier,
+                    nameof(INotifyPropertyChanged.PropertyChanged),
+                    ColumnDefinition_PropertyChanged);
             }
         }
 
@@ -220,7 +236,10 @@ namespace Avalonia.Controls
         {
             if (definition is INotifyPropertyChanged notifier)
             {
-                notifier.PropertyChanged -= ColumnDefinition_PropertyChanged;
+                WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, DataGrid>(
+                    notifier,
+                    nameof(INotifyPropertyChanged.PropertyChanged),
+                    ColumnDefinition_PropertyChanged);
             }
         }
 

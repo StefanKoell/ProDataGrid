@@ -12,6 +12,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Utilities;
 
 namespace Avalonia.Controls.DataGridFiltering
 {
@@ -91,7 +92,10 @@ namespace Avalonia.Controls.DataGridFiltering
             }
             else if (_view is INotifyPropertyChanged inpc)
             {
-                inpc.PropertyChanged += View_PropertyChanged;
+                WeakEventHandlerManager.Subscribe<INotifyPropertyChanged, PropertyChangedEventArgs, DataGridFilteringAdapter>(
+                    inpc,
+                    nameof(INotifyPropertyChanged.PropertyChanged),
+                    View_PropertyChanged);
                 ReconcileExternalFilter();
             }
         }
@@ -569,7 +573,10 @@ namespace Avalonia.Controls.DataGridFiltering
         {
             if (_view is INotifyPropertyChanged inpc)
             {
-                inpc.PropertyChanged -= View_PropertyChanged;
+                WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, DataGridFilteringAdapter>(
+                    inpc,
+                    nameof(INotifyPropertyChanged.PropertyChanged),
+                    View_PropertyChanged);
             }
 
             _view = null;

@@ -6,6 +6,7 @@
 
 using Avalonia;
 using Avalonia.Threading;
+using Avalonia.Utilities;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
@@ -148,7 +149,10 @@ internal
             _boundColumnsNotifications = collection as INotifyCollectionChanged;
             if (_boundColumnsNotifications != null)
             {
-                _boundColumnsNotifications.CollectionChanged += BoundColumns_CollectionChanged;
+                WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGrid>(
+                    _boundColumnsNotifications,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    BoundColumns_CollectionChanged);
             }
             else
             {
@@ -171,7 +175,10 @@ internal
         {
             if (_boundColumnsNotifications != null && collection != null)
             {
-                _boundColumnsNotifications.CollectionChanged -= BoundColumns_CollectionChanged;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGrid>(
+                    _boundColumnsNotifications,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    BoundColumns_CollectionChanged);
             }
 
             _boundColumnsNotifications = null;

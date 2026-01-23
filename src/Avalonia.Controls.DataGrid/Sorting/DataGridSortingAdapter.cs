@@ -16,6 +16,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.DataGridSorting;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.Utilities;
 
 namespace Avalonia.Controls.DataGridSorting
 {
@@ -107,7 +108,10 @@ namespace Avalonia.Controls.DataGridSorting
 
             if (_view != null)
             {
-                _view.SortDescriptions.CollectionChanged += OnViewSortDescriptionsChanged;
+                WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGridSortingAdapter>(
+                    _view.SortDescriptions,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    OnViewSortDescriptionsChanged);
 
                 if (_model.OwnsViewSorts)
                 {
@@ -161,7 +165,10 @@ namespace Avalonia.Controls.DataGridSorting
         {
             if (_view != null)
             {
-                _view.SortDescriptions.CollectionChanged -= OnViewSortDescriptionsChanged;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGridSortingAdapter>(
+                    _view.SortDescriptions,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    OnViewSortDescriptionsChanged);
                 _view = null;
             }
         }

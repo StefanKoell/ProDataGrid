@@ -147,6 +147,14 @@ internal
             AutomationProperties.IsOffscreenBehaviorProperty.OverrideDefaultValue<DataGridColumnHeader>(IsOffscreenBehavior.FromClip);
         }
 
+        internal static void ResetStaticState()
+        {
+            _dragMode = DragMode.None;
+            _dragColumn = null;
+            _dragStart = null;
+            _lastMousePositionHeaders = null;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Avalonia.Controls.Primitives.DataGridColumnHeader" /> class.
         /// </summary>

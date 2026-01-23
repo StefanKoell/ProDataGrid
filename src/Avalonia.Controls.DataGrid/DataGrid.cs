@@ -1155,6 +1155,12 @@ internal
 
             _pendingGroupingIndentationRefresh = true;
             LayoutUpdated += DataGrid_LayoutUpdatedGroupingIndentationRefresh;
+
+            if (DisplayData.FirstScrollingSlot < 0 || DisplayData.LastScrollingSlot < 0)
+            {
+                return;
+            }
+
             Dispatcher.UIThread.Post(() =>
             {
                 if (!_pendingGroupingIndentationRefresh)

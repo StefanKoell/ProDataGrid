@@ -696,7 +696,7 @@ internal
         internal void OnRemovedColumn_PreNotification(DataGridColumn removedColumn)
         {
             Debug.Assert(removedColumn.Index >= 0);
-            Debug.Assert(removedColumn.OwningGrid == null);
+            Debug.Assert(removedColumn.OwningGrid == null || ReferenceEquals(removedColumn.OwningGrid, this));
 
             // Intentionally keep the DisplayIndex intact after detaching the column.
             CorrectColumnIndexesAfterDeletion(removedColumn);

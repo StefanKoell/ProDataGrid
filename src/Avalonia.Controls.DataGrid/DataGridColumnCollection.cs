@@ -610,11 +610,9 @@ namespace Avalonia.Controls
                 {
                     VisibleEdgedColumnsWidth -= dataGridColumn.ActualWidth;
                 }
-                dataGridColumn.OwningGrid = null;
-                dataGridColumn.ClearElementCache();
-
                 // continue with the base remove
                 _owningGrid.OnRemovedColumn_PreNotification(dataGridColumn);
+                dataGridColumn.OwningGrid = null;
                 _owningGrid.OnColumnCollectionChanged_PreNotification(false /*columnsGrew*/);
                 if (!isSpacer)
                 {

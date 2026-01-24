@@ -5683,9 +5683,32 @@ internal
 
         private void RemoveDisplayedColumnHeader(DataGridColumn dataGridColumn)
         {
-            if (_columnHeadersPresenter != null)
+            if (_columnHeadersPresenter == null)
             {
-                _columnHeadersPresenter.Children.Remove(dataGridColumn.HeaderCell);
+                return;
+            }
+
+            DataGridColumnHeader header = null;
+            if (dataGridColumn.HasHeaderCell)
+            {
+                header = dataGridColumn.HeaderCell;
+            }
+            else
+            {
+                foreach (var child in _columnHeadersPresenter.Children)
+                {
+                    if (child is DataGridColumnHeader columnHeader
+                        && ReferenceEquals(columnHeader.OwningColumn, dataGridColumn))
+                    {
+                        header = columnHeader;
+                        break;
+                    }
+                }
+            }
+
+            if (header != null)
+            {
+                _columnHeadersPresenter.Children.Remove(header);
             }
         }
 

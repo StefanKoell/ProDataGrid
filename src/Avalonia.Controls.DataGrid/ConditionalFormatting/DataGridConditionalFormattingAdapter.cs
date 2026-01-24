@@ -49,7 +49,10 @@ namespace Avalonia.Controls.DataGridConditionalFormatting
             _model = model ?? throw new ArgumentNullException(nameof(model));
             _columnProvider = columnProvider ?? throw new ArgumentNullException(nameof(columnProvider));
 
-            _model.FormattingChanged += OnModelFormattingChanged;
+            WeakEventHandlerManager.Subscribe<IConditionalFormattingModel, ConditionalFormattingChangedEventArgs, DataGridConditionalFormattingAdapter>(
+                _model,
+                nameof(IConditionalFormattingModel.FormattingChanged),
+                OnModelFormattingChanged);
             BuildDescriptorCache();
         }
 
@@ -94,7 +97,10 @@ namespace Avalonia.Controls.DataGridConditionalFormatting
         public void Dispose()
         {
             DetachView();
-            _model.FormattingChanged -= OnModelFormattingChanged;
+            WeakEventHandlerManager.Unsubscribe<ConditionalFormattingChangedEventArgs, DataGridConditionalFormattingAdapter>(
+                _model,
+                nameof(IConditionalFormattingModel.FormattingChanged),
+                OnModelFormattingChanged);
         }
 
         public ConditionalFormattingDescriptor MatchCell(object item, int rowIndex, DataGridColumn column)

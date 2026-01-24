@@ -55,7 +55,10 @@ namespace Avalonia.Controls.DataGridFiltering
             _beforeViewRefresh = beforeViewRefresh;
             _afterViewRefresh = afterViewRefresh;
 
-            _model.FilteringChanged += OnModelFilteringChanged;
+            WeakEventHandlerManager.Subscribe<IFilteringModel, FilteringChangedEventArgs, DataGridFilteringAdapter>(
+                _model,
+                nameof(IFilteringModel.FilteringChanged),
+                OnModelFilteringChanged);
         }
 
         internal void AttachLifecycle(Action beforeViewRefresh, Action afterViewRefresh)
@@ -103,7 +106,10 @@ namespace Avalonia.Controls.DataGridFiltering
         public void Dispose()
         {
             DetachView();
-            _model.FilteringChanged -= OnModelFilteringChanged;
+            WeakEventHandlerManager.Unsubscribe<FilteringChangedEventArgs, DataGridFilteringAdapter>(
+                _model,
+                nameof(IFilteringModel.FilteringChanged),
+                OnModelFilteringChanged);
         }
 
         protected virtual bool TryApplyModelToView(

@@ -61,7 +61,10 @@ namespace Avalonia.Controls.DataGridSorting
             _beforeViewRefresh = beforeViewRefresh;
             _afterViewRefresh = afterViewRefresh;
 
-            _model.SortingChanged += OnModelSortingChanged;
+            WeakEventHandlerManager.Subscribe<ISortingModel, SortingChangedEventArgs, DataGridSortingAdapter>(
+                _model,
+                nameof(ISortingModel.SortingChanged),
+                OnModelSortingChanged);
         }
 
 #if !DATAGRID_INTERNAL
@@ -158,7 +161,10 @@ namespace Avalonia.Controls.DataGridSorting
         public void Dispose()
         {
             DetachView();
-            _model.SortingChanged -= OnModelSortingChanged;
+            WeakEventHandlerManager.Unsubscribe<SortingChangedEventArgs, DataGridSortingAdapter>(
+                _model,
+                nameof(ISortingModel.SortingChanged),
+                OnModelSortingChanged);
         }
 
         private void DetachView()

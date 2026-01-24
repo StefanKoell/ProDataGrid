@@ -52,7 +52,10 @@ namespace Avalonia.Controls.DataGridSearching
             _model = model ?? throw new ArgumentNullException(nameof(model));
             _columnProvider = columnProvider ?? throw new ArgumentNullException(nameof(columnProvider));
 
-            _model.SearchChanged += OnModelSearchChanged;
+            WeakEventHandlerManager.Subscribe<ISearchModel, SearchChangedEventArgs, DataGridSearchAdapter>(
+                _model,
+                nameof(ISearchModel.SearchChanged),
+                OnModelSearchChanged);
         }
 
 #if !DATAGRID_INTERNAL
@@ -92,7 +95,10 @@ namespace Avalonia.Controls.DataGridSearching
         public void Dispose()
         {
             DetachView();
-            _model.SearchChanged -= OnModelSearchChanged;
+            WeakEventHandlerManager.Unsubscribe<SearchChangedEventArgs, DataGridSearchAdapter>(
+                _model,
+                nameof(ISearchModel.SearchChanged),
+                OnModelSearchChanged);
         }
 
         protected virtual bool TryApplyModelToView(

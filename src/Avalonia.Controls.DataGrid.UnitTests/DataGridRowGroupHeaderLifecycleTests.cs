@@ -3,12 +3,15 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Xunit;
 
@@ -45,7 +48,103 @@ public class DataGridRowGroupHeaderLifecycleTests
         }
     }
 
-    private static (DataGrid grid, Window root) CreateGroupedGrid()
+    [AvaloniaFact]
+    public void RowGroupHeaders_Rebuild_On_Reattach()
+    {
+        var (grid, root) = CreateGroupedGrid();
+
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            Assert.NotEmpty(GetGroupHeaders(grid));
+
+            root.Content = null;
+            Dispatcher.UIThread.RunJobs();
+
+            root.Content = grid;
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            Assert.NotEmpty(GetGroupHeaders(grid));
+        }
+        finally
+        {
+            root.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void RowGroupFooters_Rebuild_On_Reattach()
+    {
+        var (grid, root) = CreateGroupedGrid(showGroupSummary: true, groupSummaryPosition: DataGridGroupSummaryPosition.Footer);
+
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            Assert.NotEmpty(GetGroupFooters(grid));
+
+            root.Content = null;
+            Dispatcher.UIThread.RunJobs();
+
+            root.Content = grid;
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            Assert.NotEmpty(GetGroupFooters(grid));
+        }
+        finally
+        {
+            root.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void RowGroupCollapse_State_Persists_On_Reattach()
+    {
+        var (grid, root) = CreateGroupedGrid();
+
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            var header = GetGroupHeaders(grid).First();
+            var key = header.RowGroupInfo.CollectionViewGroup.Key;
+
+            var toggle = typeof(DataGridRowGroupHeader).GetMethod(
+                "ToggleExpandCollapse",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.NotNull(toggle);
+            toggle.Invoke(header, new object[] { false, true });
+
+            Assert.False(header.RowGroupInfo.IsVisible);
+
+            root.Content = null;
+            Dispatcher.UIThread.RunJobs();
+
+            root.Content = grid;
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            var restoredInfo = GetGroupInfos(grid)
+                .FirstOrDefault(info => Equals(info.CollectionViewGroup.Key, key));
+
+            Assert.NotNull(restoredInfo);
+            Assert.False(restoredInfo.IsVisible);
+        }
+        finally
+        {
+            root.Close();
+        }
+    }
+
+    private static (DataGrid grid, Window root) CreateGroupedGrid(
+        bool showGroupSummary = false,
+        DataGridGroupSummaryPosition groupSummaryPosition = DataGridGroupSummaryPosition.Header)
     {
         var items = new ObservableCollection<Item>
         {
@@ -70,6 +169,11 @@ public class DataGridRowGroupHeaderLifecycleTests
             ItemsSource = view,
             HeadersVisibility = DataGridHeadersVisibility.Column,
         };
+        if (showGroupSummary)
+        {
+            grid.ShowGroupSummary = true;
+            grid.GroupSummaryPosition = groupSummaryPosition;
+        }
 
         grid.ColumnsInternal.Add(new DataGridTextColumn
         {
@@ -82,6 +186,29 @@ public class DataGridRowGroupHeaderLifecycleTests
         grid.UpdateLayout();
 
         return (grid, root);
+    }
+
+    private static IReadOnlyList<DataGridRowGroupHeader> GetGroupHeaders(DataGrid grid)
+    {
+        return grid.GetVisualDescendants()
+            .OfType<DataGridRowGroupHeader>()
+            .ToList();
+    }
+
+    private static IReadOnlyList<DataGridRowGroupFooter> GetGroupFooters(DataGrid grid)
+    {
+        return grid.GetVisualDescendants()
+            .OfType<DataGridRowGroupFooter>()
+            .ToList();
+    }
+
+    private static IReadOnlyList<DataGridRowGroupInfo> GetGroupInfos(DataGrid grid)
+    {
+        return grid.RowGroupHeadersTable
+            .GetIndexes()
+            .Select(slot => grid.RowGroupHeadersTable.GetValueAt(slot))
+            .Where(info => info != null)
+            .ToList();
     }
 
     private record Item(string Name, string Group);

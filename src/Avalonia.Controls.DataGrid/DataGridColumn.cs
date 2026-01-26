@@ -22,6 +22,7 @@ using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Metadata;
 using Avalonia.Styling;
 using Avalonia.VisualTree;
+using Avalonia.Utilities;
 using System.Collections.Specialized;
 
 namespace Avalonia.Controls
@@ -43,6 +44,8 @@ internal
         private object _header;
         private IDataTemplate _headerTemplate;
         private DataGridColumnHeader _headerCell;
+        private IDisposable _headerContentBinding;
+        private IDisposable _headerTemplateBinding;
         private Control _editingElement;
         private ICellEditBinding _editBinding;
         private IBinding _clipboardContentBinding;
@@ -57,6 +60,7 @@ internal
         private bool _showFilterButton;
         private FlyoutBase _filterFlyout;
         private System.Collections.IComparer _customSortComparer;
+        private DataGrid _owningGrid;
 
 
         /// <summary>
@@ -95,8 +99,25 @@ internal
         /// </summary>
         protected internal DataGrid OwningGrid
         {
-            get;
-            internal set;
+            get => _owningGrid;
+            internal set
+            {
+                if (ReferenceEquals(_owningGrid, value))
+                {
+                    if (value == null)
+                    {
+                        ClearElementCache();
+                    }
+                    return;
+                }
+
+                if (value == null)
+                {
+                    ClearElementCache();
+                }
+
+                _owningGrid = value;
+            }
         }
 
         internal int Index
@@ -521,7 +542,10 @@ internal
         private Classes CreateHeaderStyleClasses()
         {
             var classes = new Classes();
-            classes.CollectionChanged += HeaderStyleClassesChanged;
+            WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGridColumn>(
+                classes,
+                nameof(INotifyCollectionChanged.CollectionChanged),
+                HeaderStyleClassesChanged);
             return classes;
         }
 

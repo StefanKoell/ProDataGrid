@@ -86,6 +86,91 @@ namespace Avalonia.Controls.DataGridTests.Hierarchical;
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 
+    private sealed class TrackingExpandableItem : INotifyPropertyChanged
+    {
+        private PropertyChangedEventHandler? _propertyChanged;
+        private bool _isExpanded;
+
+        public TrackingExpandableItem(string name)
+        {
+            Name = name;
+            Children = new TrackingCollection<TrackingExpandableItem>();
+        }
+
+        public string Name { get; }
+
+        public TrackingCollection<TrackingExpandableItem> Children { get; }
+
+        public int PropertyChangedSubscriptionCount { get; private set; }
+
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set
+            {
+                if (_isExpanded == value)
+                {
+                    return;
+                }
+
+                _isExpanded = value;
+                RaiseIsExpandedChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged
+        {
+            add
+            {
+                _propertyChanged += value;
+                PropertyChangedSubscriptionCount = _propertyChanged?.GetInvocationList().Length ?? 0;
+            }
+            remove
+            {
+                _propertyChanged -= value;
+                PropertyChangedSubscriptionCount = _propertyChanged?.GetInvocationList().Length ?? 0;
+            }
+        }
+
+        public void RaiseIsExpandedChanged()
+        {
+            _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsExpanded)));
+        }
+    }
+
+    private sealed class TrackingCollection<T> : INotifyCollectionChanged, IEnumerable<T>
+    {
+        private NotifyCollectionChangedEventHandler? _collectionChanged;
+        private readonly List<T> _items = new();
+
+        public int SubscriptionCount { get; private set; }
+
+        public event NotifyCollectionChangedEventHandler? CollectionChanged
+        {
+            add
+            {
+                _collectionChanged += value;
+                SubscriptionCount = _collectionChanged?.GetInvocationList().Length ?? 0;
+            }
+            remove
+            {
+                _collectionChanged -= value;
+                SubscriptionCount = _collectionChanged?.GetInvocationList().Length ?? 0;
+            }
+        }
+
+        public void Add(T item) => _items.Add(item);
+
+        public void RaiseReset()
+        {
+            _collectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
+
+        public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
     private static HierarchicalModel CreateModel()
     {
         return new HierarchicalModel(new HierarchicalOptions
@@ -2386,5 +2471,52 @@ namespace Avalonia.Controls.DataGridTests.Hierarchical;
         Assert.Equal(2, model.GetNode(2).Level); // Grandchild1
         Assert.Equal(3, model.GetNode(3).Level); // GreatGrandchild1
         Assert.Equal(4, model.GetNode(4).Level); // Level4
+    }
+
+    [Fact]
+    public void WeakSubscriptions_DoNotRoot_Model()
+    {
+        var root = new TrackingExpandableItem("root");
+        root.Children.Add(new TrackingExpandableItem("child"));
+
+        var weak = CreateWeakModel(root);
+
+        Assert.Equal(1, root.PropertyChangedSubscriptionCount);
+        Assert.Equal(1, root.Children.SubscriptionCount);
+
+        ForceGc();
+
+        Assert.False(weak.TryGetTarget(out _));
+
+        root.RaiseIsExpandedChanged();
+        root.Children.RaiseReset();
+
+        Assert.Equal(0, root.PropertyChangedSubscriptionCount);
+        Assert.Equal(0, root.Children.SubscriptionCount);
+    }
+
+    private static WeakReference<HierarchicalModel> CreateWeakModel(TrackingExpandableItem root)
+    {
+        var model = new HierarchicalModel(new HierarchicalOptions
+        {
+            ChildrenSelector = item => ((TrackingExpandableItem)item).Children,
+            IsExpandedSelector = item => ((TrackingExpandableItem)item).IsExpanded,
+            IsExpandedSetter = (item, value) => ((TrackingExpandableItem)item).IsExpanded = value
+        });
+
+        model.SetRoot(root);
+        model.Expand(model.Root!);
+
+        return new WeakReference<HierarchicalModel>(model);
+    }
+
+    private static void ForceGc()
+    {
+        for (var i = 0; i < 3; i++)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+        }
     }
 }

@@ -170,6 +170,143 @@ public class DataGridColumnDefinitionsTests
     }
 
     [AvaloniaFact]
+    public void ColumnDefinitionsSource_Retains_Star_Sizing_After_Reattach()
+    {
+        var definitions = new ObservableCollection<DataGridColumnDefinition>
+        {
+            new DataGridTextColumnDefinition
+            {
+                Header = "Name",
+                Binding = DataGridBindingDefinition.Create<Person, string>(p => p.Name),
+                Width = new DataGridLength(1, DataGridLengthUnitType.Star)
+            },
+            new DataGridTextColumnDefinition
+            {
+                Header = "Age",
+                Binding = DataGridBindingDefinition.Create<Person, int>(p => p.Age),
+                Width = new DataGridLength(2, DataGridLengthUnitType.Star)
+            }
+        };
+
+        var items = new ObservableCollection<Person>
+        {
+            new Person { Name = "Ada", Age = 36 }
+        };
+
+        var grid = new DataGrid
+        {
+            AutoGenerateColumns = false,
+            ColumnDefinitionsSource = definitions,
+            ItemsSource = items,
+            HeadersVisibility = DataGridHeadersVisibility.Column,
+            HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled
+        };
+
+        var window = new Window
+        {
+            Width = 300,
+            Height = 200
+        };
+        window.SetThemeStyles();
+
+        try
+        {
+            window.Content = grid;
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            var columns = GetNonFillerColumns(grid);
+            Assert.Equal(2, columns.Count);
+
+            var firstWidth = columns[0].ActualWidth;
+            var secondWidth = columns[1].ActualWidth;
+            Assert.True(firstWidth > 0);
+            Assert.True(secondWidth > 0);
+            Assert.True(secondWidth > firstWidth);
+            var initialRatio = secondWidth / firstWidth;
+            Assert.InRange(initialRatio, 1.7, 2.3);
+
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+
+            window.Content = grid;
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            columns = GetNonFillerColumns(grid);
+            var firstWidthAfter = columns[0].ActualWidth;
+            var secondWidthAfter = columns[1].ActualWidth;
+
+            var ratio = secondWidthAfter / firstWidthAfter;
+            Assert.InRange(ratio, 1.7, 2.3);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void ColumnDefinitionsSource_Retains_Column_Instance_After_Reattach()
+    {
+        var definitions = new ObservableCollection<DataGridColumnDefinition>
+        {
+            new DataGridTextColumnDefinition
+            {
+                Header = "Name",
+                Binding = DataGridBindingDefinition.Create<Person, string>(p => p.Name)
+            }
+        };
+
+        var items = new ObservableCollection<Person>
+        {
+            new Person { Name = "Ada", Age = 36 }
+        };
+
+        var grid = new DataGrid
+        {
+            AutoGenerateColumns = false,
+            ColumnDefinitionsSource = definitions,
+            ItemsSource = items,
+            HeadersVisibility = DataGridHeadersVisibility.Column
+        };
+
+        var window = new Window
+        {
+            Width = 300,
+            Height = 200
+        };
+        window.SetThemeStyles();
+
+        try
+        {
+            window.Content = grid;
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            var originalColumn = Assert.Single(GetNonFillerColumns(grid));
+            originalColumn.Width = new DataGridLength(200, DataGridLengthUnitType.Pixel);
+
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+
+            window.Content = grid;
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            var restoredColumn = Assert.Single(GetNonFillerColumns(grid));
+            Assert.Same(originalColumn, restoredColumn);
+            Assert.Equal(new DataGridLength(200, DataGridLengthUnitType.Pixel), restoredColumn.Width);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void ColumnDefinitionsSource_AddRange_Materializes_Columns()
     {
         var definitions = new DataGridColumnDefinitionList();

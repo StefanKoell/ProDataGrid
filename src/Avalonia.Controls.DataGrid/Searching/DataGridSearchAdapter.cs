@@ -19,6 +19,7 @@ using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using System.Diagnostics.CodeAnalysis;
+using Avalonia.Utilities;
 
 namespace Avalonia.Controls.DataGridSearching
 {
@@ -51,7 +52,10 @@ namespace Avalonia.Controls.DataGridSearching
             _model = model ?? throw new ArgumentNullException(nameof(model));
             _columnProvider = columnProvider ?? throw new ArgumentNullException(nameof(columnProvider));
 
-            _model.SearchChanged += OnModelSearchChanged;
+            WeakEventHandlerManager.Subscribe<ISearchModel, SearchChangedEventArgs, DataGridSearchAdapter>(
+                _model,
+                nameof(ISearchModel.SearchChanged),
+                OnModelSearchChanged);
         }
 
 #if !DATAGRID_INTERNAL
@@ -79,7 +83,10 @@ namespace Avalonia.Controls.DataGridSearching
 
             if (_view is INotifyCollectionChanged incc)
             {
-                incc.CollectionChanged += View_CollectionChanged;
+                WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGridSearchAdapter>(
+                    incc,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    View_CollectionChanged);
             }
 
             ApplyModelToView(_model.Descriptors);
@@ -88,7 +95,10 @@ namespace Avalonia.Controls.DataGridSearching
         public void Dispose()
         {
             DetachView();
-            _model.SearchChanged -= OnModelSearchChanged;
+            WeakEventHandlerManager.Unsubscribe<SearchChangedEventArgs, DataGridSearchAdapter>(
+                _model,
+                nameof(ISearchModel.SearchChanged),
+                OnModelSearchChanged);
         }
 
         protected virtual bool TryApplyModelToView(
@@ -500,7 +510,10 @@ namespace Avalonia.Controls.DataGridSearching
         {
             if (_view is INotifyCollectionChanged incc)
             {
-                incc.CollectionChanged -= View_CollectionChanged;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGridSearchAdapter>(
+                    incc,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    View_CollectionChanged);
             }
 
             _view = null;
@@ -556,7 +569,10 @@ namespace Avalonia.Controls.DataGridSearching
                 {
                     if (!items.Contains(existing))
                     {
-                        existing.PropertyChanged -= Item_PropertyChanged;
+                        WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, DataGridSearchAdapter>(
+                            existing,
+                            nameof(INotifyPropertyChanged.PropertyChanged),
+                            Item_PropertyChanged);
                         toRemove.Add(existing);
                     }
                 }
@@ -571,7 +587,10 @@ namespace Avalonia.Controls.DataGridSearching
             {
                 if (_itemSubscriptions.Add(item))
                 {
-                    item.PropertyChanged += Item_PropertyChanged;
+                    WeakEventHandlerManager.Subscribe<INotifyPropertyChanged, PropertyChangedEventArgs, DataGridSearchAdapter>(
+                        item,
+                        nameof(INotifyPropertyChanged.PropertyChanged),
+                        Item_PropertyChanged);
                 }
             }
         }
@@ -585,7 +604,10 @@ namespace Avalonia.Controls.DataGridSearching
 
             foreach (var item in _itemSubscriptions)
             {
-                item.PropertyChanged -= Item_PropertyChanged;
+                WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, DataGridSearchAdapter>(
+                    item,
+                    nameof(INotifyPropertyChanged.PropertyChanged),
+                    Item_PropertyChanged);
             }
 
             _itemSubscriptions.Clear();

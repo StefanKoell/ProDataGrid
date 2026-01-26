@@ -164,6 +164,7 @@ namespace Avalonia.Controls
                     {
                         // Detach the column...
                         ItemsInternal[columnIndex].OwningGrid = null;
+                        ItemsInternal[columnIndex].ClearElementCache();
                     }
                     ItemsInternal.Clear();
                     DisplayIndexMap.Clear();
@@ -603,17 +604,16 @@ namespace Avalonia.Controls
                 }
 
                 DataGridColumn dataGridColumn = ItemsInternal[columnIndexWithFiller];
+                var headerCell = dataGridColumn.HasHeaderCell ? dataGridColumn.HeaderCell : null;
                 DataGridCellCoordinates newCurrentCellCoordinates = _owningGrid.OnRemovingColumn(dataGridColumn);
                 ItemsInternal.RemoveAt(columnIndexWithFiller);
                 if (dataGridColumn.IsVisible)
                 {
                     VisibleEdgedColumnsWidth -= dataGridColumn.ActualWidth;
                 }
-                dataGridColumn.OwningGrid = null;
-                dataGridColumn.RemoveEditingElement();
-
                 // continue with the base remove
-                _owningGrid.OnRemovedColumn_PreNotification(dataGridColumn);
+                dataGridColumn.OwningGrid = null;
+                _owningGrid.OnRemovedColumn_PreNotification(dataGridColumn, headerCell);
                 _owningGrid.OnColumnCollectionChanged_PreNotification(false /*columnsGrew*/);
                 if (!isSpacer)
                 {

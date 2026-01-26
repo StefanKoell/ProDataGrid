@@ -127,7 +127,7 @@ namespace Avalonia.Controls.DataGridHierarchical
         /// <summary>
         /// Cached handler to detach collection change subscription.
         /// </summary>
-        internal NotifyCollectionChangedEventHandler? ChildrenChangedHandler { get; set; }
+        internal EventHandler<NotifyCollectionChangedEventArgs>? ChildrenChangedHandler { get; set; }
 
         /// <summary>
         /// Subscribed notifier for expanded state changes.
@@ -137,12 +137,12 @@ namespace Avalonia.Controls.DataGridHierarchical
         /// <summary>
         /// Cached handler to detach expanded state subscription.
         /// </summary>
-        internal PropertyChangedEventHandler? ExpandedStateChangedHandler { get; set; }
+        internal EventHandler<PropertyChangedEventArgs>? ExpandedStateChangedHandler { get; set; }
 
         /// <summary>
         /// Cached handler to detach node expanded state subscription.
         /// </summary>
-        internal PropertyChangedEventHandler? NodeExpandedStateChangedHandler { get; set; }
+        internal EventHandler<PropertyChangedEventArgs>? NodeExpandedStateChangedHandler { get; set; }
 
         /// <summary>
         /// Tracks in-flight load cancellation for this node.

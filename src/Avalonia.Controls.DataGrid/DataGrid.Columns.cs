@@ -86,16 +86,22 @@ internal
         /// <returns>The remaining amount of adjustment.</returns>
         internal double AdjustColumnWidths(int displayIndex, double amount, bool userInitiated)
         {
-            if (!MathUtilities.IsZero(amount))
+            if (MathUtilities.IsZero(amount))
             {
-                if (amount < 0)
+                if (UsesStarSizing)
                 {
-                    amount = DecreaseColumnWidths(displayIndex, amount, userInitiated);
+                    NormalizeStarColumnWidths(displayIndex, userInitiated);
                 }
-                else
-                {
-                    amount = IncreaseColumnWidths(displayIndex, amount, userInitiated);
-                }
+                return amount;
+            }
+
+            if (amount < 0)
+            {
+                amount = DecreaseColumnWidths(displayIndex, amount, userInitiated);
+            }
+            else
+            {
+                amount = IncreaseColumnWidths(displayIndex, amount, userInitiated);
             }
             return amount;
         }
@@ -693,10 +699,10 @@ internal
             }
         }
 
-        internal void OnRemovedColumn_PreNotification(DataGridColumn removedColumn)
+        internal void OnRemovedColumn_PreNotification(DataGridColumn removedColumn, DataGridColumnHeader removedHeader)
         {
             Debug.Assert(removedColumn.Index >= 0);
-            Debug.Assert(removedColumn.OwningGrid == null);
+            Debug.Assert(removedColumn.OwningGrid == null || ReferenceEquals(removedColumn.OwningGrid, this));
 
             // Intentionally keep the DisplayIndex intact after detaching the column.
             CorrectColumnIndexesAfterDeletion(removedColumn);
@@ -733,7 +739,7 @@ internal
             _totalSummaryRow?.OnColumnRemoved(removedColumn);
             OnGroupSummaryColumnRemoved(removedColumn);
 
-            RemoveDisplayedColumnHeader(removedColumn);
+            RemoveDisplayedColumnHeader(removedColumn, removedHeader);
         }
 
         internal DataGridCellCoordinates OnRemovingColumn(DataGridColumn dataGridColumn)
@@ -894,6 +900,7 @@ internal
             double remainingAdjustment = adjustment;
             if (MathUtilities.IsZero(remainingAdjustment))
             {
+                NormalizeStarColumnWidths(displayIndex, userInitiated);
                 return remainingAdjustment;
             }
             bool increase = remainingAdjustment > 0;
@@ -943,6 +950,59 @@ internal
             }
 
             return remainingAdjustment;
+        }
+
+        private void NormalizeStarColumnWidths(int displayIndex, bool userInitiated)
+        {
+            if (ColumnsInternal == null)
+            {
+                return;
+            }
+
+            double totalStarWeights = 0;
+            double totalStarColumnsWidth = 0;
+            var starColumns = new List<DataGridColumn>();
+
+            foreach (DataGridColumn column in ColumnsInternal.GetDisplayedColumns(
+                c => c.Width.IsStar && c.DisplayIndex >= displayIndex && c.IsVisible && c.Width.Value > 0 && (c.ActualCanUserResize || !userInitiated)))
+            {
+                totalStarWeights += column.Width.Value;
+                totalStarColumnsWidth += column.Width.DisplayValue;
+                starColumns.Add(column);
+            }
+
+            if (starColumns.Count <= 1 || MathUtilities.IsZero(totalStarWeights) || totalStarColumnsWidth <= 0)
+            {
+                return;
+            }
+
+            var needsAdjust = false;
+            foreach (var column in starColumns)
+            {
+                var expected = totalStarColumnsWidth * column.Width.Value / totalStarWeights;
+                if (expected < column.ActualMinWidth - LayoutHelper.LayoutEpsilon ||
+                    expected > column.ActualMaxWidth + LayoutHelper.LayoutEpsilon)
+                {
+                    return;
+                }
+
+                if (Math.Abs(column.Width.DisplayValue - expected) > LayoutHelper.LayoutEpsilon)
+                {
+                    needsAdjust = true;
+                }
+            }
+
+            if (!needsAdjust)
+            {
+                return;
+            }
+
+            foreach (var column in starColumns)
+            {
+                var expected = totalStarColumnsWidth * column.Width.Value / totalStarWeights;
+                column.SetWidthDesiredValue(expected);
+                column.SetWidthDisplayValue(expected);
+            }
         }
 
         /// <summary>

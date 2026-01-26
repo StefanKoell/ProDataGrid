@@ -16,6 +16,7 @@
     </Folder>
     <Folder Name="/tests/">
         <Project Path="src/Avalonia.Controls.DataGrid.UnitTests/Avalonia.Controls.DataGrid.UnitTests.csproj" />
+        <Project Path="src/Avalonia.Controls.DataGrid.LeakTests/Avalonia.Controls.DataGrid.LeakTests.csproj" />
         <Project Path="src/ProDiagnostics.UnitTests/ProDiagnostics.UnitTests.csproj" />
     </Folder>
     <Folder Name="/samples/">

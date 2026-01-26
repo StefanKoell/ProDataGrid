@@ -25,6 +25,7 @@
 
   <ItemGroup Label="InternalsVisibleTo">
     <InternalsVisibleTo Include="Avalonia.Controls.DataGrid.UnitTests, PublicKey=$(AvaloniaPublicKey)" />
+    <InternalsVisibleTo Include="Avalonia.Controls.DataGrid.LeakTests, PublicKey=$(AvaloniaPublicKey)" />
   </ItemGroup>
 
   <Import Project="../../build/SharedVersion.props" />

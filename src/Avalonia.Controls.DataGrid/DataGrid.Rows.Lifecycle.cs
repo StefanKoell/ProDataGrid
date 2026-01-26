@@ -409,7 +409,27 @@ namespace Avalonia.Controls
         private void UnloadRow(DataGridRow dataGridRow)
         {
             Debug.Assert(dataGridRow != null);
-            Debug.Assert(_rowsPresenter != null);
+            if (_rowsPresenter == null)
+            {
+                if (_loadedRows.Contains(dataGridRow))
+                {
+                    return; // The row is still referenced, we can't release it.
+                }
+
+                OnUnloadingRow(new DataGridRowEventArgs(dataGridRow));
+                bool shouldRecycleRow = CurrentSlot != dataGridRow.Index;
+                if (shouldRecycleRow)
+                {
+                    DisplayData.RecycleRow(dataGridRow);
+                }
+                else
+                {
+                    ClearContainerForItemOverride(dataGridRow, dataGridRow.DataContext);
+                    dataGridRow.DetachFromDataGrid(false);
+                }
+                return;
+            }
+
             Debug.Assert(_rowsPresenter.Children.Contains(dataGridRow));
 
             if (_loadedRows.Contains(dataGridRow))
@@ -446,7 +466,9 @@ namespace Avalonia.Controls
 
             for (int i = _rowsPresenter.Children.Count - 1; i >= 0; i--)
             {
-                if (_rowsPresenter.Children[i] is DataGridRow or DataGridRowGroupHeader)
+                if (_rowsPresenter.Children[i] is DataGridRow
+                    or DataGridRowGroupHeader
+                    or DataGridRowGroupFooter)
                 {
                     _rowsPresenter.Children.RemoveAt(i);
                 }

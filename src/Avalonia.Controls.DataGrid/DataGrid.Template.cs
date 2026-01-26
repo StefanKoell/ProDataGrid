@@ -85,7 +85,7 @@ internal
             if (_rowsPresenter != null)
             {
                 // If we're applying a new template, we want to remove the old rows first
-                UnloadElements(recycle: false);
+                UnloadElements(recycle: true);
             }
 
             _rowsPresenter = e.NameScope.Find<DataGridRowsPresenter>(DATAGRID_elementRowsPresenterName);
@@ -151,11 +151,28 @@ internal
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
+            foreach (var column in ColumnsInternal)
+            {
+                if (column.OwningGrid == null)
+                {
+                    column.OwningGrid = this;
+                }
+            }
+            if (_columnHeadersPresenter != null && _columnHeadersPresenter.OwningGrid == null)
+            {
+                _columnHeadersPresenter.OwningGrid = this;
+            }
+            EnsureColumnHeadersPresenterChildren();
+            if (_rowsPresenter != null && _rowsPresenter.OwningGrid == null)
+            {
+                _rowsPresenter.OwningGrid = this;
+            }
             if (_summaryService == null)
             {
                 InitializeSummaryService();
                 OnDataSourceChangedForSummaries();
             }
+            EnsureTotalSummaryRow();
             if (DataConnection.DataSource != null && !DataConnection.EventsWired)
             {
                 DataConnection.WireEvents(DataConnection.DataSource);
@@ -171,6 +188,8 @@ internal
                 AttachExternalSubscriptions();
             }
 
+            TryRestorePendingGroupingState();
+
             if (_rowDragDropController == null && CanUserReorderRows)
             {
                 RefreshRowDragDropController();
@@ -184,7 +203,10 @@ internal
         protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnDetachedFromVisualTree(e);
+            CancelPendingLayoutRefreshes();
+            CancelEdit(DataGridEditingUnit.Row, raiseEvents: false);
             DetachExternalEditingElement();
+            CapturePendingGroupingState();
             _scrollStateManager.Capture(preserveOnAttach: true);
             _suppressCellContentUpdates = true;
             try
@@ -196,20 +218,45 @@ internal
                 _suppressCellContentUpdates = false;
             }
 
+            DetachExternalSubscriptions();
+
+            if (_rowDragDropController != null)
+            {
+                _rowDragDropController.Dispose();
+                _rowDragDropController = null;
+            }
+
+            if (_columnHeadersPresenter != null)
+            {
+                RemoveDisplayedColumnHeaders();
+            }
+
+            RemoveRecycledChildrenFromVisualTree();
+
             EndSelectionDrag();
             DisposeDragAutoScrollTimer();
             EndFillHandleDrag(applyFill: false);
             DisposeFillAutoScrollTimer();
             CancelPendingAutoScroll();
 
-            _rowDragDropController?.Dispose();
-            _rowDragDropController = null;
-
             _validationSubscription?.Dispose();
             _validationSubscription = null;
 
             DetachRowGroupHandlers(resetTopLevelGroup: false);
-            DetachExternalSubscriptions();
+            DetachSummaryRows();
+
+            foreach (var column in ColumnsInternal)
+            {
+                column.OwningGrid = null;
+            }
+            if (_columnHeadersPresenter != null)
+            {
+                _columnHeadersPresenter.OwningGrid = null;
+            }
+            if (_rowsPresenter != null)
+            {
+                _rowsPresenter.OwningGrid = null;
+            }
 
             // When wired to INotifyCollectionChanged, the DataGrid will be cleaned up by GC
             if (DataConnection.DataSource != null && DataConnection.EventsWired)
@@ -220,7 +267,66 @@ internal
             DetachAdapterViews();
 
             DisposeSummaryService();
+            DataGridColumnHeader.ResetStaticState();
             UpdateKeyboardGestureSubscriptions();
+        }
+
+        private void EnsureColumnHeadersPresenterChildren()
+        {
+            if (_columnHeadersPresenter == null)
+            {
+                return;
+            }
+
+            if (_columnHeadersPresenter.Children.Count > 0)
+            {
+                return;
+            }
+
+            ColumnsInternal.FillerColumn.IsRepresented = false;
+
+            var sortedInternal = new List<DataGridColumn>(ColumnsItemsInternal);
+            sortedInternal.Sort(new DisplayIndexComparer());
+            foreach (var column in sortedInternal)
+            {
+                InsertDisplayedColumnHeader(column);
+            }
+
+            InvalidateColumnHeadersMeasure();
+        }
+
+        private void CancelPendingLayoutRefreshes()
+        {
+            if (_pendingPointerOverRefresh)
+            {
+                LayoutUpdated -= DataGrid_LayoutUpdatedPointerOverRefresh;
+                _pendingPointerOverRefresh = false;
+            }
+
+            if (_pendingHierarchicalIndentationRefresh)
+            {
+                LayoutUpdated -= DataGrid_LayoutUpdatedHierarchicalIndentationRefresh;
+                _pendingHierarchicalIndentationRefresh = false;
+            }
+
+            if (_pendingGroupingIndentationRefresh)
+            {
+                LayoutUpdated -= DataGrid_LayoutUpdatedGroupingIndentationRefresh;
+                _pendingGroupingIndentationRefresh = false;
+                _groupingIndentationRefreshQueued = false;
+            }
+
+            if (_pendingSelectionOverlayRefresh)
+            {
+                LayoutUpdated -= DataGrid_LayoutUpdatedSelectionOverlayRefresh;
+                _pendingSelectionOverlayRefresh = false;
+            }
+
+            if (_selectionOverlayLayoutHooked)
+            {
+                LayoutUpdated -= DataGrid_LayoutUpdatedSelectionOverlay;
+                _selectionOverlayLayoutHooked = false;
+            }
         }
 
 

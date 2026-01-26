@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Utilities;
 
 namespace Avalonia.Controls.DataGridHierarchical
 {
@@ -977,8 +978,14 @@ namespace Avalonia.Controls.DataGridHierarchical
         {
             _source = source ?? throw new ArgumentNullException(nameof(source));
 
-            ((INotifyCollectionChanged)_source).CollectionChanged += OnSourceCollectionChanged;
-            ((INotifyPropertyChanged)_source).PropertyChanged += OnSourcePropertyChanged;
+            WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, ProjectedObservableNodes<T>>(
+                (INotifyCollectionChanged)_source,
+                nameof(INotifyCollectionChanged.CollectionChanged),
+                OnSourceCollectionChanged);
+            WeakEventHandlerManager.Subscribe<INotifyPropertyChanged, PropertyChangedEventArgs, ProjectedObservableNodes<T>>(
+                (INotifyPropertyChanged)_source,
+                nameof(INotifyPropertyChanged.PropertyChanged),
+                OnSourcePropertyChanged);
         }
 
         public HierarchicalNode<T> this[int index] => new HierarchicalNode<T>(_source[index]);

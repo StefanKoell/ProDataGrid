@@ -829,9 +829,6 @@ public class HierarchicalIntegrationTests
         bool adapterEventFired = false;
         ((DataGridHierarchicalAdapter)adapter).FlattenedChanged += (_, __) => adapterEventFired = true;
         var hierarchicalEnabledField = typeof(DataGrid).GetField("_hierarchicalRowsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
-        var modelHandlersField = typeof(HierarchicalModel).GetField("FlattenedChanged", BindingFlags.Instance | BindingFlags.NonPublic);
-        var modelHandlers = ((MulticastDelegate?)modelHandlersField?.GetValue(model))?.GetInvocationList().Select(h => h.Method.Name).ToArray() ?? Array.Empty<string>();
-        Assert.Contains("HierarchicalAdapter_FlattenedChanged", modelHandlers);
 
         grid.ColumnsInternal.Add(new DataGridHierarchicalColumn
         {

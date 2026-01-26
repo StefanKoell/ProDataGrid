@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Threading;
+using Avalonia.Utilities;
 
 namespace Avalonia.Controls.DataGridHierarchical
 {
@@ -93,7 +94,10 @@ namespace Avalonia.Controls.DataGridHierarchical
             _model = model ?? throw new ArgumentNullException(nameof(model));
             _flattenedChangedCallback = flattenedChangedCallback;
 
-            _model.FlattenedChanged += OnModelFlattenedChanged;
+            WeakEventHandlerManager.Subscribe<IHierarchicalModel, FlattenedChangedEventArgs, DataGridHierarchicalAdapter>(
+                _model,
+                nameof(IHierarchicalModel.FlattenedChanged),
+                OnModelFlattenedChanged);
         }
 
         public IHierarchicalModel Model => _model;
@@ -145,7 +149,10 @@ namespace Avalonia.Controls.DataGridHierarchical
 
         public void Dispose()
         {
-            _model.FlattenedChanged -= OnModelFlattenedChanged;
+            WeakEventHandlerManager.Unsubscribe<FlattenedChangedEventArgs, DataGridHierarchicalAdapter>(
+                _model,
+                nameof(IHierarchicalModel.FlattenedChanged),
+                OnModelFlattenedChanged);
             EndDebouncedVirtualizationGuard();
 
             if (_guardTimer != null)

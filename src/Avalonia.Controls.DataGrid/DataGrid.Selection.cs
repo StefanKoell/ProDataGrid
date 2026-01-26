@@ -9,6 +9,7 @@ using Avalonia.Controls.Utils;
 using Avalonia.Interactivity;
 using Avalonia.Controls.Selection;
 using Avalonia.Threading;
+using Avalonia.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Specialized;
@@ -727,7 +728,10 @@ internal
             if (_selectedItemsBinding is INotifyCollectionChanged incc)
             {
                 _selectedItemsBindingNotifications = incc;
-                _selectedItemsBindingNotifications.CollectionChanged += OnBoundSelectedItemsCollectionChanged;
+                WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGrid>(
+                    _selectedItemsBindingNotifications,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    OnBoundSelectedItemsCollectionChanged);
             }
         }
 
@@ -735,7 +739,10 @@ internal
         {
             if (_selectedItemsBindingNotifications != null)
             {
-                _selectedItemsBindingNotifications.CollectionChanged -= OnBoundSelectedItemsCollectionChanged;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGrid>(
+                    _selectedItemsBindingNotifications,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    OnBoundSelectedItemsCollectionChanged);
                 _selectedItemsBindingNotifications = null;
             }
         }
@@ -1118,7 +1125,10 @@ internal
             if (_selectedCellsBinding is INotifyCollectionChanged incc)
             {
                 _selectedCellsBindingNotifications = incc;
-                _selectedCellsBindingNotifications.CollectionChanged += OnBoundSelectedCellsCollectionChanged;
+                WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGrid>(
+                    _selectedCellsBindingNotifications,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    OnBoundSelectedCellsCollectionChanged);
             }
         }
 
@@ -1126,7 +1136,10 @@ internal
         {
             if (_selectedCellsBindingNotifications != null)
             {
-                _selectedCellsBindingNotifications.CollectionChanged -= OnBoundSelectedCellsCollectionChanged;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGrid>(
+                    _selectedCellsBindingNotifications,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    OnBoundSelectedCellsCollectionChanged);
                 _selectedCellsBindingNotifications = null;
             }
         }

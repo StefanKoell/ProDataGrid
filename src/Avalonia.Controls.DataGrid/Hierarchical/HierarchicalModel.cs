@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
+using Avalonia.Utilities;
 
 namespace Avalonia.Controls.DataGridHierarchical
 {
@@ -2479,6 +2480,57 @@ namespace Avalonia.Controls.DataGridHierarchical
             }
         }
 
+        private sealed class ExpandedStateHandler
+        {
+            private readonly HierarchicalModel _owner;
+            private readonly HierarchicalNode _node;
+
+            public ExpandedStateHandler(HierarchicalModel owner, HierarchicalNode node)
+            {
+                _owner = owner;
+                _node = node;
+            }
+
+            public void Handle(object? sender, PropertyChangedEventArgs e)
+            {
+                _owner.OnItemExpandedStateChanged(_node, e);
+            }
+        }
+
+        private sealed class NodeExpandedStateHandler
+        {
+            private readonly HierarchicalModel _owner;
+            private readonly HierarchicalNode _node;
+
+            public NodeExpandedStateHandler(HierarchicalModel owner, HierarchicalNode node)
+            {
+                _owner = owner;
+                _node = node;
+            }
+
+            public void Handle(object? sender, PropertyChangedEventArgs e)
+            {
+                _owner.OnNodeExpandedStateChanged(_node, e);
+            }
+        }
+
+        private sealed class ChildrenChangedHandler
+        {
+            private readonly HierarchicalModel _owner;
+            private readonly HierarchicalNode _node;
+
+            public ChildrenChangedHandler(HierarchicalModel owner, HierarchicalNode node)
+            {
+                _owner = owner;
+                _node = node;
+            }
+
+            public void Handle(object? sender, NotifyCollectionChangedEventArgs e)
+            {
+                _owner.OnChildrenCollectionChanged(_node, e);
+            }
+        }
+
         private void AttachExpandedStateNotifier(HierarchicalNode node)
         {
             if (!HasExpandedStateSelector)
@@ -2493,17 +2545,24 @@ namespace Avalonia.Controls.DataGridHierarchical
 
             DetachExpandedStateNotifier(node);
 
-            PropertyChangedEventHandler handler = (_, e) => OnItemExpandedStateChanged(node, e);
-            notifier.PropertyChanged += handler;
+            var handler = new ExpandedStateHandler(this, node);
+            EventHandler<PropertyChangedEventArgs> handlerDelegate = handler.Handle;
+            WeakEventHandlerManager.Subscribe<INotifyPropertyChanged, PropertyChangedEventArgs, ExpandedStateHandler>(
+                notifier,
+                nameof(INotifyPropertyChanged.PropertyChanged),
+                handlerDelegate);
             node.ExpandedStateNotifier = notifier;
-            node.ExpandedStateChangedHandler = handler;
+            node.ExpandedStateChangedHandler = handlerDelegate;
         }
 
         private void DetachExpandedStateNotifier(HierarchicalNode node)
         {
             if (node.ExpandedStateNotifier != null && node.ExpandedStateChangedHandler != null)
             {
-                node.ExpandedStateNotifier.PropertyChanged -= node.ExpandedStateChangedHandler;
+                WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, ExpandedStateHandler>(
+                    node.ExpandedStateNotifier,
+                    nameof(INotifyPropertyChanged.PropertyChanged),
+                    node.ExpandedStateChangedHandler);
             }
 
             node.ExpandedStateNotifier = null;
@@ -2514,16 +2573,23 @@ namespace Avalonia.Controls.DataGridHierarchical
         {
             DetachNodeExpandedStateNotifier(node);
 
-            PropertyChangedEventHandler handler = (_, e) => OnNodeExpandedStateChanged(node, e);
-            node.PropertyChanged += handler;
-            node.NodeExpandedStateChangedHandler = handler;
+            var handler = new NodeExpandedStateHandler(this, node);
+            EventHandler<PropertyChangedEventArgs> handlerDelegate = handler.Handle;
+            WeakEventHandlerManager.Subscribe<INotifyPropertyChanged, PropertyChangedEventArgs, NodeExpandedStateHandler>(
+                node,
+                nameof(INotifyPropertyChanged.PropertyChanged),
+                handlerDelegate);
+            node.NodeExpandedStateChangedHandler = handlerDelegate;
         }
 
         private void DetachNodeExpandedStateNotifier(HierarchicalNode node)
         {
             if (node.NodeExpandedStateChangedHandler != null)
             {
-                node.PropertyChanged -= node.NodeExpandedStateChangedHandler;
+                WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, NodeExpandedStateHandler>(
+                    node,
+                    nameof(INotifyPropertyChanged.PropertyChanged),
+                    node.NodeExpandedStateChangedHandler);
             }
 
             node.NodeExpandedStateChangedHandler = null;
@@ -2628,10 +2694,14 @@ namespace Avalonia.Controls.DataGridHierarchical
             {
                 DetachChildrenNotifier(node);
 
-                NotifyCollectionChangedEventHandler handler = (s, e) => OnChildrenCollectionChanged(node, e);
-                notifier.CollectionChanged += handler;
+                var handler = new ChildrenChangedHandler(this, node);
+                EventHandler<NotifyCollectionChangedEventArgs> handlerDelegate = handler.Handle;
+                WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, ChildrenChangedHandler>(
+                    notifier,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    handlerDelegate);
                 node.ChildrenNotifier = notifier;
-                node.ChildrenChangedHandler = handler;
+                node.ChildrenChangedHandler = handlerDelegate;
             }
         }
 
@@ -2639,7 +2709,10 @@ namespace Avalonia.Controls.DataGridHierarchical
         {
             if (node.ChildrenNotifier != null && node.ChildrenChangedHandler != null)
             {
-                node.ChildrenNotifier.CollectionChanged -= node.ChildrenChangedHandler;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, ChildrenChangedHandler>(
+                    node.ChildrenNotifier,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    node.ChildrenChangedHandler);
             }
 
             node.ChildrenNotifier = null;

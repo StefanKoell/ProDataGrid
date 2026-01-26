@@ -14,6 +14,7 @@ using System.Linq;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Utils;
+using Avalonia.Utilities;
 
 namespace Avalonia.Controls.DataGridConditionalFormatting
 {
@@ -48,7 +49,10 @@ namespace Avalonia.Controls.DataGridConditionalFormatting
             _model = model ?? throw new ArgumentNullException(nameof(model));
             _columnProvider = columnProvider ?? throw new ArgumentNullException(nameof(columnProvider));
 
-            _model.FormattingChanged += OnModelFormattingChanged;
+            WeakEventHandlerManager.Subscribe<IConditionalFormattingModel, ConditionalFormattingChangedEventArgs, DataGridConditionalFormattingAdapter>(
+                _model,
+                nameof(IConditionalFormattingModel.FormattingChanged),
+                OnModelFormattingChanged);
             BuildDescriptorCache();
         }
 
@@ -80,7 +84,10 @@ namespace Avalonia.Controls.DataGridConditionalFormatting
 
             if (_view is INotifyCollectionChanged incc)
             {
-                incc.CollectionChanged += View_CollectionChanged;
+                WeakEventHandlerManager.Subscribe<INotifyCollectionChanged, NotifyCollectionChangedEventArgs, DataGridConditionalFormattingAdapter>(
+                    incc,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    View_CollectionChanged);
             }
 
             UpdateItemSubscriptionsFromView();
@@ -90,7 +97,10 @@ namespace Avalonia.Controls.DataGridConditionalFormatting
         public void Dispose()
         {
             DetachView();
-            _model.FormattingChanged -= OnModelFormattingChanged;
+            WeakEventHandlerManager.Unsubscribe<ConditionalFormattingChangedEventArgs, DataGridConditionalFormattingAdapter>(
+                _model,
+                nameof(IConditionalFormattingModel.FormattingChanged),
+                OnModelFormattingChanged);
         }
 
         public ConditionalFormattingDescriptor MatchCell(object item, int rowIndex, DataGridColumn column)
@@ -462,7 +472,10 @@ namespace Avalonia.Controls.DataGridConditionalFormatting
         {
             if (_view is INotifyCollectionChanged incc)
             {
-                incc.CollectionChanged -= View_CollectionChanged;
+                WeakEventHandlerManager.Unsubscribe<NotifyCollectionChangedEventArgs, DataGridConditionalFormattingAdapter>(
+                    incc,
+                    nameof(INotifyCollectionChanged.CollectionChanged),
+                    View_CollectionChanged);
             }
 
             _view = null;
@@ -500,7 +513,10 @@ namespace Avalonia.Controls.DataGridConditionalFormatting
                 }
 
                 _itemSubscriptionCounts[inpc] = 1;
-                inpc.PropertyChanged += Item_PropertyChanged;
+                WeakEventHandlerManager.Subscribe<INotifyPropertyChanged, PropertyChangedEventArgs, DataGridConditionalFormattingAdapter>(
+                    inpc,
+                    nameof(INotifyPropertyChanged.PropertyChanged),
+                    Item_PropertyChanged);
             }
         }
 
@@ -517,7 +533,10 @@ namespace Avalonia.Controls.DataGridConditionalFormatting
                 if (count <= 1)
                 {
                     _itemSubscriptionCounts.Remove(inpc);
-                    inpc.PropertyChanged -= Item_PropertyChanged;
+                    WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, DataGridConditionalFormattingAdapter>(
+                        inpc,
+                        nameof(INotifyPropertyChanged.PropertyChanged),
+                        Item_PropertyChanged);
                 }
                 else
                 {
@@ -535,7 +554,10 @@ namespace Avalonia.Controls.DataGridConditionalFormatting
 
             foreach (var item in _itemSubscriptionCounts.Keys)
             {
-                item.PropertyChanged -= Item_PropertyChanged;
+                WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, DataGridConditionalFormattingAdapter>(
+                    item,
+                    nameof(INotifyPropertyChanged.PropertyChanged),
+                    Item_PropertyChanged);
             }
 
             _itemSubscriptionCounts.Clear();

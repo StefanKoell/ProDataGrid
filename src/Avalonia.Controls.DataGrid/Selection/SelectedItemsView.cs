@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using Avalonia.Controls.Selection;
+using Avalonia.Utilities;
 using System.Linq;
 
 namespace Avalonia.Controls.DataGridSelection
@@ -41,9 +42,18 @@ namespace Avalonia.Controls.DataGridSelection
             _model = model ?? throw new ArgumentNullException(nameof(model));
             _itemSelector = itemSelector ?? (item => item);
             _indexResolver = indexResolver;
-            _model.SelectionChanged += OnSelectionChanged;
-            _model.SourceReset += OnSourceReset;
-            _model.PropertyChanged += OnModelPropertyChanged;
+            WeakEventHandlerManager.Subscribe<ISelectionModel, SelectionModelSelectionChangedEventArgs, SelectedItemsView>(
+                _model,
+                nameof(ISelectionModel.SelectionChanged),
+                OnSelectionChanged);
+            WeakEventHandlerManager.Subscribe<ISelectionModel, EventArgs, SelectedItemsView>(
+                _model,
+                nameof(ISelectionModel.SourceReset),
+                OnSourceReset);
+            WeakEventHandlerManager.Subscribe<INotifyPropertyChanged, PropertyChangedEventArgs, SelectedItemsView>(
+                (INotifyPropertyChanged)_model,
+                nameof(INotifyPropertyChanged.PropertyChanged),
+                OnModelPropertyChanged);
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -481,9 +491,18 @@ namespace Avalonia.Controls.DataGridSelection
                 return;
             }
 
-            _model.SelectionChanged -= OnSelectionChanged;
-            _model.PropertyChanged -= OnModelPropertyChanged;
-            _model.SourceReset -= OnSourceReset;
+            WeakEventHandlerManager.Unsubscribe<SelectionModelSelectionChangedEventArgs, SelectedItemsView>(
+                _model,
+                nameof(ISelectionModel.SelectionChanged),
+                OnSelectionChanged);
+            WeakEventHandlerManager.Unsubscribe<PropertyChangedEventArgs, SelectedItemsView>(
+                _model,
+                nameof(INotifyPropertyChanged.PropertyChanged),
+                OnModelPropertyChanged);
+            WeakEventHandlerManager.Unsubscribe<EventArgs, SelectedItemsView>(
+                _model,
+                nameof(ISelectionModel.SourceReset),
+                OnSourceReset);
 
             _isDisposed = true;
         }

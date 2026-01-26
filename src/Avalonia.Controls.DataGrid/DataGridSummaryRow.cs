@@ -74,6 +74,7 @@ internal
                 if (_cellsPresenter != null)
                 {
                     _cellsPresenter.OwningGrid = value;
+                    _cellsPresenter.OwnerRow = value == null ? null : this;
                 }
             }
         }
@@ -169,6 +170,9 @@ internal
                 return;
             }
 
+            _cellsPresenter.OwningGrid = OwningGrid;
+            _cellsPresenter.OwnerRow = this;
+
             // Clear existing cells
             foreach (var cell in _cells)
             {
@@ -258,6 +262,29 @@ internal
         internal void OnColumnsReordered()
         {
             EnsureCells();
+        }
+
+        internal void DetachFromGrid()
+        {
+            if (_cellsPresenter != null)
+            {
+                _cellsPresenter.OwningGrid = null;
+                _cellsPresenter.OwnerRow = null;
+                _cellsPresenter.Children.Clear();
+            }
+
+            foreach (var cell in _cells)
+            {
+                cell.Detach();
+                cell.Column = null;
+                cell.Description = null;
+                cell.Value = null;
+            }
+
+            _cells.Clear();
+            _owningGrid = null;
+            Group = null;
+            Level = 0;
         }
     }
 }

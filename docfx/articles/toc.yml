@@ -22,6 +22,14 @@
     href: data-operations.md
   - name: Summaries and Aggregation
     href: summaries.md
+  - name: Pivot Tables
+    href: pivot-tables.md
+  - name: Pivot Calculated Measures
+    href: pivot-calculated-measures.md
+  - name: Pivot Slicers
+    href: pivot-slicers.md
+  - name: Pivot Chart Model
+    href: pivot-charts.md
 - name: Real-Time Updates
   items:
   - name: High-Frequency Updates

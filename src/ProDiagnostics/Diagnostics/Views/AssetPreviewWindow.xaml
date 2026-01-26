@@ -1,0 +1,90 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Avalonia.Diagnostics.ViewModels"
+        x:Class="Avalonia.Diagnostics.Views.AssetPreviewWindow"
+        x:DataType="vm:AssetPreviewViewModel"
+        Width="900"
+        Height="650"
+        MinWidth="600"
+        MinHeight="420"
+        Title="{Binding Title}">
+  <Grid RowDefinitions="Auto,*">
+    <Border Padding="10"
+            BorderBrush="{DynamicResource ThemeControlMidBrush}"
+            BorderThickness="0,0,0,1">
+      <StackPanel Spacing="8">
+        <TextBlock Text="{Binding Status}"
+                   IsVisible="{Binding IsLoading}"
+                   FontStyle="Italic"/>
+        <TextBlock Text="{Binding ErrorMessage}"
+                   IsVisible="{Binding HasError}"
+                   Foreground="Tomato"
+                   TextWrapping="Wrap"/>
+        <ItemsControl ItemsSource="{Binding Metadata}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:AssetMetadataItem">
+              <StackPanel Spacing="2" MaxWidth="360" Margin="0,0,16,8">
+                <TextBlock Text="{Binding Name}"
+                           FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Value}"
+                           Foreground="Gray"
+                           TextWrapping="Wrap" />
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </Border>
+
+    <Grid Grid.Row="1">
+      <Grid IsVisible="{Binding IsImage}">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+          <Image Source="{Binding PreviewImage}"
+                 Stretch="None"
+                 Margin="16"/>
+        </ScrollViewer>
+      </Grid>
+
+      <Grid IsVisible="{Binding IsText}">
+        <TextBox Text="{Binding PreviewText}"
+                 IsReadOnly="True"
+                 AcceptsReturn="True"
+                 TextWrapping="NoWrap"
+                 Margin="16"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" />
+      </Grid>
+
+      <Grid IsVisible="{Binding IsFont}">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+          <StackPanel Spacing="12" Margin="16">
+            <TextBlock Text="{Binding FontFamilyName}"
+                       FontSize="16"
+                       FontWeight="Bold" />
+            <TextBlock Text="{Binding SampleText}"
+                       FontFamily="{Binding PreviewFontFamily}"
+                       FontSize="28"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789"
+                       FontFamily="{Binding PreviewFontFamily}"
+                       FontSize="20"
+                       TextWrapping="Wrap" />
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+
+      <TextBlock Text="No preview available."
+                 IsVisible="{Binding ShowPlaceholder}"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center"
+                 Foreground="Gray" />
+    </Grid>
+  </Grid>
+</Window>

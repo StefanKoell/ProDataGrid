@@ -8,13 +8,25 @@ public enum DevToolsViewKind
     /// <summary>
     /// The Logical Tree diagnostic view
     /// </summary>
-    LogicalTree,
+    LogicalTree = 0,
     /// <summary>
     /// The Visual Tree diagnostic view
     /// </summary>
-    VisualTree,
+    VisualTree = 1,
     /// <summary>
     /// Events diagnostic view
     /// </summary>
-    Events,
+    Events = 2,
+    /// <summary>
+    /// The Combined Tree diagnostic view
+    /// </summary>
+    CombinedTree = 3,
+    /// <summary>
+    /// Resources diagnostic view
+    /// </summary>
+    Resources = 4,
+    /// <summary>
+    /// Assets diagnostic view
+    /// </summary>
+    Assets = 5,
 }

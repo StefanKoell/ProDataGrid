@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Avalonia.Controls.DataGridHierarchical;
+using Avalonia.Diagnostics.Services;
 using Avalonia.Controls;
 using Avalonia.VisualTree;
 
@@ -11,11 +13,13 @@ namespace Avalonia.Diagnostics.ViewModels
         private TreeNode? _selectedNode;
         private ControlDetailsViewModel? _details;
         private readonly ISet<string> _pinnedProperties;
+        private readonly IHierarchicalModel _hierarchicalModel;
 
-        public TreePageViewModel(MainViewModel mainView, TreeNode[] nodes, ISet<string> pinnedProperties)
+        public TreePageViewModel(MainViewModel mainView, TreeNode[] nodes, ITreeHierarchyModelFactory modelFactory, ISet<string> pinnedProperties)
         {
             MainView = mainView;
             Nodes = nodes;
+            _hierarchicalModel = modelFactory.Create(nodes);
             _pinnedProperties = pinnedProperties;
             PropertiesFilter = new FilterViewModel();
             PropertiesFilter.RefreshFilter += (s, e) => Details?.PropertiesView?.Refresh();
@@ -34,6 +38,8 @@ namespace Avalonia.Diagnostics.ViewModels
 
         public TreeNode[] Nodes { get; protected set; }
 
+        public IHierarchicalModel HierarchicalModel => _hierarchicalModel;
+
         public TreeNode? SelectedNode
         {
             get => _selectedNode;
@@ -41,6 +47,11 @@ namespace Avalonia.Diagnostics.ViewModels
             {
                 if (RaiseAndSetIfChanged(ref _selectedNode, value))
                 {
+                    if (value != null)
+                    {
+                        ExpandNode(value.Parent);
+                    }
+
                     Details = value != null ?
                         new ControlDetailsViewModel(this, value.Visual, _pinnedProperties) :
                         null;
@@ -107,7 +118,6 @@ namespace Avalonia.Diagnostics.ViewModels
             if (node != null)
             {
                 SelectedNode = node;
-                ExpandNode(node.Parent);
             }
         }
 

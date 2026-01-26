@@ -246,18 +246,20 @@ namespace Avalonia.Controls
                     if (groupHeader != null)
                     {
                         groupHeader.TotalIndent = (groupHeader.Level == 0) ? 0 : RowGroupSublevelIndents[groupHeader.Level - 1];
-                        if (!groupHeader.IsRecycled)
+                        if (_rowsPresenter != null && !_rowsPresenter.Children.Contains(groupHeader))
                         {
                             _rowsPresenter.Children.Add(element);
                         }
+                        groupHeader.IsRecycled = false;
                         groupHeader.LoadVisualsForDisplay();
                     }
                     else if (groupFooter != null)
                     {
-                        if (!groupFooter.IsRecycled)
+                        if (_rowsPresenter != null && !_rowsPresenter.Children.Contains(groupFooter))
                         {
                             _rowsPresenter.Children.Add(element);
                         }
+                        groupFooter.IsRecycled = false;
                         groupFooter.ApplySummaryRowTheme();
                         groupFooter.UpdateSummaryRowOffset();
                         groupFooter.UpdateSummaryRowState();

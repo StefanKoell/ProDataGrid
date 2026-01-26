@@ -14,6 +14,7 @@ using Avalonia.Controls.DataGridSorting;
 using Avalonia.Data;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Threading;
 using Xunit;
 
 namespace Avalonia.Controls.DataGridTests.Sorting;
@@ -44,6 +45,68 @@ public class DataGridSortDirectionSyncTests
         var sort = Assert.Single(view.SortDescriptions);
         var comparerSort = Assert.IsType<DataGridComparerSortDescription>(sort);
         Assert.Same(column.CustomSortComparer, comparerSort.SourceComparer);
+    }
+
+    [AvaloniaFact]
+    public void SortDirection_Persists_After_Reattach()
+    {
+        var items = new ObservableCollection<Item>
+        {
+            new("B"),
+            new("A")
+        };
+
+        var view = new DataGridCollectionView(items);
+        var window = new Window
+        {
+            Width = 400,
+            Height = 300
+        };
+
+        window.SetThemeStyles();
+
+        var grid = new DataGrid
+        {
+            AutoGenerateColumns = false,
+            ItemsSource = view
+        };
+
+        var column = new DataGridTextColumn
+        {
+            Header = "Name",
+            Binding = new Binding(nameof(Item.Name)),
+            SortMemberPath = nameof(Item.Name)
+        };
+
+        grid.ColumnsInternal.Add(column);
+
+        window.Content = grid;
+        window.Show();
+        grid.UpdateLayout();
+
+        column.SortDirection = ListSortDirection.Ascending;
+        grid.UpdateLayout();
+
+        var sort = Assert.Single(view.SortDescriptions);
+        Assert.Equal(nameof(Item.Name), sort.PropertyPath);
+        Assert.Equal(ListSortDirection.Ascending, sort.Direction);
+
+        window.Content = null;
+        Dispatcher.UIThread.RunJobs();
+
+        window.Content = grid;
+        Dispatcher.UIThread.RunJobs();
+        grid.UpdateLayout();
+
+        sort = Assert.Single(view.SortDescriptions);
+        Assert.Equal(nameof(Item.Name), sort.PropertyPath);
+        Assert.Equal(ListSortDirection.Ascending, sort.Direction);
+
+        var descriptor = Assert.Single(grid.SortingModel.Descriptors);
+        Assert.Equal(nameof(Item.Name), descriptor.PropertyPath);
+        Assert.Equal(ListSortDirection.Ascending, descriptor.Direction);
+
+        window.Close();
     }
 
     [AvaloniaFact]

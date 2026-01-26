@@ -113,6 +113,63 @@ public class DataGridColumnHeaderCacheTests
         }
     }
 
+    [AvaloniaFact]
+    public void ColumnHeaders_Rebuild_On_Reattach()
+    {
+        var items = new ObservableCollection<Item>
+        {
+            new("Row")
+        };
+
+        var column = new DataGridTextColumn
+        {
+            Header = "Name",
+            Binding = new Binding(nameof(Item.Name))
+        };
+
+        var grid = new DataGrid
+        {
+            AutoGenerateColumns = false,
+            ItemsSource = items,
+            HeadersVisibility = DataGridHeadersVisibility.Column,
+            Columns = new ObservableCollection<DataGridColumn> { column }
+        };
+
+        var window = new Window
+        {
+            Width = 400,
+            Height = 300
+        };
+        window.SetThemeStyles();
+
+        try
+        {
+            window.Content = grid;
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            var presenter = grid.ColumnHeaders;
+            Assert.NotNull(presenter);
+            Assert.Contains(column.HeaderCell, presenter.Children);
+
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.DoesNotContain(column.HeaderCell, presenter.Children);
+
+            window.Content = grid;
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            Assert.Contains(column.HeaderCell, presenter.Children);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private sealed class Item
     {
         public Item(string name)

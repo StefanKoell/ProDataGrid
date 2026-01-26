@@ -3728,30 +3728,6 @@ internal
 
         private void DetachAdapterViews()
         {
-            var view = DataConnection?.CollectionView;
-            if (view != null)
-            {
-                var canClearView = true;
-                if (view is DataGridCollectionView dataGridView &&
-                    (dataGridView.IsAddingNew || dataGridView.IsEditingItem))
-                {
-                    canClearView = false;
-                }
-
-                if (canClearView)
-                {
-                    if (_sortingModel?.OwnsViewSorts == true)
-                    {
-                        view.SortDescriptions.Clear();
-                    }
-
-                    if (_filteringModel?.OwnsViewFilter == true)
-                    {
-                        view.Filter = null;
-                    }
-                }
-            }
-
             _sortingAdapter?.AttachView(null);
             _filteringAdapter?.AttachView(null);
             _searchAdapter?.AttachView(null);
@@ -3835,7 +3811,7 @@ internal
 
             if (_columnDefinitionsSource != null)
             {
-                DetachColumnDefinitions(_columnDefinitionsSource);
+                DetachColumnDefinitionsNotifications();
             }
 
             DetachBoundSelectedItems();

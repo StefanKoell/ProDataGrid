@@ -162,6 +162,7 @@ internal
             {
                 _columnHeadersPresenter.OwningGrid = this;
             }
+            EnsureColumnHeadersPresenterChildren();
             if (_rowsPresenter != null && _rowsPresenter.OwningGrid == null)
             {
                 _rowsPresenter.OwningGrid = this;
@@ -224,7 +225,7 @@ internal
 
             if (_columnHeadersPresenter != null)
             {
-                _columnHeadersPresenter.Children.Clear();
+                RemoveDisplayedColumnHeaders();
             }
 
             RemoveRecycledChildrenFromVisualTree();
@@ -265,6 +266,30 @@ internal
             DisposeSummaryService();
             DataGridColumnHeader.ResetStaticState();
             UpdateKeyboardGestureSubscriptions();
+        }
+
+        private void EnsureColumnHeadersPresenterChildren()
+        {
+            if (_columnHeadersPresenter == null)
+            {
+                return;
+            }
+
+            if (_columnHeadersPresenter.Children.Count > 0)
+            {
+                return;
+            }
+
+            ColumnsInternal.FillerColumn.IsRepresented = false;
+
+            var sortedInternal = new List<DataGridColumn>(ColumnsItemsInternal);
+            sortedInternal.Sort(new DisplayIndexComparer());
+            foreach (var column in sortedInternal)
+            {
+                InsertDisplayedColumnHeader(column);
+            }
+
+            InvalidateColumnHeadersMeasure();
         }
 
         private void CancelPendingLayoutRefreshes()

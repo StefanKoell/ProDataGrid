@@ -2,7 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:collections="using:Avalonia.Collections"
         xmlns:controls="clr-namespace:Avalonia.Controls"
-        xmlns:filtering="clr-namespace:Avalonia.Controls.DataGridFiltering">
+        xmlns:filtering="clr-namespace:Avalonia.Controls.DataGridFiltering"
+        xmlns:pivoting="clr-namespace:Avalonia.Controls.DataGridPivoting">
   <Styles.Resources>
     <ResourceDictionary>
       <!-- StreamGeometry Icons -->
@@ -100,6 +101,37 @@
             <Button Content="Apply" Command="{Binding ApplyCommand}" />
           </StackPanel>
         </StackPanel>
+      </DataTemplate>
+
+      <!-- Pivot table templates -->
+      <pivoting:PivotIndentToThicknessConverter x:Key="PivotIndentToThicknessConverter" />
+      <pivoting:PivotRowTypeToFontWeightConverter x:Key="PivotRowTypeToFontWeightConverter" />
+
+      <DataTemplate x:Key="DataGridPivotHeaderTemplate"
+                    x:DataType="pivoting:PivotHeader">
+        <ItemsControl ItemsSource="{Binding Segments}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Spacing="2" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding}"
+                         TextWrapping="NoWrap"
+                         TextTrimming="CharacterEllipsis" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </DataTemplate>
+
+      <DataTemplate x:Key="DataGridPivotRowHeaderTemplate"
+                    x:DataType="pivoting:PivotRow">
+        <TextBlock Text="{Binding CompactLabel}"
+                   Margin="{Binding Indent, Converter={StaticResource PivotIndentToThicknessConverter}}"
+                   VerticalAlignment="Center"
+                   TextTrimming="CharacterEllipsis"
+                   FontWeight="{Binding RowType, Converter={StaticResource PivotRowTypeToFontWeightConverter}}" />
       </DataTemplate>
 
       <!-- DataGridFilterButtonTheme -->
@@ -1349,6 +1381,46 @@
   </Style>
   <Style Selector="DataGridCell:info DataValidationErrors">
     <Setter Property="Theme" Value="{DynamicResource DataGridCellDataValidationInfoTheme}" />
+  </Style>
+
+  <!-- Pivot table styles -->
+  <Style Selector="DataGridColumnHeader.pivot-row-header">
+    <Setter Property="Background" Value="{DynamicResource DataGridRowGroupHeaderBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource DataGridRowGroupHeaderForegroundBrush}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="DataGridCell.pivot-row-header:not(:cell-selected)">
+    <Setter Property="Background" Value="{DynamicResource DataGridRowGroupHeaderBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource DataGridRowGroupHeaderForegroundBrush}" />
+  </Style>
+
+  <Style Selector="DataGridColumnHeader.pivot-values-header">
+    <Setter Property="FontStyle" Value="Italic" />
+  </Style>
+  <Style Selector="DataGridCell.pivot-values-header">
+    <Setter Property="FontStyle" Value="Italic" />
+  </Style>
+
+  <Style Selector="DataGridColumnHeader.pivot-subtotal">
+    <Setter Property="Background" Value="{DynamicResource DataGridRowGroupHeaderBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource DataGridRowGroupHeaderForegroundBrush}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="DataGridCell.pivot-subtotal:not(:cell-selected)">
+    <Setter Property="Background" Value="{DynamicResource DataGridRowGroupHeaderBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource DataGridRowGroupHeaderForegroundBrush}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+
+  <Style Selector="DataGridColumnHeader.pivot-grandtotal">
+    <Setter Property="Background" Value="{DynamicResource DataGridRowGroupHeaderBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource DataGridRowGroupHeaderForegroundBrush}" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+  <Style Selector="DataGridCell.pivot-grandtotal:not(:cell-selected)">
+    <Setter Property="Background" Value="{DynamicResource DataGridRowGroupHeaderBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource DataGridRowGroupHeaderForegroundBrush}" />
+    <Setter Property="FontWeight" Value="Bold" />
   </Style>
 
   <!-- Selection-unit specific hover visuals -->

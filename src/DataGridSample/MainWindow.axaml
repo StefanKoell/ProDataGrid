@@ -170,6 +170,48 @@
     <TabItem Header="Grouping">
       <local:GroupingPage />
     </TabItem>
+    <TabItem Header="Pivot Tables">
+      <pages:PivotTablePage />
+    </TabItem>
+    <TabItem Header="Pivot Report Filter">
+      <pages:PivotReportFilterPage />
+    </TabItem>
+    <TabItem Header="Pivot Values in Rows">
+      <pages:PivotValuesInRowsPage />
+    </TabItem>
+    <TabItem Header="Pivot Percent of Row Total">
+      <pages:PivotPercentOfRowTotalPage />
+    </TabItem>
+    <TabItem Header="Pivot Show Items With No Data">
+      <pages:PivotMissingItemsPage />
+    </TabItem>
+    <TabItem Header="Pivot Value Filter">
+      <pages:PivotValueFilterPage />
+    </TabItem>
+    <TabItem Header="Pivot Value Sort">
+      <pages:PivotValueSortPage />
+    </TabItem>
+    <TabItem Header="Pivot Running Total">
+      <pages:PivotRunningTotalPage />
+    </TabItem>
+    <TabItem Header="Pivot Difference From Previous">
+      <pages:PivotDifferenceFromPreviousPage />
+    </TabItem>
+    <TabItem Header="Pivot Percent of Parent Total">
+      <pages:PivotPercentOfParentPage />
+    </TabItem>
+    <TabItem Header="Pivot Index">
+      <pages:PivotIndexPage />
+    </TabItem>
+    <TabItem Header="Pivot Calculated Measures">
+      <pages:PivotCalculatedMeasuresPage />
+    </TabItem>
+    <TabItem Header="Pivot Slicers">
+      <pages:PivotSlicerPage />
+    </TabItem>
+    <TabItem Header="Pivot Chart Model">
+      <pages:PivotChartPage />
+    </TabItem>
     <TabItem Header="Programmatic Grouping">
       <pages:ProgrammaticGroupingPage />
     </TabItem>

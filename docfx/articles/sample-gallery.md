@@ -10,6 +10,10 @@ Highlights include:
 - Selection stability, selection origin logging, and current cell tracking.
 - Selection units and highlighting (row vs cell visuals).
 - Clipboard export formats and export customization.
+- Pivot tables with layout toggles, totals, and percent displays.
+- Pivot table layouts for report filters, values in rows, percent of total, and show items with no data.
+- Pivot value filters, value sorting, running totals, differences from previous, percent of parent totals, and index calculations.
+- Pivot calculated measures, slicers, and pivot chart model data.
 - Range interaction model samples (drag thresholds, selection anchors, fill handle ranges).
 - Clipboard import model samples (custom paste parsing and transforms).
 - Editing interaction model samples (custom edit triggers and input handling).

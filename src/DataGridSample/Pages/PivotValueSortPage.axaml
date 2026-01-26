@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:DataGridSample.Models"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.PivotValueSortPage"
+             x:DataType="viewModels:PivotValueSortViewModel">
+  <UserControl.DataContext>
+    <viewModels:PivotValueSortViewModel />
+  </UserControl.DataContext>
+
+  <TabControl Margin="12">
+    <TabItem Header="Pivot">
+      <Grid RowDefinitions="Auto,*" RowSpacing="8">
+        <StackPanel Spacing="4">
+          <TextBlock Classes="h2">Pivot value sort</TextBlock>
+          <TextBlock Text="Regions ordered by total sales using a value-based sort."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Pivot.Rows}"
+                  ColumnDefinitionsSource="{Binding Pivot.ColumnDefinitions}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28" />
+      </Grid>
+    </TabItem>
+    <TabItem Header="Data">
+      <Grid RowDefinitions="Auto,*" RowSpacing="8">
+        <StackPanel Spacing="4">
+          <TextBlock Classes="h2">Source data</TextBlock>
+          <TextBlock Text="Rows used by the pivot table." TextWrapping="Wrap" />
+          <CheckBox Content="Show filtered data" IsChecked="{Binding ShowFilteredData}" />
+        </StackPanel>
+
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding DataRows}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate, StringFormat=d}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Region" Binding="{Binding Region}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Segment" Binding="{Binding Segment}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Product" Binding="{Binding Product}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridNumericColumn Header="Sales" Binding="{Binding Sales}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridNumericColumn Header="Profit" Binding="{Binding Profit}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridNumericColumn Header="Units" Binding="{Binding Quantity}" Width="*" x:DataType="models:SalesRecord" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </Grid>
+    </TabItem>
+  </TabControl>
+</UserControl>

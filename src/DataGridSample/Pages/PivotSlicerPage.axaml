@@ -1,0 +1,103 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:DataGridSample.Models"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             xmlns:pivoting="clr-namespace:Avalonia.Controls.DataGridPivoting;assembly=Avalonia.Controls.DataGrid"
+             x:Class="DataGridSample.Pages.PivotSlicerPage"
+             x:DataType="viewModels:PivotSlicerViewModel">
+  <UserControl.DataContext>
+    <viewModels:PivotSlicerViewModel />
+  </UserControl.DataContext>
+
+  <TabControl Margin="12">
+    <TabItem Header="Pivot">
+      <Grid ColumnDefinitions="240,*" RowDefinitions="Auto,*" RowSpacing="8" ColumnSpacing="12">
+        <StackPanel Grid.ColumnSpan="2" Spacing="4">
+          <TextBlock Classes="h2">Pivot slicers and report filters</TextBlock>
+          <TextBlock Text="Facet slicers with counts drive PivotFieldFilter selections and optional value filters."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Spacing="10">
+          <StackPanel Spacing="4">
+            <TextBlock Text="Region slicer" FontWeight="SemiBold" />
+            <ItemsControl ItemsSource="{Binding RegionSlicer.Items}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Spacing="2" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="pivoting:PivotSlicerItem">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <CheckBox Content="{Binding Display}" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                    <TextBlock Text="{Binding Count}" Opacity="0.6" />
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <WrapPanel>
+              <Button Content="Select All" Command="{Binding SelectAllRegionsCommand}" />
+              <Button Content="Clear" Command="{Binding ClearRegionsCommand}" />
+            </WrapPanel>
+          </StackPanel>
+
+          <Border BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                  BorderThickness="0,1,0,0"
+                  Margin="0,6,0,0" />
+
+          <StackPanel Spacing="4">
+            <TextBlock Text="Top categories by sales" FontWeight="SemiBold" />
+            <CheckBox Content="Enable top filter" IsChecked="{Binding UseValueFilter}" />
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="Top" VerticalAlignment="Center" />
+              <NumericUpDown Width="80"
+                             Minimum="1"
+                             Maximum="10"
+                             Value="{Binding TopCount, Mode=TwoWay}" />
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+
+        <DataGrid Grid.Row="1" Grid.Column="1"
+                  ItemsSource="{Binding Pivot.Rows}"
+                  ColumnDefinitionsSource="{Binding Pivot.ColumnDefinitions}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28" />
+      </Grid>
+    </TabItem>
+    <TabItem Header="Data">
+      <Grid RowDefinitions="Auto,*" RowSpacing="8">
+        <StackPanel Spacing="4">
+          <TextBlock Classes="h2">Source data</TextBlock>
+          <TextBlock Text="Rows used by the pivot table." TextWrapping="Wrap" />
+          <CheckBox Content="Show filtered data" IsChecked="{Binding ShowFilteredData}" />
+        </StackPanel>
+
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding DataRows}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate, StringFormat=d}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Region" Binding="{Binding Region}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Segment" Binding="{Binding Segment}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Product" Binding="{Binding Product}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridNumericColumn Header="Sales" Binding="{Binding Sales}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridNumericColumn Header="Profit" Binding="{Binding Profit}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridNumericColumn Header="Units" Binding="{Binding Quantity}" Width="*" x:DataType="models:SalesRecord" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </Grid>
+    </TabItem>
+  </TabControl>
+</UserControl>

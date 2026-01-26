@@ -1,0 +1,131 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:DataGridSample.Models"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.PivotChartPage"
+             x:DataType="viewModels:PivotChartViewModel">
+  <UserControl.DataContext>
+    <viewModels:PivotChartViewModel />
+  </UserControl.DataContext>
+
+  <TabControl Margin="12">
+    <TabItem Header="Pivot + Chart Data">
+      <Grid RowDefinitions="Auto,*" RowSpacing="8">
+        <StackPanel Spacing="4">
+          <TextBlock Classes="h2">Pivot chart model</TextBlock>
+          <TextBlock Text="Series and categories are derived from pivot output for chart controls."
+                     TextWrapping="Wrap" />
+          <WrapPanel>
+            <StackPanel Spacing="4" Margin="0,0,12,0">
+              <TextBlock Text="Series source" />
+              <ComboBox Width="160"
+                        ItemsSource="{Binding SeriesSources}"
+                        SelectedItem="{Binding SeriesSource}" />
+            </StackPanel>
+            <StackPanel Spacing="4">
+              <TextBlock Text="Include totals" />
+              <WrapPanel>
+                <CheckBox Content="Subtotals" Margin="0,0,12,0" IsChecked="{Binding IncludeSubtotals}" />
+                <CheckBox Content="Grand totals" IsChecked="{Binding IncludeGrandTotals}" />
+              </WrapPanel>
+            </StackPanel>
+          </WrapPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="12">
+          <DataGrid ItemsSource="{Binding Pivot.Rows}"
+                    ColumnDefinitionsSource="{Binding Pivot.ColumnDefinitions}"
+                    AutoGenerateColumns="False"
+                    IsReadOnly="True"
+                    HeadersVisibility="All"
+                    CanUserResizeColumns="True"
+                    CanUserReorderColumns="True"
+                    RowHeight="28" />
+
+          <StackPanel Grid.Column="1" Spacing="8">
+            <StackPanel Spacing="4">
+              <TextBlock Text="Categories" FontWeight="SemiBold" />
+              <ItemsControl ItemsSource="{Binding Chart.Categories}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                  <WrapPanel />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border Padding="4,2"
+                          Margin="0,0,6,6"
+                          CornerRadius="4"
+                          BorderThickness="1"
+                          BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+                    <TextBlock Text="{Binding}" />
+                  </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+
+            <DataGrid ItemsSource="{Binding Chart.Series}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      HeadersVisibility="All"
+                      CanUserResizeColumns="True"
+                      RowHeight="40">
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="Series" Binding="{Binding Name}" Width="180" />
+                <DataGridTemplateColumn Header="Values" Width="*">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <ItemsControl ItemsSource="{Binding Values}">
+                        <ItemsControl.ItemsPanel>
+                          <ItemsPanelTemplate>
+                            <WrapPanel />
+                          </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate>
+                            <TextBlock Margin="0,0,6,6"
+                                       Text="{Binding StringFormat={}{0:N0}}" />
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+              </DataGrid.Columns>
+            </DataGrid>
+          </StackPanel>
+        </Grid>
+      </Grid>
+    </TabItem>
+    <TabItem Header="Data">
+      <Grid RowDefinitions="Auto,*" RowSpacing="8">
+        <StackPanel Spacing="4">
+          <TextBlock Classes="h2">Source data</TextBlock>
+          <TextBlock Text="Rows used by the pivot table." TextWrapping="Wrap" />
+          <CheckBox Content="Show filtered data" IsChecked="{Binding ShowFilteredData}" />
+        </StackPanel>
+
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding DataRows}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate, StringFormat=d}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Region" Binding="{Binding Region}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Segment" Binding="{Binding Segment}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Product" Binding="{Binding Product}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridNumericColumn Header="Sales" Binding="{Binding Sales}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridNumericColumn Header="Profit" Binding="{Binding Profit}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridNumericColumn Header="Units" Binding="{Binding Quantity}" Width="*" x:DataType="models:SalesRecord" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </Grid>
+    </TabItem>
+  </TabControl>
+</UserControl>

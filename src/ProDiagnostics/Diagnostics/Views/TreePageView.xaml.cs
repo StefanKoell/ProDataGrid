@@ -1,22 +1,24 @@
 using System.Text;
 using Avalonia.Controls;
+using Avalonia.Controls.DataGridHierarchical;
 using Avalonia.Diagnostics.ViewModels;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
+using Avalonia.VisualTree;
 
 namespace Avalonia.Diagnostics.Views
 {
     partial class TreePageView : UserControl
     {
-        private TreeViewItem? _hovered;
-        private TreeView _tree;
+        private DataGridRow? _hovered;
+        private DataGrid _tree;
         private System.IDisposable? _adorner;
 
         public TreePageView()
         {
             InitializeComponent();
-            _tree = this.GetControl<TreeView>("tree");
+            _tree = this.GetControl<DataGrid>("tree");
         }
 
         protected void UpdateAdorner(object? sender, PointerEventArgs e)
@@ -26,23 +28,23 @@ namespace Avalonia.Diagnostics.Views
                 return;
             }
 
-            var item = source.FindLogicalAncestorOfType<TreeViewItem>();
-            if (item == _hovered)
+            var row = source.FindLogicalAncestorOfType<DataGridRow>();
+            if (row == _hovered)
             {
                 return;
             }
 
             _adorner?.Dispose();
 
-            if (item is null || item.TreeViewOwner != _tree)
+            if (row is null || row.OwningGrid != _tree)
             {
                 _hovered = null;
                 return;
             }
 
-            _hovered = item;
+            _hovered = row;
 
-            var visual = (item.DataContext as TreeNode)?.Visual as Visual;
+            var visual = ResolveNode(row.DataContext)?.Visual as Visual;
             var shouldVisualizeMarginPadding = (DataContext as TreePageViewModel)?.MainView.ShouldVisualizeMarginPadding;
             if (visual is null || shouldVisualizeMarginPadding is null)
             {
@@ -56,6 +58,16 @@ namespace Avalonia.Diagnostics.Views
         {
             _adorner?.Dispose();
             _adorner = null;
+        }
+
+        private static TreeNode? ResolveNode(object? dataContext)
+        {
+            return dataContext switch
+            {
+                HierarchicalNode node => node.Item as TreeNode,
+                TreeNode treeNode => treeNode,
+                _ => null
+            };
         }
 
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

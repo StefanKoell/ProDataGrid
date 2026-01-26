@@ -9,6 +9,7 @@ using Avalonia.Reactive;
 using Avalonia.Rendering;
 using System.Collections.Generic;
 using Avalonia.Media;
+using Avalonia.Diagnostics.Services;
 
 namespace Avalonia.Diagnostics.ViewModels
 {
@@ -17,6 +18,7 @@ namespace Avalonia.Diagnostics.ViewModels
         private readonly AvaloniaObject _root;
         private readonly TreePageViewModel _logicalTree;
         private readonly TreePageViewModel _visualTree;
+        private readonly TreePageViewModel _combinedTree;
         private readonly EventsPageViewModel _events;
         private readonly HotKeyPageViewModel _hotKeys;
         private readonly IDisposable _pointerOverSubscription;
@@ -38,8 +40,14 @@ namespace Avalonia.Diagnostics.ViewModels
         public MainViewModel(AvaloniaObject root)
         {
             _root = root;
-            _logicalTree = new TreePageViewModel(this, LogicalTreeNode.Create(root), _pinnedProperties);
-            _visualTree = new TreePageViewModel(this, VisualTreeNode.Create(root), _pinnedProperties);
+            var templateProvider = new TemplateVisualTreeProvider();
+            var treeModelFactory = new TreeHierarchyModelFactory();
+            var logicalProvider = new LogicalTreeNodeProvider();
+            var visualProvider = new VisualTreeNodeProvider();
+            var combinedProvider = new CombinedTreeNodeProvider(templateProvider);
+            _logicalTree = new TreePageViewModel(this, logicalProvider.Create(root), treeModelFactory, _pinnedProperties);
+            _visualTree = new TreePageViewModel(this, visualProvider.Create(root), treeModelFactory, _pinnedProperties);
+            _combinedTree = new TreePageViewModel(this, combinedProvider.Create(root), treeModelFactory, _pinnedProperties);
             _events = new EventsPageViewModel(this);
             _hotKeys = new HotKeyPageViewModel();
 
@@ -161,8 +169,8 @@ namespace Avalonia.Diagnostics.ViewModels
                     oldTree?.SelectedNode?.Visual is Control control)
                 {
                     // HACK: We want to select the currently selected control in the new tree, but
-                    // to select nested nodes in TreeView, currently the TreeView has to be able to
-                    // expand the parent nodes. Because at this point the TreeView isn't visible,
+                    // to select nested nodes in the tree grid, the control has to be able to
+                    // expand the parent nodes. Because at this point the tree grid isn't visible,
                     // this will fail unless we schedule the selection to run after layout.
                     DispatcherTimer.RunOnce(
                         () =>
@@ -191,16 +199,19 @@ namespace Avalonia.Diagnostics.ViewModels
                 switch (value)
                 {
                     case 1:
-                        Content = _visualTree;
+                        Content = _logicalTree;
                         break;
                     case 2:
-                        Content = _events;
+                        Content = _visualTree;
                         break;
                     case 3:
+                        Content = _events;
+                        break;
+                    case 4:
                         Content = _hotKeys;
                         break;
                     default:
-                        Content = _logicalTree;
+                        Content = _combinedTree;
                         break;
                 }
 
@@ -238,7 +249,7 @@ namespace Avalonia.Diagnostics.ViewModels
 
         public void ShowHotKeys()
         {
-            SelectedTab = 3;
+            SelectedTab = 4;
         }
 
         public void SelectControl(Control control)
@@ -263,6 +274,7 @@ namespace Avalonia.Diagnostics.ViewModels
             _pointerOverSubscription.Dispose();
             _logicalTree.Dispose();
             _visualTree.Dispose();
+            _combinedTree.Dispose();
             _events.Dispose();
             _currentFocusHighlightAdorner?.Dispose();
             if (TryGetRenderer() is { } renderer)
@@ -301,7 +313,7 @@ namespace Avalonia.Diagnostics.ViewModels
 
             if (node != null)
             {
-                SelectedTab = isVisualTree ? 1 : 0;
+                SelectedTab = isVisualTree ? 2 : 1;
 
                 tree.SelectControl(control);
             }
@@ -343,7 +355,7 @@ namespace Avalonia.Diagnostics.ViewModels
             StartupScreenIndex = options.StartupScreenIndex;
             ShowImplementedInterfaces = options.ShowImplementedInterfaces;
             FocusHighlighter = options.FocusHighlighterBrush;
-            SelectedTab = (int)options.LaunchView;
+            SelectedTab = GetTabIndex(options.LaunchView);
 
             _hotKeys.SetOptions(options);
         }
@@ -383,6 +395,18 @@ namespace Avalonia.Diagnostics.ViewModels
         public void SelectFocusHighlighter(object parameter)
         {
             FocusHighlighter = parameter as IBrush;
+        }
+
+        private static int GetTabIndex(DevToolsViewKind viewKind)
+        {
+            return viewKind switch
+            {
+                DevToolsViewKind.CombinedTree => 0,
+                DevToolsViewKind.LogicalTree => 1,
+                DevToolsViewKind.VisualTree => 2,
+                DevToolsViewKind.Events => 3,
+                _ => 0
+            };
         }
     }
 }

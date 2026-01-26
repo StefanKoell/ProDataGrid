@@ -252,7 +252,11 @@
       </MenuItem>
     </Menu>
 
-    <TabStrip Grid.Row="2" SelectedIndex="{Binding SelectedTab, Mode=TwoWay}">
+    <TabStrip Grid.Row="2"
+              BorderBrush="Transparent"
+              BorderThickness="0"
+              SelectedIndex="{Binding SelectedTab, Mode=TwoWay}">
+      <TabStripItem Content="Combined Tree" />
       <TabStripItem Content="Logical Tree" />
       <TabStripItem Content="Visual Tree" />
       <TabStripItem Content="Events" />
@@ -260,8 +264,7 @@
     </TabStrip>
 
     <ContentControl Grid.Row="3"
-                    BorderBrush="{DynamicResource ThemeControlMidBrush}"
-                    BorderThickness="0,1,0,0"
+                    BorderThickness="0"
                     Content="{Binding Content}" />
 
     <GridSplitter Name="consoleSplitter" Grid.Row="4" Height="1"

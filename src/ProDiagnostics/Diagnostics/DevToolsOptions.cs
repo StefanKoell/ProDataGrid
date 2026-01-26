@@ -56,7 +56,7 @@ namespace Avalonia.Diagnostics
         /// <summary>
         /// Set the <see cref="DevToolsViewKind">kind</see> of diagnostic view that show at launch of DevTools
         /// </summary>
-        public DevToolsViewKind LaunchView { get; init; }
+        public DevToolsViewKind LaunchView { get; init; } = DevToolsViewKind.CombinedTree;
 
         /// <summary>
         /// Gets or inits the <see cref="HotKeyConfiguration" /> used to activate DevTools features

@@ -1,0 +1,119 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:charts="clr-namespace:ProCharts.Avalonia;assembly=ProCharts.Avalonia"
+             xmlns:models="clr-namespace:DataGridSample.Models"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.FormulaEngineIntegrationPage"
+             x:DataType="viewModels:FormulaEngineIntegrationViewModel">
+  <UserControl.Resources>
+    <DataTemplate x:Key="FormulaEditorTemplate" x:DataType="models:FormulaDefinition">
+      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" MinWidth="140" />
+        <TextBox Grid.Column="1"
+                 Text="{Binding Formula, UpdateSourceTrigger=PropertyChanged}"
+                 Classes="formula-editor"
+                 Classes.error="{Binding HasErrors}"
+                 ToolTip.Tip="{Binding ErrorMessage}"
+                 ToolTip.IsEnabled="{Binding HasErrors}"
+                 Watermark="Enter formula" />
+      </Grid>
+    </DataTemplate>
+  </UserControl.Resources>
+
+  <UserControl.Styles>
+    <Style Selector="TextBox.formula-editor.error">
+      <Setter Property="BorderBrush" Value="#E53935" />
+      <Setter Property="BorderThickness" Value="1.5" />
+    </Style>
+  </UserControl.Styles>
+
+  <UserControl.DataContext>
+    <viewModels:FormulaEngineIntegrationViewModel />
+  </UserControl.DataContext>
+
+  <TabControl Margin="12">
+    <TabItem Header="Data Grid">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+          <TextBlock Classes="h2" Text="Formula-driven columns" />
+          <TextBlock Text="Computed columns use the Excel-compatible formula engine."
+                     TextWrapping="Wrap" />
+          <ItemsControl ItemsSource="{Binding Formulas}"
+                        ItemTemplate="{StaticResource FormulaEditorTemplate}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Spacing="2" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
+        </StackPanel>
+
+        <DataGrid ItemsSource="{Binding Items}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="False"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate, StringFormat=d}" Width="*" x:DataType="models:FormulaEngineSalesRecord" />
+            <DataGridTextColumn Header="Region" Binding="{Binding Region}" Width="*" x:DataType="models:FormulaEngineSalesRecord" />
+            <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="*" x:DataType="models:FormulaEngineSalesRecord" />
+            <DataGridNumericColumn Header="Sales" Binding="{Binding Sales}" Width="*" x:DataType="models:FormulaEngineSalesRecord" />
+            <DataGridNumericColumn Header="Profit" Binding="{Binding Profit}" Width="*" x:DataType="models:FormulaEngineSalesRecord" />
+            <DataGridNumericColumn Header="Units" Binding="{Binding Quantity}" Width="*" x:DataType="models:FormulaEngineSalesRecord" />
+            <DataGridNumericColumn Header="Margin" Binding="{Binding Margin}" Width="*" IsReadOnly="True" x:DataType="models:FormulaEngineSalesRecord" />
+            <DataGridNumericColumn Header="Sales / Unit" Binding="{Binding SalesPerUnit}" Width="*" IsReadOnly="True" x:DataType="models:FormulaEngineSalesRecord" />
+            <DataGridNumericColumn Header="Profit / Unit" Binding="{Binding ProfitPerUnit}" Width="*" IsReadOnly="True" x:DataType="models:FormulaEngineSalesRecord" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </DockPanel>
+    </TabItem>
+
+    <TabItem Header="Pivot">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+          <TextBlock Classes="h2" Text="Pivot table with formula-driven fields" />
+          <TextBlock Text="Aggregates the computed columns for region/category summaries."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <DataGrid ItemsSource="{Binding Pivot.Rows}"
+                  ColumnDefinitionsSource="{Binding Pivot.ColumnDefinitions}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28" />
+      </DockPanel>
+    </TabItem>
+
+    <TabItem Header="Chart">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+          <TextBlock Classes="h2" Text="Formula-backed chart series" />
+          <TextBlock Text="Chart series evaluate Excel-style formulas per row before aggregation."
+                     TextWrapping="Wrap" />
+          <ItemsControl ItemsSource="{Binding Formulas}"
+                        ItemTemplate="{StaticResource FormulaEditorTemplate}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Spacing="2" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
+        </StackPanel>
+
+        <Border Background="Transparent"
+                BorderBrush="#22000000"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="8">
+          <charts:ProChartView ChartModel="{Binding Chart}"
+                               ChartStyle="{Binding ChartStyle}" />
+        </Border>
+      </DockPanel>
+    </TabItem>
+  </TabControl>
+</UserControl>

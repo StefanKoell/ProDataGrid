@@ -212,6 +212,63 @@
     <TabItem Header="Pivot Chart Model">
       <pages:PivotChartPage />
     </TabItem>
+    <TabItem Header="ProCharts Combo">
+      <pages:ChartingPage SampleKind="Combo" />
+    </TabItem>
+    <TabItem Header="ProCharts Calculated Measures">
+      <pages:ChartingPage SampleKind="CalculatedMeasures" />
+    </TabItem>
+    <TabItem Header="ProCharts Line">
+      <pages:ChartingPage SampleKind="Line" />
+    </TabItem>
+    <TabItem Header="ProCharts Area">
+      <pages:ChartingPage SampleKind="Area" />
+    </TabItem>
+    <TabItem Header="ProCharts Column">
+      <pages:ChartingPage SampleKind="Column" />
+    </TabItem>
+    <TabItem Header="ProCharts Bar">
+      <pages:ChartingPage SampleKind="Bar" />
+    </TabItem>
+    <TabItem Header="ProCharts Stacked Column">
+      <pages:ChartingPage SampleKind="StackedColumn" />
+    </TabItem>
+    <TabItem Header="ProCharts Stacked Bar">
+      <pages:ChartingPage SampleKind="StackedBar" />
+    </TabItem>
+    <TabItem Header="ProCharts Stacked Area">
+      <pages:ChartingPage SampleKind="StackedArea" />
+    </TabItem>
+    <TabItem Header="ProCharts Waterfall">
+      <pages:ChartingPage SampleKind="Waterfall" />
+    </TabItem>
+    <TabItem Header="ProCharts Histogram">
+      <pages:ChartingPage SampleKind="Histogram" />
+    </TabItem>
+    <TabItem Header="ProCharts Pareto">
+      <pages:ChartingPage SampleKind="Pareto" />
+    </TabItem>
+    <TabItem Header="ProCharts Radar">
+      <pages:ChartingPage SampleKind="Radar" />
+    </TabItem>
+    <TabItem Header="ProCharts Box &amp; Whisker">
+      <pages:ChartingPage SampleKind="BoxWhisker" />
+    </TabItem>
+    <TabItem Header="ProCharts Funnel">
+      <pages:ChartingPage SampleKind="Funnel" />
+    </TabItem>
+    <TabItem Header="ProCharts Scatter">
+      <pages:ChartingPage SampleKind="Scatter" />
+    </TabItem>
+    <TabItem Header="ProCharts Bubble">
+      <pages:ChartingPage SampleKind="Bubble" />
+    </TabItem>
+    <TabItem Header="ProCharts Pie">
+      <pages:ChartingPage SampleKind="Pie" />
+    </TabItem>
+    <TabItem Header="ProCharts Donut">
+      <pages:ChartingPage SampleKind="Donut" />
+    </TabItem>
     <TabItem Header="Outline Report">
       <pages:OutlineReportPage />
     </TabItem>
@@ -223,6 +280,21 @@
     </TabItem>
     <TabItem Header="Excel-like Editing">
       <pages:ExcelLikeEditingPage />
+    </TabItem>
+    <TabItem Header="Formula Engine Samples">
+      <pages:FormulaEngineSamplesPage />
+    </TabItem>
+    <TabItem Header="Formula Engine Integration">
+      <pages:FormulaEngineIntegrationPage />
+    </TabItem>
+    <TabItem Header="Formula Columns (A1)">
+      <pages:FormulaColumnsA1Page />
+    </TabItem>
+    <TabItem Header="Formula Columns (Structured)">
+      <pages:FormulaColumnsStructuredPage />
+    </TabItem>
+    <TabItem Header="Formula Editing &amp; Spills">
+      <pages:FormulaEditingSamplesPage />
     </TabItem>
     <TabItem Header="Conditional Formatting">
       <pages:ConditionalFormattingPage />

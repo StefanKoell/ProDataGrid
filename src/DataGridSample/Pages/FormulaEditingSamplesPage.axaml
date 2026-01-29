@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.FormulaEditingSamplesPage"
+             x:DataType="viewModels:FormulaEditingSamplesViewModel">
+  <UserControl.DataContext>
+    <viewModels:FormulaEditingSamplesViewModel />
+  </UserControl.DataContext>
+
+  <ScrollViewer>
+    <StackPanel Margin="12" Spacing="16">
+      <StackPanel Spacing="4">
+        <TextBlock Classes="h2" Text="Per-cell formula editing" />
+        <TextBlock Text="Edit any formula cell with F2 or double-click. Commit to recalculate only affected cells."
+                   TextWrapping="Wrap" />
+      </StackPanel>
+
+      <DataGrid Name="EditingGrid"
+                ItemsSource="{Binding EditingItems}"
+                ColumnDefinitionsSource="{Binding EditingColumns}"
+                AutoGenerateColumns="False"
+                HeadersVisibility="All"
+                CanUserResizeColumns="True"
+                CanUserReorderColumns="False"
+                RowHeight="30" />
+
+      <StackPanel Spacing="4">
+        <TextBlock Classes="h2" Text="Spill / dynamic arrays" />
+        <TextBlock Text="The first spill cell is prefilled with =SEQUENCE(1,4). Try editing it or enter another array formula."
+                   TextWrapping="Wrap" />
+      </StackPanel>
+
+      <DataGrid Name="SpillGrid"
+                ItemsSource="{Binding SpillItems}"
+                ColumnDefinitionsSource="{Binding SpillColumns}"
+                AutoGenerateColumns="False"
+                HeadersVisibility="All"
+                CanUserResizeColumns="True"
+                CanUserReorderColumns="False"
+                RowHeight="30" />
+
+      <StackPanel Spacing="4">
+        <TextBlock Classes="h2" Text="Incremental recalculation" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Text="Formula version:" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding ElementName=IncrementalGrid, Path=FormulaModel.FormulaVersion}"
+                     VerticalAlignment="Center" />
+          <Button Content="Recalculate" Click="OnRecalculateClick" />
+        </StackPanel>
+        <TextBlock Text="Edit Input/Factor to trigger incremental recalculation without a full grid refresh."
+                   TextWrapping="Wrap" />
+      </StackPanel>
+
+      <DataGrid Name="IncrementalGrid"
+                ItemsSource="{Binding RecalcItems}"
+                ColumnDefinitionsSource="{Binding RecalcColumns}"
+                AutoGenerateColumns="False"
+                HeadersVisibility="All"
+                CanUserResizeColumns="True"
+                CanUserReorderColumns="False"
+                RowHeight="30" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

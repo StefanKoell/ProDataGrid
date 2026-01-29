@@ -1,0 +1,244 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.FormulaEngineSamplesPage"
+             x:DataType="viewModels:FormulaEngineSamplesViewModel">
+  <UserControl.DataContext>
+    <viewModels:FormulaEngineSamplesViewModel />
+  </UserControl.DataContext>
+  <TabControl Margin="12">
+    <TabItem Header="Workbook">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+          <TextBlock Classes="h2" Text="Formula engine workbook" />
+          <TextBlock Text="Seeded cells with formulas, names, and structured references."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <DataGrid
+                  ItemsSource="{Binding WorkbookCells}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Cell" Binding="{Binding AddressText}" Width="120" />
+            <DataGridTextColumn Header="Formula" Binding="{Binding Formula}" Width="*" />
+            <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="*" />
+            <DataGridTextColumn Header="Kind" Binding="{Binding Kind}" Width="140" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </DockPanel>
+    </TabItem>
+
+    <TabItem Header="Basics">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+          <TextBlock Classes="h2" Text="Formula basics" />
+          <TextBlock Text="Operator precedence, coercion, and error literals."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <DataGrid
+                  ItemsSource="{Binding Basics}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Scenario" Binding="{Binding Description}" Width="220" />
+            <DataGridTextColumn Header="Formula" Binding="{Binding Formula}" Width="*" />
+            <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="*" />
+            <DataGridTextColumn Header="Kind" Binding="{Binding Kind}" Width="140" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </DockPanel>
+    </TabItem>
+
+    <TabItem Header="References">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+          <TextBlock Classes="h2" Text="References" />
+          <TextBlock Text="A1/R1C1 references, sheet prefixes, and 3-D ranges."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <DataGrid
+                  ItemsSource="{Binding References}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Scenario" Binding="{Binding Description}" Width="220" />
+            <DataGridTextColumn Header="Formula" Binding="{Binding Formula}" Width="*" />
+            <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="*" />
+            <DataGridTextColumn Header="Kind" Binding="{Binding Kind}" Width="140" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </DockPanel>
+    </TabItem>
+
+    <TabItem Header="Arrays">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+          <TextBlock Classes="h2" Text="Arrays &amp; operators" />
+          <TextBlock Text="Array literals, unions, intersections, and implicit intersection behavior."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <DataGrid
+                  ItemsSource="{Binding Arrays}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Scenario" Binding="{Binding Description}" Width="220" />
+            <DataGridTextColumn Header="Formula" Binding="{Binding Formula}" Width="*" />
+            <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="*" />
+            <DataGridTextColumn Header="Kind" Binding="{Binding Kind}" Width="140" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </DockPanel>
+    </TabItem>
+
+    <TabItem Header="Functions">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+          <TextBlock Classes="h2" Text="Function library" />
+          <TextBlock Text="Math, logical, lookup, text, and aggregate functions."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <DataGrid
+                  ItemsSource="{Binding Functions}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Scenario" Binding="{Binding Description}" Width="220" />
+            <DataGridTextColumn Header="Formula" Binding="{Binding Formula}" Width="*" />
+            <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="*" />
+            <DataGridTextColumn Header="Kind" Binding="{Binding Kind}" Width="140" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </DockPanel>
+    </TabItem>
+
+    <TabItem Header="Date/Time">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+          <TextBlock Classes="h2" Text="Date &amp; time" />
+          <TextBlock Text="Serial conversion and calendar-aware functions."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <DataGrid
+                  ItemsSource="{Binding DateTimeSamples}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Scenario" Binding="{Binding Description}" Width="220" />
+            <DataGridTextColumn Header="Formula" Binding="{Binding Formula}" Width="*" />
+            <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="*" />
+            <DataGridTextColumn Header="Kind" Binding="{Binding Kind}" Width="140" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </DockPanel>
+    </TabItem>
+
+    <TabItem Header="Names">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+          <TextBlock Classes="h2" Text="Names &amp; structured references" />
+          <TextBlock Text="Workbook and worksheet name resolution."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <DataGrid
+                  ItemsSource="{Binding Names}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Scenario" Binding="{Binding Description}" Width="220" />
+            <DataGridTextColumn Header="Formula" Binding="{Binding Formula}" Width="*" />
+            <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="*" />
+            <DataGridTextColumn Header="Kind" Binding="{Binding Kind}" Width="140" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </DockPanel>
+    </TabItem>
+
+    <TabItem Header="Structured">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+          <TextBlock Classes="h2" Text="Structured references" />
+          <TextBlock Text="Table columns and this-row references."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <DataGrid
+                  ItemsSource="{Binding Structured}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Scenario" Binding="{Binding Description}" Width="220" />
+            <DataGridTextColumn Header="Formula" Binding="{Binding Formula}" Width="*" />
+            <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="*" />
+            <DataGridTextColumn Header="Kind" Binding="{Binding Kind}" Width="140" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </DockPanel>
+    </TabItem>
+
+    <TabItem Header="External">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+          <TextBlock Classes="h2" Text="External references" />
+          <TextBlock Text="Workbook-qualified references resolved through the workbook resolver."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <DataGrid
+                  ItemsSource="{Binding External}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="All"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Scenario" Binding="{Binding Description}" Width="220" />
+            <DataGridTextColumn Header="Formula" Binding="{Binding Formula}" Width="*" />
+            <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="*" />
+            <DataGridTextColumn Header="Kind" Binding="{Binding Kind}" Width="140" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </DockPanel>
+    </TabItem>
+  </TabControl>
+</UserControl>

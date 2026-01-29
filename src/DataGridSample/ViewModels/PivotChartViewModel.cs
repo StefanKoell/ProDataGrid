@@ -4,6 +4,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using Avalonia.Controls.DataGridPivoting;
+using ProCharts;
+using ProCharts.Skia;
+using ProDataGrid.Charting;
 using DataGridSample.Models;
 using DataGridSample.Mvvm;
 
@@ -71,6 +74,25 @@ namespace DataGridSample.ViewModels
                 ValueField = salesField
             };
 
+            ChartData = new PivotChartDataSource
+            {
+                PivotChart = Chart,
+                SeriesKind = ChartSeriesKind.Column
+            };
+
+            ChartModel = new ChartModel
+            {
+                DataSource = ChartData
+            };
+
+            ChartStyle = new SkiaChartStyle
+            {
+                ShowGridlines = true,
+                ShowCategoryGridlines = true,
+                LegendFlow = SkiaLegendFlow.Column,
+                LegendWrap = true
+            };
+
             SeriesSources = Enum.GetValues<PivotChartSeriesSource>();
             _seriesSource = Chart.SeriesSource;
             _includeSubtotals = Chart.IncludeSubtotals;
@@ -82,6 +104,12 @@ namespace DataGridSample.ViewModels
         public PivotTableModel Pivot { get; }
 
         public PivotChartModel Chart { get; }
+
+        public PivotChartDataSource ChartData { get; }
+
+        public ChartModel ChartModel { get; }
+
+        public SkiaChartStyle ChartStyle { get; }
 
         public PivotChartSeriesSource[] SeriesSources { get; }
 

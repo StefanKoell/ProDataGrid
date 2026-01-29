@@ -418,10 +418,16 @@ namespace DataGridSample.ViewModels
         {
             return new ClrPropertyInfo(
                 name,
-                target => getter((Person)target),
+                target => target is Person person ? getter(person) : default!,
                 setter == null
                     ? null
-                    : (target, value) => setter((Person)target, value is null ? default! : (TValue)value),
+                    : (target, value) =>
+                    {
+                        if (target is Person person)
+                        {
+                            setter(person, value is null ? default! : (TValue)value);
+                        }
+                    },
                 typeof(TValue));
         }
 

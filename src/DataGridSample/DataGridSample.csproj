@@ -23,6 +23,10 @@
 
   <ItemGroup>
     <ProjectReference Include="../Avalonia.Controls.DataGrid/Avalonia.Controls.DataGrid.csproj" />
+    <ProjectReference Include="../ProCharts.Avalonia/ProCharts.Avalonia.csproj" />
+    <ProjectReference Include="../ProDataGrid.Charting/ProDataGrid.Charting.csproj" />
+    <ProjectReference Include="../ProDataGrid.FormulaEngine/ProDataGrid.FormulaEngine.csproj" />
+    <ProjectReference Include="../ProDataGrid.FormulaEngine.Excel/ProDataGrid.FormulaEngine.Excel.csproj" />
     <ProjectReference Include="../ProDiagnostics/ProDiagnostics.csproj" />
     <ProjectReference Include="../ProDiagnostics.Transport/ProDiagnostics.Transport.csproj" />
   </ItemGroup>

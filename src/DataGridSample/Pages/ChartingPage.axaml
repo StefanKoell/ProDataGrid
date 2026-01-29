@@ -1,0 +1,262 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:charts="clr-namespace:ProCharts.Avalonia;assembly=ProCharts.Avalonia"
+             xmlns:models="clr-namespace:DataGridSample.Models"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.ChartingPage"
+             x:DataType="viewModels:ChartSampleViewModel">
+  <TabControl Margin="12">
+    <TabItem Header="Chart">
+      <Grid RowDefinitions="Auto,*"
+            ColumnDefinitions="320,*"
+            ColumnSpacing="12"
+            RowSpacing="8">
+        <StackPanel Grid.ColumnSpan="2" Spacing="4">
+          <TextBlock Classes="h2" Text="{Binding Title}" />
+          <TextBlock Text="{Binding Description}" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1"
+                      Grid.Column="0"
+                      VerticalScrollBarVisibility="Auto">
+          <StackPanel Spacing="12">
+            <StackPanel Spacing="6">
+              <TextBlock Classes="h3" Text="Legend" />
+              <CheckBox Content="Show legend" IsChecked="{Binding ShowLegend}" />
+              <StackPanel Spacing="4">
+                <TextBlock Text="Position" />
+                <ComboBox ItemsSource="{Binding LegendPositions}"
+                          SelectedItem="{Binding LegendPosition}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Flow" />
+                <ComboBox ItemsSource="{Binding LegendFlows}"
+                          SelectedItem="{Binding LegendFlow}" />
+              </StackPanel>
+              <CheckBox Content="Wrap legend" IsChecked="{Binding LegendWrap}" />
+              <CheckBox Content="Group stacked series" IsChecked="{Binding LegendGroupStackedSeries}" />
+              <StackPanel Spacing="4">
+                <TextBlock Text="Legend text size" />
+                <NumericUpDown Minimum="8"
+                               Maximum="18"
+                               Increment="1"
+                               Value="{Binding LegendTextSize}" />
+              </StackPanel>
+            </StackPanel>
+
+            <StackPanel Spacing="6">
+              <TextBlock Classes="h3" Text="Axes" />
+              <CheckBox Content="Show value axis" IsChecked="{Binding ShowValueAxis}" />
+              <CheckBox Content="Show category axis" IsChecked="{Binding ShowCategoryAxis}" />
+              <StackPanel Spacing="4">
+                <TextBlock Text="Category axis kind" />
+                <ComboBox ItemsSource="{Binding CategoryAxisKinds}"
+                          SelectedItem="{Binding CategoryAxisKind}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Category axis title" />
+                <TextBox Text="{Binding CategoryAxisTitle}"
+                         Watermark="Category axis title" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Value axis title" />
+                <TextBox Text="{Binding ValueAxisTitle}"
+                         Watermark="Value axis title" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Axis tick count" />
+                <NumericUpDown Minimum="2"
+                               Maximum="12"
+                               Increment="1"
+                               Value="{Binding AxisTickCount}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Category axis min / max" />
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <TextBox Width="84"
+                           Watermark="Min"
+                           Text="{Binding CategoryAxisMinimumText}" />
+                  <TextBox Width="84"
+                           Watermark="Max"
+                           Text="{Binding CategoryAxisMaximumText}" />
+                </StackPanel>
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Value axis min / max" />
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <TextBox Width="84"
+                           Watermark="Min"
+                           Text="{Binding ValueAxisMinimumText}" />
+                  <TextBox Width="84"
+                           Watermark="Max"
+                           Text="{Binding ValueAxisMaximumText}" />
+                </StackPanel>
+              </StackPanel>
+            </StackPanel>
+
+            <StackPanel Spacing="6">
+              <TextBlock Classes="h3" Text="Gridlines &amp; labels" />
+              <CheckBox Content="Show gridlines" IsChecked="{Binding ShowGridlines}" />
+              <CheckBox Content="Show category gridlines" IsChecked="{Binding ShowCategoryGridlines}" />
+              <CheckBox Content="Formatted labels" IsChecked="{Binding UseFormattedLabels}" />
+              <CheckBox Content="Show data labels" IsChecked="{Binding ShowDataLabels}" />
+              <CheckBox Content="Show tooltips" IsChecked="{Binding ShowToolTips}" />
+              <StackPanel Spacing="4">
+                <TextBlock Text="Axis label size" />
+                <NumericUpDown Minimum="8"
+                               Maximum="18"
+                               Increment="1"
+                               Value="{Binding LabelSize}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Data label size" />
+                <NumericUpDown Minimum="8"
+                               Maximum="18"
+                               Increment="1"
+                               Value="{Binding DataLabelTextSize}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Data label padding" />
+                <NumericUpDown Minimum="0"
+                               Maximum="12"
+                               Increment="1"
+                               Value="{Binding DataLabelPadding}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Data label offset" />
+                <NumericUpDown Minimum="0"
+                               Maximum="20"
+                               Increment="1"
+                               Value="{Binding DataLabelOffset}" />
+              </StackPanel>
+            </StackPanel>
+
+            <StackPanel Spacing="6">
+              <TextBlock Classes="h3" Text="Style" />
+              <StackPanel Spacing="4">
+                <TextBlock Text="Palette" />
+                <ComboBox ItemsSource="{Binding Palettes}"
+                          SelectedItem="{Binding SelectedPalette}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Series stroke width" />
+                <NumericUpDown Minimum="1"
+                               Maximum="6"
+                               Increment="0.5"
+                               Value="{Binding SeriesStrokeWidth}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Axis stroke width" />
+                <NumericUpDown Minimum="1"
+                               Maximum="3"
+                               Increment="0.5"
+                               Value="{Binding AxisStrokeWidth}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Area fill opacity" />
+                <NumericUpDown Minimum="0"
+                               Maximum="1"
+                               Increment="0.05"
+                               FormatString="N2"
+                               Value="{Binding AreaFillOpacity}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Bubble min radius" />
+                <NumericUpDown Minimum="2"
+                               Maximum="40"
+                               Increment="1"
+                               Value="{Binding BubbleMinRadius}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Bubble max radius" />
+                <NumericUpDown Minimum="4"
+                               Maximum="80"
+                               Increment="1"
+                               Value="{Binding BubbleMaxRadius}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Bubble fill opacity" />
+                <NumericUpDown Minimum="0"
+                               Maximum="1"
+                               Increment="0.05"
+                               FormatString="N2"
+                               Value="{Binding BubbleFillOpacity}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Bubble stroke width" />
+                <NumericUpDown Minimum="0"
+                               Maximum="4"
+                               Increment="0.5"
+                               Value="{Binding BubbleStrokeWidth}" />
+              </StackPanel>
+            </StackPanel>
+
+            <StackPanel Spacing="6">
+              <TextBlock Classes="h3" Text="Data" />
+              <StackPanel Spacing="4">
+                <TextBlock Text="Group by" />
+                <ComboBox ItemsSource="{Binding GroupByOptions}"
+                          SelectedItem="{Binding GroupBy}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Downsample aggregation" />
+                <ComboBox ItemsSource="{Binding DownsampleAggregations}"
+                          SelectedItem="{Binding DownsampleAggregation}" />
+              </StackPanel>
+              <StackPanel Spacing="4">
+                <TextBlock Text="Max points (0 = all)" />
+                <NumericUpDown Minimum="0"
+                               Maximum="1000"
+                               Increment="25"
+                               Value="{Binding MaxPoints}" />
+              </StackPanel>
+            </StackPanel>
+          </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="1"
+                Grid.Column="1"
+                Background="#0E000000"
+                BorderBrush="#22000000"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="8">
+          <charts:ProChartView ChartModel="{Binding Chart}"
+                               ChartStyle="{Binding ChartStyle}"
+                               ShowToolTips="{Binding ShowToolTips}"
+                               ToolTipFormatter="{Binding ToolTipFormatter}" />
+        </Border>
+      </Grid>
+    </TabItem>
+    <TabItem Header="Data">
+      <Grid RowDefinitions="Auto,*" RowSpacing="8">
+        <StackPanel Spacing="4">
+          <TextBlock Classes="h2" Text="Source data" />
+          <TextBlock Text="Sort, filter, and group the grid to see the chart update."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding ItemsView}"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  CanUserSortColumns="True"
+                  HeadersVisibility="All"
+                  IsReadOnly="False"
+                  CellEditEnded="OnCellEditEnded"
+                  RowHeight="28">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate, StringFormat=d}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Region" Binding="{Binding Region}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Segment" Binding="{Binding Segment}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridTextColumn Header="Product" Binding="{Binding Product}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridNumericColumn Header="Sales" Binding="{Binding Sales}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridNumericColumn Header="Profit" Binding="{Binding Profit}" Width="*" x:DataType="models:SalesRecord" />
+            <DataGridNumericColumn Header="Quantity" Binding="{Binding Quantity}" Width="*" x:DataType="models:SalesRecord" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </Grid>
+    </TabItem>
+  </TabControl>
+</UserControl>

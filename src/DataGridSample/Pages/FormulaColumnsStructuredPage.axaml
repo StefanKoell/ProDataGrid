@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             x:Class="DataGridSample.Pages.FormulaColumnsStructuredPage"
+             x:DataType="viewModels:FormulaColumnsStructuredViewModel">
+  <UserControl.DataContext>
+    <viewModels:FormulaColumnsStructuredViewModel />
+  </UserControl.DataContext>
+
+  <Grid Margin="12" RowDefinitions="Auto,*" RowSpacing="8">
+    <StackPanel Spacing="4">
+      <TextBlock Classes="h2" Text="Formula columns with structured references" />
+      <TextBlock Text="Uses table-aware references like SalesTable[Sales] and row references like [@Sales]."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <DataGrid Grid.Row="1"
+              Name="SalesTable"
+              ItemsSource="{Binding Items}"
+              ColumnDefinitionsSource="{Binding ColumnDefinitions}"
+              AutoGenerateColumns="False"
+              HeadersVisibility="All"
+              CanUserResizeColumns="True"
+              CanUserReorderColumns="True"
+              RowHeight="30" />
+  </Grid>
+</UserControl>

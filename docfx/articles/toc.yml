@@ -32,6 +32,70 @@
     href: pivot-slicers.md
   - name: Pivot Chart Model
     href: pivot-charts.md
+- name: Charting
+  items:
+  - name: ProCharts Overview
+    href: procharts-overview.md
+  - name: ProCharts Architecture
+    href: procharts-architecture.md
+  - name: ProCharts Chart Model
+    href: procharts-chart-model.md
+  - name: ProCharts Series Types
+    href: procharts-series-types.md
+  - name: ProCharts Axes and Scales
+    href: procharts-axes-and-scales.md
+  - name: ProCharts Styling and Interaction
+    href: procharts-styling.md
+  - name: ProCharts Skia Style Reference
+    href: procharts-skia-style-reference.md
+  - name: ProCharts Rendering Pipeline
+    href: procharts-rendering-pipeline.md
+  - name: ProCharts Performance
+    href: procharts-performance.md
+  - name: ProCharts Interaction
+    href: procharts-interaction.md
+  - name: ProCharts Export and Clipboard
+    href: procharts-export-clipboard.md
+  - name: ProCharts Data Sources and Updates
+    href: procharts-data-sources.md
+  - name: ProCharts Samples
+    href: procharts-samples.md
+- name: Formula Engine
+  items:
+  - name: Formula Engine Overview
+    href: formula-engine-overview.md
+  - name: Formula Engine Architecture
+    href: formula-engine-architecture.md
+  - name: Formula Engine Reference Syntax
+    href: formula-engine-reference-syntax.md
+  - name: Formula Engine Values and Coercion
+    href: formula-engine-values-and-coercion.md
+  - name: Formula Engine Arrays and Spills
+    href: formula-engine-arrays-and-spills.md
+  - name: Formula Engine Calculation Engine
+    href: formula-engine-calculation-engine.md
+  - name: Formula Engine Functions
+    href: formula-engine-functions.md
+  - name: Formula Engine Settings and Culture
+    href: formula-engine-settings.md
+  - name: Formula Engine Names and Structured References
+    href: formula-engine-names-and-structured-references.md
+  - name: Formula Engine Errors and Validation
+    href: formula-engine-errors-and-validation.md
+  - name: Formula Engine Formatting
+    href: formula-engine-formatting.md
+  - name: Formula Engine Diagnostics
+    href: formula-engine-diagnostics.md
+  - name: Formula Engine Integration
+    href: formula-engine-integration.md
+  - name: Formula Engine Samples
+    href: formula-engine-samples.md
+  - name: Formula Engine Testing and Parity
+    href: formula-engine-testing-and-parity.md
+- name: Charting and Formula Engine
+  items:
+  - name: ProCharts DataGrid Integration
+    href: procharts-datagrid-integration.md
 - name: Real-Time Updates
   items:
   - name: High-Frequency Updates
@@ -120,5 +184,7 @@
   items:
   - name: Sample Gallery
     href: sample-gallery.md
+  - name: Chart Gallery
+    href: chart-gallery.md
   - name: Integration Samples
     href: integration-samples.md

@@ -5,7 +5,15 @@
         {
           "files": [
             "src/Avalonia.Controls.DataGrid/Avalonia.Controls.DataGrid.csproj",
-            "src/ProDiagnostics/ProDiagnostics.csproj"
+            "src/ProDiagnostics/ProDiagnostics.csproj",
+            "src/ProCharts/ProCharts.csproj",
+            "src/ProCharts.Skia/ProCharts.Skia.csproj",
+            "src/ProCharts.Avalonia/ProCharts.Avalonia.csproj",
+            "src/ProDataGrid.Charting/ProDataGrid.Charting.csproj",
+            "src/ProDataGrid.FormulaEngine/ProDataGrid.FormulaEngine.csproj",
+            "src/ProDataGrid.FormulaEngine.Excel/ProDataGrid.FormulaEngine.Excel.csproj",
+            "src/ProDiagnostics.Transport/ProDiagnostics.Transport.csproj",
+            "src/ProDiagnostics.Viewer/ProDiagnostics.Viewer.csproj"
           ],
           "src": ".."
         }

@@ -17,10 +17,12 @@
     <PackageVersion Include="Avalonia.Headless.XUnit" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Skia" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Themes.Simple" Version="11.3.9" />
     <PackageVersion Include="DynamicData" Version="9.4.1" />
     <PackageVersion Include="Microsoft.PowerFx.Interpreter" Version="1.4.0" />
+    <PackageVersion Include="SkiaSharp" Version="2.88.9" />
     <PackageVersion Include="System.Reactive" Version="6.0.1" />
   </ItemGroup>
   <!-- Build tooling -->

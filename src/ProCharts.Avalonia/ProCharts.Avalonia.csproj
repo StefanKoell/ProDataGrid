@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>net6.0;net8.0;net10.0;netstandard2.0</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>ProCharts.Avalonia</PackageId>
+    <PackageDescription>Avalonia control integration for ProCharts.</PackageDescription>
+    <PackageTags>procharts;charts;avalonia;skia</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProCharts\ProCharts.csproj" />
+    <ProjectReference Include="..\ProCharts.Skia\ProCharts.Skia.csproj" />
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Skia" />
+  </ItemGroup>
+
+  <Import Project="../../build/SharedVersion.props" />
+
+</Project>

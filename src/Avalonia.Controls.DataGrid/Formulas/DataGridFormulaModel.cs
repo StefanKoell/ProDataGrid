@@ -686,10 +686,16 @@ namespace Avalonia.Controls.DataGridFormulas
             }
 
             _invalidatePending = true;
+            var weakSelf = new WeakReference<DataGridFormulaModel>(this);
             Dispatcher.UIThread.Post(() =>
             {
-                _invalidatePending = false;
-                ProcessInvalidation();
+                if (!weakSelf.TryGetTarget(out var model))
+                {
+                    return;
+                }
+
+                model._invalidatePending = false;
+                model.ProcessInvalidation();
             }, DispatcherPriority.Background);
         }
 

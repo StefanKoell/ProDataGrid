@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>net6.0;net8.0;net10.0;netstandard2.0</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>ProDataGrid.FormulaEngine</PackageId>
+    <PackageDescription>Excel-compatible formula engine core for ProDataGrid.</PackageDescription>
+    <PackageTags>prodatagrid;formula;excel;calculation</PackageTags>
+  </PropertyGroup>
+
+  <Import Project="../../build/SharedVersion.props" />
+
+</Project>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>net6.0;net8.0;net10.0;netstandard2.0</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>ProDataGrid.FormulaEngine.Excel</PackageId>
+    <PackageDescription>Excel formula parser and function library for ProDataGrid.</PackageDescription>
+    <PackageTags>prodatagrid;formula;excel;calculation</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\\ProDataGrid.FormulaEngine\\ProDataGrid.FormulaEngine.csproj" />
+  </ItemGroup>
+
+  <Import Project="../../build/SharedVersion.props" />
+
+</Project>

@@ -424,6 +424,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridAutoCompleteColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridAutoCompleteColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridAutoCompleteColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridAutoGeneratingColumnEventArgs.yml",
       "output": {
         ".html": {
@@ -435,6 +449,76 @@
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridAutoGeneratingColumnEventArgs",
       "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridAutoGeneratingColumnEventArgs.yml\" sourcestartlinenumber=\"1\">Provides data for the <xref href=\"Avalonia.Controls.DataGrid.AutoGeneratingColumn\" data-throw-if-not-resolved=\"false\"></xref> event.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridBanding.ColumnBand.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridBanding.ColumnBand.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridBanding.ColumnBand",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridBanding.ColumnBandHeader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridBanding.ColumnBandHeader.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridBanding.ColumnBandHeader",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridBanding.ColumnBandModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridBanding.ColumnBandModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridBanding.ColumnBandModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridBanding.ColumnBandObservableCollection-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridBanding.ColumnBandObservableCollection-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridBanding.ColumnBandObservableCollection<T>",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridBanding.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridBanding.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridBanding",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -452,6 +536,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridBindingDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridBindingDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridBindingDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridBoundColumn.yml",
       "output": {
         ".html": {
@@ -466,6 +564,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridBoundColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridBoundColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridBoundColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridButtonColumn.yml",
       "output": {
         ".html": {
@@ -477,6 +589,20 @@
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridButtonColumn",
       "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridButtonColumn.yml\" sourcestartlinenumber=\"1\">Represents a <xref href=\"Avalonia.Controls.DataGrid\" data-throw-if-not-resolved=\"false\"></xref> column that hosts <xref href=\"Avalonia.Controls.Button\" data-throw-if-not-resolved=\"false\"></xref> controls\nfor triggering actions (e.g., Delete, Edit, View) per row.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridButtonColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridButtonColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridButtonColumnDefinition",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -550,6 +676,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridCellRange.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridCellRange.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridCellRange",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridCellState.yml",
       "output": {
         ".html": {
@@ -575,6 +715,90 @@
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridCheckBoxColumn",
       "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridCheckBoxColumn.yml\" sourcestartlinenumber=\"1\">Represents a <xref href=\"System.Windows.Controls.DataGrid\" data-throw-if-not-resolved=\"false\"></xref> column that hosts\n<xref href=\"System.Windows.Controls.CheckBox\" data-throw-if-not-resolved=\"false\"></xref> controls in its cells.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridCheckBoxColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridCheckBoxColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridCheckBoxColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridClipboard.DataGridClipboardImportContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridClipboard.DataGridClipboardImportContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridClipboard.DataGridClipboardImportContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridClipboard.DataGridClipboardImportModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridClipboard.DataGridClipboardImportModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridClipboard.DataGridClipboardImportModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridClipboard.IDataGridClipboardImportModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridClipboard.IDataGridClipboardImportModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridClipboard.IDataGridClipboardImportModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridClipboard.IDataGridClipboardImportModelFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridClipboard.IDataGridClipboardImportModelFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridClipboard.IDataGridClipboardImportModelFactory",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridClipboard.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridClipboard.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridClipboard",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -648,6 +872,104 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridColumnDefinitionBuilder-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridColumnDefinitionBuilder-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridColumnDefinitionBuilder<TItem>",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridColumnDefinitionBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridColumnDefinitionBuilder.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridColumnDefinitionBuilder",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridColumnDefinitionContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridColumnDefinitionContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridColumnDefinitionContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridColumnDefinitionList.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridColumnDefinitionList.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridColumnDefinitionList",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridColumnDefinitionOptions-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridColumnDefinitionOptions-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridColumnDefinitionOptions<TItem>",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridColumnDefinitionOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridColumnDefinitionOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridColumnDefinitionOptions",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridColumnEventArgs.yml",
       "output": {
         ".html": {
@@ -704,6 +1026,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridColumnMetadata.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridColumnMetadata.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridColumnMetadata",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridColumnReorderingEventArgs.yml",
       "output": {
         ".html": {
@@ -732,6 +1068,48 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridColumnValueAccessor-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridColumnValueAccessor-2.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridColumnValueAccessor<TItem, TValue>",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridColumnValueAccessorComparer-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridColumnValueAccessorComparer-2.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridColumnValueAccessorComparer<TItem, TValue>",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridColumnValueAccessorComparer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridColumnValueAccessorComparer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridColumnValueAccessorComparer",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridComboBoxColumn.yml",
       "output": {
         ".html": {
@@ -743,6 +1121,230 @@
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridComboBoxColumn",
       "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridComboBoxColumn.yml\" sourcestartlinenumber=\"1\">Represents a <xref href=\"Avalonia.Controls.DataGrid\" data-throw-if-not-resolved=\"false\"></xref> column that hosts <xref href=\"Avalonia.Controls.ComboBox\" data-throw-if-not-resolved=\"false\"></xref> controls in its cells.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridComboBoxColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridComboBoxColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridComboBoxColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridCompiledBindingPathCache.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridCompiledBindingPathCache.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridCompiledBindingPathCache",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingChangedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingChangedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingChangedEventArgs",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingChangingEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingChangingEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingChangingEventArgs",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingDescriptor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingDescriptor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingDescriptor",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingOperator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingOperator.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingOperator",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingTarget.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingTarget.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingTarget",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingValueSource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingValueSource.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting.ConditionalFormattingValueSource",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.DataGridConditionalFormattingAdapter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.DataGridConditionalFormattingAdapter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting.DataGridConditionalFormattingAdapter",
+      "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridConditionalFormatting.DataGridConditionalFormattingAdapter.yml\" sourcestartlinenumber=\"1\">Evaluates conditional formatting descriptors against the view and current items.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.IConditionalFormattingModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.IConditionalFormattingModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting.IConditionalFormattingModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.IDataGridConditionalFormattingAdapterFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.IDataGridConditionalFormattingAdapterFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting.IDataGridConditionalFormattingAdapterFactory",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.IDataGridConditionalFormattingModelFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.IDataGridConditionalFormattingModelFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting.IDataGridConditionalFormattingModelFactory",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormatting.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormatting",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridConditionalFormattingState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridConditionalFormattingState.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridConditionalFormattingState",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -785,6 +1387,20 @@
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridDatePickerColumn",
       "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridDatePickerColumn.yml\" sourcestartlinenumber=\"1\">Represents a <xref href=\"Avalonia.Controls.DataGrid\" data-throw-if-not-resolved=\"false\"></xref> column that hosts <xref href=\"Avalonia.Controls.CalendarDatePicker\" data-throw-if-not-resolved=\"false\"></xref> controls\nfor editing date values.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridDatePickerColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridDatePickerColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridDatePickerColumnDefinition",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -942,6 +1558,132 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridEditTriggers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridEditTriggers.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridEditTriggers",
+      "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridEditTriggers.yml\" sourcestartlinenumber=\"1\">Controls which user gestures can begin editing.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridEditing.DataGridEditingInteractionModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridEditing.DataGridEditingInteractionModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridEditing.DataGridEditingInteractionModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridEditing.DataGridPointerEditContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridEditing.DataGridPointerEditContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridEditing.DataGridPointerEditContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridEditing.DataGridTextInputApplyContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridEditing.DataGridTextInputApplyContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridEditing.DataGridTextInputApplyContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridEditing.DataGridTextInputContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridEditing.DataGridTextInputContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridEditing.DataGridTextInputContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridEditing.DataGridTextInputEditContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridEditing.DataGridTextInputEditContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridEditing.DataGridTextInputEditContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridEditing.IDataGridEditingInteractionModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridEditing.IDataGridEditingInteractionModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridEditing.IDataGridEditingInteractionModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridEditing.IDataGridEditingInteractionModelFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridEditing.IDataGridEditingInteractionModelFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridEditing.IDataGridEditingInteractionModelFactory",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridEditing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridEditing.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridEditing",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridEditingUnit.yml",
       "output": {
         ".html": {
@@ -952,6 +1694,188 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridEditingUnit",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFastPathFeature.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFastPathFeature.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFastPathFeature",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFastPathMissingAccessorEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFastPathMissingAccessorEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFastPathMissingAccessorEventArgs",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFastPathOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFastPathOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFastPathOptions",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFilling.DataGridFillContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFilling.DataGridFillContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFilling.DataGridFillContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFilling.DataGridFillDirection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFilling.DataGridFillDirection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFilling.DataGridFillDirection",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFilling.DataGridFillModel.FillSeries.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFilling.DataGridFillModel.FillSeries.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFilling.DataGridFillModel.FillSeries",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFilling.DataGridFillModel.FillSeriesKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFilling.DataGridFillModel.FillSeriesKind.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFilling.DataGridFillModel.FillSeriesKind",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFilling.DataGridFillModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFilling.DataGridFillModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFilling.DataGridFillModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFilling.IDataGridFillModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFilling.IDataGridFillModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFilling.IDataGridFillModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFilling.IDataGridFillModelFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFilling.IDataGridFillModelFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFilling.IDataGridFillModelFactory",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFilling.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFilling.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFilling",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFiltering.DataGridAccessorFilteringAdapter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFiltering.DataGridAccessorFilteringAdapter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFiltering.DataGridAccessorFilteringAdapter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFiltering.DataGridAccessorFilteringAdapterFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFiltering.DataGridAccessorFilteringAdapterFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFiltering.DataGridAccessorFilteringAdapterFactory",
       "Summary": null
     },
     {
@@ -1190,6 +2114,90 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridFilteringState",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFormulaColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFormulaColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFormulaColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFormulaTextColumn.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFormulaTextColumn.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFormulaTextColumn",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFormulas.DataGridFormulaInvalidatedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFormulas.DataGridFormulaInvalidatedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFormulas.DataGridFormulaInvalidatedEventArgs",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFormulas.DataGridFormulaModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFormulas.DataGridFormulaModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFormulas.DataGridFormulaModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFormulas.IDataGridFormulaModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFormulas.IDataGridFormulaModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFormulas.IDataGridFormulaModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridFormulas.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridFormulas.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridFormulas",
       "Summary": null
     },
     {
@@ -1740,6 +2748,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridHierarchicalColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridHierarchicalColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridHierarchicalColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridHierarchicalPresenter.yml",
       "output": {
         ".html": {
@@ -1782,6 +2804,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridHyperlinkColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridHyperlinkColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridHyperlinkColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridImageColumn.yml",
       "output": {
         ".html": {
@@ -1793,6 +2829,160 @@
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridImageColumn",
       "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridImageColumn.yml\" sourcestartlinenumber=\"1\">Represents a <xref href=\"Avalonia.Controls.DataGrid\" data-throw-if-not-resolved=\"false\"></xref> column that hosts <xref href=\"Avalonia.Controls.Image\" data-throw-if-not-resolved=\"false\"></xref> controls\nfor displaying images. This column is read-only by default.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridImageColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridImageColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridImageColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridAutoScrollContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridAutoScrollContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridInteractions.DataGridAutoScrollContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridAutoScrollDirection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridAutoScrollDirection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridInteractions.DataGridAutoScrollDirection",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridCellPosition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridCellPosition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridInteractions.DataGridCellPosition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridFillHandleRangeContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridFillHandleRangeContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridInteractions.DataGridFillHandleRangeContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridRangeInteractionModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridRangeInteractionModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridInteractions.DataGridRangeInteractionModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridSelectionAnchorContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridSelectionAnchorContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridInteractions.DataGridSelectionAnchorContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridSelectionRangeContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridInteractions.DataGridSelectionRangeContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridInteractions.DataGridSelectionRangeContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridInteractions.IDataGridRangeInteractionModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridInteractions.IDataGridRangeInteractionModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridInteractions.IDataGridRangeInteractionModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridInteractions.IDataGridRangeInteractionModelFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridInteractions.IDataGridRangeInteractionModelFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridInteractions.IDataGridRangeInteractionModelFactory",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridInteractions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridInteractions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridInteractions",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -1880,6 +3070,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridMaskedTextColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridMaskedTextColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridMaskedTextColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridNumericColumn.yml",
       "output": {
         ".html": {
@@ -1891,6 +3095,510 @@
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridNumericColumn",
       "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridNumericColumn.yml\" sourcestartlinenumber=\"1\">Represents a <xref href=\"Avalonia.Controls.DataGrid\" data-throw-if-not-resolved=\"false\"></xref> column that hosts <xref href=\"Avalonia.Controls.NumericUpDown\" data-throw-if-not-resolved=\"false\"></xref> controls\nfor editing numeric values (decimal, double, int) with optional formatting and spinner controls.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridNumericColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridNumericColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridNumericColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.IPivotAggregationState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.IPivotAggregationState.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.IPivotAggregationState",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.IPivotAggregator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.IPivotAggregator.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.IPivotAggregator",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.IPivotRow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.IPivotRow.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.IPivotRow",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotAggregateType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotAggregateType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotAggregateType",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotAggregatorRegistry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotAggregatorRegistry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotAggregatorRegistry",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotAxisField.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotAxisField.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotAxisField",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotChangedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotChangedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotChangedEventArgs",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotChartChangedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotChartChangedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotChartChangedEventArgs",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotChartModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotChartModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotChartModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotChartSeries.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotChartSeries.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotChartSeries",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotChartSeriesSource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotChartSeriesSource.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotChartSeriesSource",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotColumn.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotColumn.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotColumn",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotColumnType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotColumnType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotColumnType",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotFieldBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotFieldBase.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotFieldBase",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotFieldFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotFieldFilter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotFieldFilter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotHeader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotHeader.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotHeader",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotLayoutOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotLayoutOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotLayoutOptions",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotObservableCollection-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotObservableCollection-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotObservableCollection<T>",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotRow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotRow.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotRow",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotRowLayout.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotRowLayout.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotRowLayout",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotRowType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotRowType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotRowType",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotSlicerFilterMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotSlicerFilterMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotSlicerFilterMode",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotSlicerItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotSlicerItem.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotSlicerItem",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotSlicerModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotSlicerModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotSlicerModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotSlicerSelectionMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotSlicerSelectionMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotSlicerSelectionMode",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotTableModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotTableModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotTableModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotTotalPosition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotTotalPosition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotTotalPosition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValueDisplayMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValueDisplayMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotValueDisplayMode",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValueField.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValueField.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotValueField",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValueFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValueFilter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotValueFilter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValueFilterModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValueFilterModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotValueFilterModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValueFilterType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValueFilterType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotValueFilterType",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValueSort.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValueSort.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotValueSort",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValuesPosition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.PivotValuesPosition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting.PivotValuesPosition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridPivoting.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridPivoting.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridPivoting",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -1922,6 +3630,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridProgressBarColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridProgressBarColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridProgressBarColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridRecycleHidingMode.yml",
       "output": {
         ".html": {
@@ -1933,6 +3655,146 @@
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridRecycleHidingMode",
       "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridRecycleHidingMode.yml\" sourcestartlinenumber=\"1\">Controls how recycled containers are hidden when removed from the viewport.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineFieldBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineFieldBase.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridReporting.OutlineFieldBase",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineGroupField.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineGroupField.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridReporting.OutlineGroupField",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineLayoutOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineLayoutOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridReporting.OutlineLayoutOptions",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineObservableCollection-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineObservableCollection-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridReporting.OutlineObservableCollection<T>",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineReportChangedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineReportChangedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridReporting.OutlineReportChangedEventArgs",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineReportModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineReportModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridReporting.OutlineReportModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineRow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineRow.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridReporting.OutlineRow",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineRowType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineRowType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridReporting.OutlineRowType",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineValueField.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridReporting.OutlineValueField.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridReporting.OutlineValueField",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridReporting.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridReporting.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridReporting",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -2170,6 +4032,34 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridSearchState",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridSearching.DataGridAccessorSearchAdapter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridSearching.DataGridAccessorSearchAdapter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridSearching.DataGridAccessorSearchAdapter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridSearching.DataGridAccessorSearchAdapterFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridSearching.DataGridAccessorSearchAdapterFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridSearching.DataGridAccessorSearchAdapterFactory",
       "Summary": null
     },
     {
@@ -2524,6 +4414,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridSelectionOverlay.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridSelectionOverlay.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridSelectionOverlay",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridSelectionState.yml",
       "output": {
         ".html": {
@@ -2563,6 +4467,34 @@
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridSliderColumn",
       "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridSliderColumn.yml\" sourcestartlinenumber=\"1\">Represents a <xref href=\"Avalonia.Controls.DataGrid\" data-throw-if-not-resolved=\"false\"></xref> column that hosts <xref href=\"Avalonia.Controls.Slider\" data-throw-if-not-resolved=\"false\"></xref> controls\nfor editing numeric values with a slider.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridSliderColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridSliderColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridSliderColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridSorting.DataGridColumnSort.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridSorting.DataGridColumnSort.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridSorting.DataGridColumnSort",
+      "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridSorting.DataGridColumnSort.yml\" sourcestartlinenumber=\"1\">Attached properties for sorting configuration on <xref href=\"Avalonia.Controls.DataGridColumn\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2902,6 +4834,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridTemplateColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridTemplateColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridTemplateColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridTextColumn.yml",
       "output": {
         ".html": {
@@ -2913,6 +4859,20 @@
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridTextColumn",
       "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridTextColumn.yml\" sourcestartlinenumber=\"1\">Represents a <xref href=\"Avalonia.Controls.DataGrid\" data-throw-if-not-resolved=\"false\"></xref> column that hosts textual content in its cells.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridTextColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridTextColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridTextColumnDefinition",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -2930,6 +4890,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridTimePickerColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridTimePickerColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridTimePickerColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridToggleButtonColumn.yml",
       "output": {
         ".html": {
@@ -2944,6 +4918,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridToggleButtonColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridToggleButtonColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridToggleButtonColumnDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Avalonia.Controls.DataGridToggleSwitchColumn.yml",
       "output": {
         ".html": {
@@ -2955,6 +4943,20 @@
       "IsMRef": true,
       "Title": "Avalonia.Controls.DataGridToggleSwitchColumn",
       "Summary": "<p sourcefile=\"api/Avalonia.Controls.DataGridToggleSwitchColumn.yml\" sourcestartlinenumber=\"1\">Represents a <xref href=\"Avalonia.Controls.DataGrid\" data-throw-if-not-resolved=\"false\"></xref> column that hosts <xref href=\"Avalonia.Controls.ToggleSwitch\" data-throw-if-not-resolved=\"false\"></xref> controls\nfor editing boolean values with a toggle switch.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.DataGridToggleSwitchColumnDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.DataGridToggleSwitchColumnDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.DataGridToggleSwitchColumnDefinition",
+      "Summary": null
     },
     {
       "type": "ManagedReference",
@@ -3024,6 +5026,62 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Avalonia.Controls.IDataGridClipboardFormatExporter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.IDataGridColumnFilterAccessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.IDataGridColumnFilterAccessor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.IDataGridColumnFilterAccessor",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.IDataGridColumnTextAccessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.IDataGridColumnTextAccessor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.IDataGridColumnTextAccessor",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.IDataGridColumnValueAccessor-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.IDataGridColumnValueAccessor-2.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.IDataGridColumnValueAccessor<TItem, TValue>",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Avalonia.Controls.IDataGridColumnValueAccessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Avalonia.Controls.IDataGridColumnValueAccessor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Avalonia.Controls.IDataGridColumnValueAccessor",
       "Summary": null
     },
     {
@@ -3447,6 +5505,2386 @@
       "Summary": null
     },
     {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Avalonia.ChartClipboardFormat.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Avalonia.ChartClipboardFormat.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Avalonia.ChartClipboardFormat",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Avalonia.ChartClipboardFormats.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Avalonia.ChartClipboardFormats.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Avalonia.ChartClipboardFormats",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Avalonia.ProChartView.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Avalonia.ProChartView.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Avalonia.ProChartView",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Avalonia.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Avalonia.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Avalonia",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartAxisCrossing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartAxisCrossing.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartAxisCrossing",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartAxisDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartAxisDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartAxisDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartAxisKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartAxisKind.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartAxisKind",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartColor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartColor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartColor",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartDataDelta.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartDataDelta.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartDataDelta",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartDataDeltaKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartDataDeltaKind.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartDataDeltaKind",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartDataRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartDataRequest.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartDataRequest",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartDataSnapshot.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartDataSnapshot.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartDataSnapshot",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartDataUpdate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartDataUpdate.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartDataUpdate",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartDataUpdateEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartDataUpdateEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartDataUpdateEventArgs",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartDownsampleMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartDownsampleMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartDownsampleMode",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartErrorBarType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartErrorBarType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartErrorBarType",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartGradient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartGradient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartGradient",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartGradientDirection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartGradientDirection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartGradientDirection",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartLegendDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartLegendDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartLegendDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartLegendPosition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartLegendPosition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartLegendPosition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartLineInterpolation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartLineInterpolation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartLineInterpolation",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartLineStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartLineStyle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartLineStyle",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartMarkerShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartMarkerShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartMarkerShape",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartSeriesKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartSeriesKind.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartSeriesKind",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartSeriesSnapshot.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartSeriesSnapshot.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartSeriesSnapshot",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartSeriesStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartSeriesStyle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartSeriesStyle",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartTheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartTheme.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartTheme",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartTrendlineType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartTrendlineType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartTrendlineType",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.ChartValueAxisAssignment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.ChartValueAxisAssignment.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.ChartValueAxisAssignment",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.IChartDataSource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.IChartDataSource.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.IChartDataSource",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.IChartIncrementalDataSource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.IChartIncrementalDataSource.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.IChartIncrementalDataSource",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.IChartWindowInfoProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.IChartWindowInfoProvider.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.IChartWindowInfoProvider",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaChartExporter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaChartExporter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaChartExporter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaChartGradient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaChartGradient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaChartGradient",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaChartHitTestResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaChartHitTestResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaChartHitTestResult",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaChartRenderCache.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaChartRenderCache.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaChartRenderCache",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaChartRenderer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaChartRenderer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaChartRenderer",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaChartSeriesStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaChartSeriesStyle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaChartSeriesStyle",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaChartStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaChartStyle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaChartStyle",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaChartTheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaChartTheme.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaChartTheme",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaChartViewportInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaChartViewportInfo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaChartViewportInfo",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaGradientDirection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaGradientDirection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaGradientDirection",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaLegendFlow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaLegendFlow.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaLegendFlow",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaLineInterpolation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaLineInterpolation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaLineInterpolation",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaLineStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaLineStyle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaLineStyle",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaMarkerShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaMarkerShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaMarkerShape",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.SkiaPieLabelPlacement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.SkiaPieLabelPlacement.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia.SkiaPieLabelPlacement",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.Skia.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.Skia.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts.Skia",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProCharts.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProCharts.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProCharts",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.Charting.DataGridChartAggregation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.Charting.DataGridChartAggregation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.Charting.DataGridChartAggregation",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.Charting.DataGridChartGroupMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.Charting.DataGridChartGroupMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.Charting.DataGridChartGroupMode",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.Charting.DataGridChartModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.Charting.DataGridChartModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.Charting.DataGridChartModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.Charting.DataGridChartSeriesDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.Charting.DataGridChartSeriesDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.Charting.DataGridChartSeriesDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.Charting.PivotChartDataSource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.Charting.PivotChartDataSource.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.Charting.PivotChartDataSource",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.Charting.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.Charting.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.Charting",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.Excel.ExcelDateConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.Excel.ExcelDateConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.Excel.ExcelDateConverter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.Excel.ExcelFormulaFormatter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.Excel.ExcelFormulaFormatter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.Excel.ExcelFormulaFormatter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.Excel.ExcelFormulaParser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.Excel.ExcelFormulaParser.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.Excel.ExcelFormulaParser",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.Excel.ExcelFormulaTokenizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.Excel.ExcelFormulaTokenizer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.Excel.ExcelFormulaTokenizer",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.Excel.ExcelFunctionRegistry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.Excel.ExcelFunctionRegistry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.Excel.ExcelFunctionRegistry",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.Excel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.Excel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.Excel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaArray.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaArray.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaArray",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaArrayExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaArrayExpression.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaArrayExpression",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaBinaryExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaBinaryExpression.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaBinaryExpression",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaBinaryOperator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaBinaryOperator.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaBinaryOperator",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaCalculationEngine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaCalculationEngine.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaCalculationEngine",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaCalculationMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaCalculationMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaCalculationMode",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaCalculationSettings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaCalculationSettings.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaCalculationSettings",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaCalculationTelemetry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaCalculationTelemetry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaCalculationTelemetry",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaCellAddress.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaCellAddress.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaCellAddress",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaCoercion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaCoercion.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaCoercion",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaDateSystem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaDateSystem.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaDateSystem",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaDependencyGraph.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaDependencyGraph.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaDependencyGraph",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaError.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaError",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaErrorType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaErrorType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaErrorType",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaEvaluationContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaEvaluationContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaEvaluationContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaEvaluator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaEvaluator.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaEvaluator",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaExpression.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaExpression",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaExpressionKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaExpressionKind.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaExpressionKind",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaFormatOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaFormatOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaFormatOptions",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaFunctionCallExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaFunctionCallExpression.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaFunctionCallExpression",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaFunctionContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaFunctionContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaFunctionContext",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaFunctionInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaFunctionInfo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaFunctionInfo",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaLiteralExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaLiteralExpression.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaLiteralExpression",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaNameChangeKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaNameChangeKind.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaNameChangeKind",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaNameChangedEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaNameChangedEventArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaNameChangedEventArgs",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaNameExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaNameExpression.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaNameExpression",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaNameTable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaNameTable.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaNameTable",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaNumberUtilities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaNumberUtilities.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaNumberUtilities",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaParseException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaParseException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaParseException",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaParseOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaParseOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaParseOptions",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaRangeAddress.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaRangeAddress.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaRangeAddress",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaRecalculationResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaRecalculationResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaRecalculationResult",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaReference.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaReference.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaReference",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaReferenceAddress.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaReferenceAddress.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaReferenceAddress",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaReferenceExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaReferenceExpression.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaReferenceExpression",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaReferenceKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaReferenceKind.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaReferenceKind",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaReferenceMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaReferenceMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaReferenceMode",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaReferenceResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaReferenceResolver.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaReferenceResolver",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaReferenceShiftResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaReferenceShiftResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaReferenceShiftResult",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaSheetReference.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaSheetReference.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaSheetReference",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaStructuredReference.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaStructuredReference.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaStructuredReference",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaStructuredReferenceExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaStructuredReferenceExpression.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaStructuredReferenceExpression",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaStructuredReferenceScope.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaStructuredReferenceScope.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaStructuredReferenceScope",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaToken.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaToken.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaToken",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaTokenType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaTokenType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaTokenType",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaUnaryExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaUnaryExpression.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaUnaryExpression",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaUnaryOperator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaUnaryOperator.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaUnaryOperator",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaValue.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaValue.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaValue",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.FormulaValueKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.FormulaValueKind.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.FormulaValueKind",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaCalculationModeProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaCalculationModeProvider.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaCalculationModeProvider",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaCalculationObserver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaCalculationObserver.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaCalculationObserver",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaCell.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaCell.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaCell",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaFormatter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaFormatter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaFormatter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaFunction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaFunction.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaFunction",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaFunctionRegistry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaFunctionRegistry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaFunctionRegistry",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaNameChangeNotifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaNameChangeNotifier.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaNameChangeNotifier",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaNameCollection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaNameCollection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaNameCollection",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaNameProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaNameProvider.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaNameProvider",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaParser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaParser.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaParser",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaRangeValueResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaRangeValueResolver.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaRangeValueResolver",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaStructuredReferenceDependencyResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaStructuredReferenceDependencyResolver.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaStructuredReferenceDependencyResolver",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaStructuredReferenceResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaStructuredReferenceResolver.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaStructuredReferenceResolver",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaValueResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaValueResolver.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaValueResolver",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaWorkbook.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaWorkbook.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaWorkbook",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaWorkbookResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaWorkbookResolver.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaWorkbookResolver",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.IFormulaWorksheet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.IFormulaWorksheet.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.IFormulaWorksheet",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.ILazyFormulaFunction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.ILazyFormulaFunction.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.ILazyFormulaFunction",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.WorkbookValueResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.WorkbookValueResolver.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine.WorkbookValueResolver",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDataGrid.FormulaEngine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDataGrid.FormulaEngine.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDataGrid.FormulaEngine",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.DiagnosticsUdpExporter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.DiagnosticsUdpExporter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.DiagnosticsUdpExporter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.DiagnosticsUdpOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.DiagnosticsUdpOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.DiagnosticsUdpOptions",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.DiagnosticsUdpReceiver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.DiagnosticsUdpReceiver.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.DiagnosticsUdpReceiver",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.TelemetryActivity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.TelemetryActivity.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.TelemetryActivity",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.TelemetryHello.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.TelemetryHello.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.TelemetryHello",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.TelemetryMessageType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.TelemetryMessageType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.TelemetryMessageType",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.TelemetryMetric.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.TelemetryMetric.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.TelemetryMetric",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.TelemetryMetricValue.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.TelemetryMetricValue.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.TelemetryMetricValue",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.TelemetryMetricValueType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.TelemetryMetricValueType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.TelemetryMetricValueType",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.TelemetryPacket.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.TelemetryPacket.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.TelemetryPacket",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.TelemetryPacketReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.TelemetryPacketReader.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.TelemetryPacketReader",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.TelemetryPacketWriter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.TelemetryPacketWriter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.TelemetryPacketWriter",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.TelemetryProtocol.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.TelemetryProtocol.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.TelemetryProtocol",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.TelemetryTag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.TelemetryTag.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.TelemetryTag",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.TelemetryTagValueType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.TelemetryTagValueType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.TelemetryTagValueType",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.WildcardMatcher.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.WildcardMatcher.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport.WildcardMatcher",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Transport.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Transport.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Transport",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.App.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.App.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.App",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.Controls.MetricTrendChart.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.Controls.MetricTrendChart.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.Controls.MetricTrendChart",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.Controls.Sparkline.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.Controls.Sparkline.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.Controls.Sparkline",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.Controls.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.Controls.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.Controls",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.MainWindow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.MainWindow.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.MainWindow",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.Models.MetricSample.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.Models.MetricSample.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.Models.MetricSample",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.Models.PresetDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.Models.PresetDefinition.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.Models.PresetDefinition",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.Models.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.Models.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.Models",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.Program.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.Program.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.Program",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.Services.PresetStore.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.Services.PresetStore.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.Services.PresetStore",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.Services.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.Services.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.Services",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.ViewModels.ActivityEventViewModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.ViewModels.ActivityEventViewModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.ViewModels.ActivityEventViewModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.ViewModels.ColumnVisibilityOption.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.ViewModels.ColumnVisibilityOption.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.ViewModels.ColumnVisibilityOption",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.ViewModels.MainViewModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.ViewModels.MainViewModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.ViewModels.MainViewModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.ViewModels.MetricDetailTabViewModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.ViewModels.MetricDetailTabViewModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.ViewModels.MetricDetailTabViewModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.ViewModels.MetricSeriesViewModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.ViewModels.MetricSeriesViewModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.ViewModels.MetricSeriesViewModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.ViewModels.ObservableObject.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.ViewModels.ObservableObject.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.ViewModels.ObservableObject",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.ViewModels.RelayCommand.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.ViewModels.RelayCommand.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.ViewModels.RelayCommand",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.ViewModels.SessionViewModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.ViewModels.SessionViewModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.ViewModels.SessionViewModel",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.ViewModels.TrendRangeOption.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.ViewModels.TrendRangeOption.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.ViewModels.TrendRangeOption",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.ViewModels.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.ViewModels.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer.ViewModels",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/ProDiagnostics.Viewer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/ProDiagnostics.Viewer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "ProDiagnostics.Viewer",
+      "Summary": null
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "api/index.md",
       "output": {
@@ -3481,10 +7919,110 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/cell-template-reuse.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/cell-template-reuse.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/chart-gallery.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/chart-gallery.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/clipboard-and-export.md",
       "output": {
         ".html": {
           "relative_path": "articles/clipboard-and-export.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/clipboard-import-model.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/clipboard-import-model.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/column-banding.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/column-banding.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/column-definitions-aot.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/column-definitions-aot.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/column-definitions-fast-path-overview.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/column-definitions-fast-path-overview.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/column-definitions-hierarchical.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/column-definitions-hierarchical.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/column-definitions-hot-path.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/column-definitions-hot-path.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/column-definitions-models.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/column-definitions-models.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/column-definitions.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/column-definitions.html"
         }
       },
       "version": ""
@@ -3505,6 +8043,16 @@
       "output": {
         ".html": {
           "relative_path": "articles/columns-and-editing.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/conditional-formatting.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/conditional-formatting.html"
         }
       },
       "version": ""
@@ -3561,6 +8109,26 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/dynamicdata-hierarchical-streaming-sourcecache.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/dynamicdata-hierarchical-streaming-sourcecache.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/dynamicdata-hierarchical-streaming-sourcelist.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/dynamicdata-hierarchical-streaming-sourcelist.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/dynamicdata-streaming-sourcecache.md",
       "output": {
         ".html": {
@@ -3581,10 +8149,180 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/editing-interaction-model.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/editing-interaction-model.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/events-and-routing.md",
       "output": {
         ".html": {
           "relative_path": "articles/events-and-routing.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/fill-handle-and-autofill.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/fill-handle-and-autofill.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-architecture.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-architecture.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-arrays-and-spills.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-arrays-and-spills.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-calculation-engine.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-calculation-engine.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-diagnostics.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-diagnostics.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-errors-and-validation.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-errors-and-validation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-formatting.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-formatting.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-functions.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-functions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-integration.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-integration.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-names-and-structured-references.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-names-and-structured-references.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-overview.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-overview.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-reference-syntax.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-reference-syntax.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-samples.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-samples.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-settings.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-settings.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-testing-and-parity.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-testing-and-parity.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/formula-engine-values-and-coercion.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/formula-engine-values-and-coercion.html"
         }
       },
       "version": ""
@@ -3605,6 +8343,26 @@
       "output": {
         ".html": {
           "relative_path": "articles/hierarchical-data.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/hierarchical-high-frequency-updates.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/hierarchical-high-frequency-updates.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/hierarchical-root-items.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/hierarchical-root-items.html"
         }
       },
       "version": ""
@@ -3681,10 +8439,210 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "articles/outline-reports.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/outline-reports.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/pivot-calculated-measures.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/pivot-calculated-measures.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/pivot-charts.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/pivot-charts.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/pivot-slicers.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/pivot-slicers.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/pivot-tables.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/pivot-tables.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-architecture.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-architecture.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-axes-and-scales.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-axes-and-scales.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-chart-model.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-chart-model.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-data-sources.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-data-sources.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-datagrid-integration.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-datagrid-integration.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-export-clipboard.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-export-clipboard.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-interaction.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-interaction.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-overview.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-overview.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-performance.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-performance.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-rendering-pipeline.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-rendering-pipeline.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-samples.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-samples.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-series-types.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-series-types.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-skia-style-reference.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-skia-style-reference.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/procharts-styling.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/procharts-styling.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "articles/prodiagnostics.md",
       "output": {
         ".html": {
           "relative_path": "articles/prodiagnostics.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/range-interaction-model.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/range-interaction-model.html"
         }
       },
       "version": ""
@@ -3725,6 +8683,16 @@
       "output": {
         ".html": {
           "relative_path": "articles/selection-and-navigation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/selection-highlighting.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/selection-highlighting.html"
         }
       },
       "version": ""

@@ -58,6 +58,87 @@ Basic XAML usage:
 </DataGrid>
 ```
 
+### More than DataGrid
+
+ProDataGrid ships as a family of packages beyond the grid itself. Quick starts below cover the most common add-ons.
+
+#### Charting
+
+ProCharts is an Excel-quality charting library built for ProDataGrid. `ProDataGrid.Charting` bridges grid data and pivots into chart series.
+
+Quick start:
+
+```sh
+dotnet add package ProCharts.Avalonia
+dotnet add package ProDataGrid.Charting
+```
+
+```csharp
+using ProCharts;
+
+var chartModel = new ChartModel
+{
+    Title = "Revenue by Quarter",
+    Series = new List<ChartSeries>
+    {
+        ChartSeries.Line("Q1", new[] { 120d, 140d, 110d, 180d }),
+        ChartSeries.Line("Q2", new[] { 160d, 130d, 150d, 210d })
+    },
+    XAxis = new ChartAxis { Title = "Quarter", Kind = ChartAxisKind.Category },
+    YAxis = new ChartAxis { Title = "Revenue", Kind = ChartAxisKind.Value }
+};
+```
+
+Bind `chartModel` to `ProChartView.ChartModel` in your Avalonia view.
+
+#### Formula Engine
+
+The formula engine provides Excel-compatible parsing, evaluation, and recalculation. Use it in DataGrid formula columns or wire it to your own data model.
+
+Quick start:
+
+```sh
+dotnet add package ProDataGrid.FormulaEngine
+dotnet add package ProDataGrid.FormulaEngine.Excel
+```
+
+```csharp
+var definition = new DataGridFormulaColumnDefinition
+{
+    Header = "Total",
+    Formula = "=[Price] * [Quantity]",
+    AllowCellFormulas = true
+};
+```
+
+#### ProDiagnostics
+
+ProDiagnostics provides Avalonia developer tools UI for runtime inspection and debugging, with optional out-of-process transport and a viewer app.
+
+Quick start:
+
+```sh
+dotnet add package ProDiagnostics
+```
+
+```csharp
+public override void OnFrameworkInitializationCompleted()
+{
+    if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        desktop.MainWindow = new MainWindow();
+
+    base.OnFrameworkInitializationCompleted();
+    this.AttachDevTools();
+}
+```
+
+Optional streaming + viewer:
+
+```sh
+dotnet add package ProDiagnostics.Transport
+dotnet tool install -g prodiagnostics-viewer
+```
+
 ## Nightly Packages (GitHub Packages)
 
 Nightly builds are published to GitHub Packages with versions like `11.3.9-nightly.20241227.123`.

@@ -15,6 +15,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Xunit;
 
 namespace Avalonia.Controls.DataGridTests;
@@ -444,6 +445,75 @@ public class DataGridLogicalScrollableDetachTests
         }
 
         Assert.Null(exception);
+    }
+
+    [AvaloniaFact]
+    public void Detach_defers_rows_presenter_cleanup_until_dispatcher()
+    {
+        var items = new ObservableCollection<AutoHideItem>(
+            Enumerable.Range(1, 120).Select(i => new AutoHideItem
+            {
+                Name = $"Item {i:000}",
+                Value = i
+            }));
+
+        var window = new Window
+        {
+            Width = 480,
+            Height = 320
+        };
+        window.SetThemeStyles(DataGridTheme.SimpleV2);
+
+        var grid = new DataGrid
+        {
+            ItemsSource = items,
+            UseLogicalScrollable = true,
+            KeepRecycledContainersInVisualTree = true,
+            HeadersVisibility = DataGridHeadersVisibility.Column,
+            AutoGenerateColumns = false,
+            Height = 200
+        };
+
+        grid.Columns.Add(new DataGridTextColumn { Header = "Name", Binding = new Binding(nameof(AutoHideItem.Name)) });
+        grid.Columns.Add(new DataGridTextColumn { Header = "Value", Binding = new Binding(nameof(AutoHideItem.Value)) });
+
+        window.Content = grid;
+
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            grid.UpdateLayout();
+
+            grid.ScrollIntoView(items[^1], grid.Columns[0]);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            grid.UpdateLayout();
+
+            grid.Columns.Add(new DataGridTextColumn { Header = "Extra", Binding = new Binding(nameof(AutoHideItem.Value)) });
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            grid.UpdateLayout();
+
+            var rowsPresenter = grid.GetVisualDescendants()
+                .OfType<DataGridRowsPresenter>()
+                .Single();
+
+            Assert.True(rowsPresenter.Children.OfType<DataGridRow>().Any());
+
+            window.Content = null;
+
+            Assert.True(rowsPresenter.Children.OfType<DataGridRow>().Any());
+
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.False(rowsPresenter.Children.OfType<DataGridRow>().Any());
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     private sealed class AutoHideItem

@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:Avalonia.Controls">
   <!-- Simple v2 keeps the base Simple styling and only swaps the DataGrid template to the ScrollViewer-based version. -->
-  <StyleInclude Source="/Themes/Simple.xaml" />
+  <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Simple.xaml" />
   <Styles.Resources>
    <ResourceDictionary>
     <ControlTheme x:Key="{x:Type DataGrid}"

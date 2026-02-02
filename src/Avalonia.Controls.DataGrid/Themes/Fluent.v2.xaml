@@ -5,7 +5,7 @@
         xmlns:controls="clr-namespace:Avalonia.Controls">
   <!-- Fluent v2 keeps the v1 styling and only swaps the DataGrid template to the ScrollViewer-based version.
        All colors, column/cell themes, and resources continue to come from Fluent.xaml. -->
-  <StyleInclude Source="/Themes/Fluent.xaml" />
+  <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
   <Styles.Resources>
    <ResourceDictionary>
     <ControlTheme x:Key="{x:Type DataGrid}"

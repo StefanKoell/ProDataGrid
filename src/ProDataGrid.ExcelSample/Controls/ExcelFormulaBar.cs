@@ -36,11 +36,18 @@ public sealed class ExcelFormulaBar : TemplatedControl
             o => o.FormulaCommitCommand,
             (o, v) => o.FormulaCommitCommand = v);
 
+    public static readonly DirectProperty<ExcelFormulaBar, ICommand?> FormulaCancelCommandProperty =
+        AvaloniaProperty.RegisterDirect<ExcelFormulaBar, ICommand?>(
+            nameof(FormulaCancelCommand),
+            o => o.FormulaCancelCommand,
+            (o, v) => o.FormulaCancelCommand = v);
+
     private string? _nameText;
     private string? _formulaText;
     private string? _filterText;
     private ICommand? _nameCommitCommand;
     private ICommand? _formulaCommitCommand;
+    private ICommand? _formulaCancelCommand;
 
     public string? NameText
     {
@@ -70,5 +77,11 @@ public sealed class ExcelFormulaBar : TemplatedControl
     {
         get => _formulaCommitCommand;
         set => SetAndRaise(FormulaCommitCommandProperty, ref _formulaCommitCommand, value);
+    }
+
+    public ICommand? FormulaCancelCommand
+    {
+        get => _formulaCancelCommand;
+        set => SetAndRaise(FormulaCancelCommandProperty, ref _formulaCancelCommand, value);
     }
 }

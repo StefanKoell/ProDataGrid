@@ -59,6 +59,33 @@ public sealed class WorkbookViewModelTests
         Assert.Equal(first, viewModel.SelectedSheet);
     }
 
+    [Fact]
+    public void CancelFormulaCommand_RestoresFormulaText()
+    {
+        using var viewModel = new WorkbookViewModel(ImmediateScheduler.Instance, ImmediateScheduler.Instance, startLiveUpdates: false);
+
+        viewModel.SelectionState.CurrentCell = new SpreadsheetCellReference(0, 0);
+        var original = viewModel.FormulaText;
+
+        viewModel.FormulaText = "123";
+
+        viewModel.CancelFormulaCommand.Execute().Subscribe(new NoopObserver());
+
+        Assert.Equal(original, viewModel.FormulaText);
+    }
+
+    [Fact]
+    public void FormulaBarVisibility_Toggles()
+    {
+        using var viewModel = new WorkbookViewModel(ImmediateScheduler.Instance, ImmediateScheduler.Instance, startLiveUpdates: false);
+
+        Assert.True(viewModel.IsFormulaBarVisible);
+
+        viewModel.IsFormulaBarVisible = false;
+
+        Assert.False(viewModel.IsFormulaBarVisible);
+    }
+
     private sealed class NoopObserver : IObserver<Unit>
     {
         public void OnCompleted()

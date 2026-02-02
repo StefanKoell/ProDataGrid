@@ -33,6 +33,7 @@ public sealed class WorkbookViewModel : ReactiveObject, IDisposable
     private string _statusRight = "100%";
     private bool _isLiveUpdates;
     private bool _isChartPanelVisible;
+    private bool _isFormulaBarVisible = true;
     private readonly ChartPanelViewModel _chartPanel;
     private readonly SpreadsheetClipboardState _clipboardState;
 
@@ -95,6 +96,7 @@ public sealed class WorkbookViewModel : ReactiveObject, IDisposable
         _chartPanel.IsEnabled = false;
         _chartPanel.SetSheet(_selectedSheet);
         CommitFormulaCommand = ReactiveCommand.Create(CommitFormula);
+        CancelFormulaCommand = ReactiveCommand.Create(CancelFormula);
         CommitNameCommand = ReactiveCommand.Create(CommitName);
         ReorderSheetCommand = ReactiveCommand.Create<SheetTabReorderRequest>(ApplySheetReorder);
 
@@ -175,6 +177,8 @@ public sealed class WorkbookViewModel : ReactiveObject, IDisposable
 
     public ReactiveCommand<Unit, Unit> CommitFormulaCommand { get; }
 
+    public ReactiveCommand<Unit, Unit> CancelFormulaCommand { get; }
+
     public ReactiveCommand<Unit, Unit> CommitNameCommand { get; }
 
     public ReactiveCommand<SheetTabReorderRequest, Unit> ReorderSheetCommand { get; }
@@ -216,6 +220,12 @@ public sealed class WorkbookViewModel : ReactiveObject, IDisposable
             this.RaiseAndSetIfChanged(ref _isChartPanelVisible, value);
             _chartPanel.IsEnabled = value;
         }
+    }
+
+    public bool IsFormulaBarVisible
+    {
+        get => _isFormulaBarVisible;
+        set => this.RaiseAndSetIfChanged(ref _isFormulaBarVisible, value);
     }
 
     public string StatusLeft
@@ -503,6 +513,20 @@ public sealed class WorkbookViewModel : ReactiveObject, IDisposable
         UpdateFormulaText(current);
     }
 
+    private void CancelFormula()
+    {
+        var current = SelectionState.CurrentCell;
+        if (!current.HasValue)
+        {
+            FormulaText = string.Empty;
+            SetFormulaError(null);
+            return;
+        }
+
+        SetFormulaError(null);
+        UpdateFormulaText(current);
+    }
+
     private void CommitName()
     {
         var name = NameBoxText?.Trim();
@@ -712,7 +736,7 @@ public sealed class WorkbookViewModel : ReactiveObject, IDisposable
                         {
                             CreateCommand("Gridlines"),
                             CreateCommand("Headings"),
-                            CreateCommand("Formula Bar"),
+                            CreateToggleCommand("Formula Bar", value => IsFormulaBarVisible = value),
                             CreateToggleCommand("Chart Pane", value => IsChartPanelVisible = value)
                         }),
                     new RibbonGroupViewModel(

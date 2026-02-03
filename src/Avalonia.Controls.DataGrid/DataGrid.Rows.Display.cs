@@ -6,7 +6,10 @@
 using Avalonia.Media;
 using Avalonia.Controls.Utils;
 using Avalonia.Controls.DataGridSearching;
+using Avalonia.Input;
 using Avalonia.Utilities;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using System;
 using System.Diagnostics;
 
@@ -317,6 +320,30 @@ namespace Avalonia.Controls
 
             if (element is DataGridRow dataGridRow)
             {
+                if (ReferenceEquals(dataGridRow, _focusedRow)
+                    || dataGridRow.IsKeyboardFocusWithin
+                    || CurrentSlot == slot)
+                {
+                    var focusManager = FocusManager.GetFocusManager(this);
+                    var focusedElement = focusManager?.GetFocusedElement() as Visual;
+                    if (focusedElement == null
+                        || !focusedElement.IsAttachedToVisualTree
+                        || !focusedElement.IsEffectivelyVisible
+                        || this.ContainsChild(focusedElement))
+                    {
+                        if (focusManager != null)
+                        {
+                            focusManager.Focus(this, NavigationMethod.Unspecified, KeyModifiers.None);
+                        }
+                        else
+                        {
+                            Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+                        }
+                    }
+
+                    RequestFocusAfterRowRecycle();
+                }
+
                 HideRecycledElement(dataGridRow);
 
                 if (IsRowRecyclable(dataGridRow))
@@ -345,6 +372,37 @@ namespace Avalonia.Controls
             }
 
             DisplayData.UnloadScrollingElement(element, slot, updateSlotInformation, wasDeleted);
+        }
+
+        internal void RequestFocusAfterRowRecycle()
+        {
+            if (!IsAttachedToVisualTree || _focusRestoreScheduled)
+            {
+                return;
+            }
+
+            _focusRestoreScheduled = true;
+            Dispatcher.UIThread.Post(() =>
+            {
+                _focusRestoreScheduled = false;
+                var focusManager = FocusManager.GetFocusManager(this);
+                var focusedElement = focusManager?.GetFocusedElement() as Visual;
+
+                if (focusedElement != null && focusedElement.IsAttachedToVisualTree && focusedElement.IsEffectivelyVisible)
+                {
+                    return;
+                }
+
+                if (focusManager != null)
+                {
+                    focusManager.Focus(this, NavigationMethod.Unspecified, KeyModifiers.None);
+                }
+                else
+                {
+                    Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+                }
+
+            }, DispatcherPriority.Input);
         }
 
 

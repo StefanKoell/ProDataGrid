@@ -18,7 +18,6 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Reactive;
 using Avalonia.Utilities;
-using Avalonia.VisualTree;
 using System.Diagnostics;
 using System;
 

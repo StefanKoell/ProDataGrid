@@ -580,6 +580,7 @@ internal
             AddHandler(InputElement.PointerReleasedEvent, DataGrid_FillHandlePointerReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
             AddHandler(InputElement.PointerCaptureLostEvent, DataGrid_FillHandlePointerCaptureLost, RoutingStrategies.Tunnel, handledEventsToo: true);
             AddHandler(DataGridColumnHeader.HeaderPointerPressedEvent, DataGrid_ColumnHeaderPointerPressed, handledEventsToo: true);
+            AddHandler(InputElement.LostFocusEvent, DataGrid_DescendantLostFocus, RoutingStrategies.Bubble, handledEventsToo: true);
 
             _loadedRows = new List<DataGridRow>();
             _lostFocusActions = new Queue<Action>();

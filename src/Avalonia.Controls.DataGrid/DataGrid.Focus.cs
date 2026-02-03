@@ -4,6 +4,7 @@
 
 #nullable disable
 
+using Avalonia.Controls.Utils;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
@@ -62,13 +63,16 @@ internal
         //TODO: Make override?
         private void DataGrid_LostFocus(object sender, RoutedEventArgs e)
         {
+            var previousFocusedObject = _focusedObject as Visual;
             _focusedObject = null;
             DetachExternalEditingElement();
             if (ContainsFocus)
             {
                 bool focusLeftDataGrid = true;
                 bool dataGridWillReceiveRoutedEvent = true;
-                Visual focusedObject = FocusManager.GetFocusManager(this)?.GetFocusedElement() as Visual;
+                var focusManager = FocusManager.GetFocusManager(this);
+                Visual focusedObject = focusManager?.GetFocusedElement() as Visual;
+                var newFocusedObject = focusedObject;
                 DataGridColumn editingColumn = null;
 
                 while (focusedObject != null)
@@ -92,6 +96,16 @@ internal
                         dataGridWillReceiveRoutedEvent = false;
                     }
                     focusedObject = parent;
+                }
+
+                if (focusLeftDataGrid
+                    && previousFocusedObject != null
+                    && (!previousFocusedObject.IsAttachedToVisualTree || !previousFocusedObject.IsEffectivelyVisible)
+                    && (newFocusedObject == null
+                        || !newFocusedObject.IsAttachedToVisualTree
+                        || !newFocusedObject.IsEffectivelyVisible))
+                {
+                    RequestFocusAfterRowRecycle();
                 }
 
                 if (EditingRow != null && EditingColumnIndex != -1)
@@ -148,6 +162,23 @@ internal
                 }
                 DataGrid_LostFocus(sender, e);
             }
+        }
+
+        private void DataGrid_DescendantLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (e.Source is not Visual source || !this.ContainsChild(source))
+            {
+                return;
+            }
+
+            var focusManager = FocusManager.GetFocusManager(this);
+            var focusedElement = focusManager?.GetFocusedElement() as Visual;
+            if (focusedElement != null && focusedElement.IsAttachedToVisualTree)
+            {
+                return;
+            }
+
+            RequestFocusAfterRowRecycle();
         }
 
 
@@ -242,6 +273,8 @@ internal
         private Queue<Action> _lostFocusActions;
 
         private bool _executingLostFocusActions;
+
+        private bool _focusRestoreScheduled;
 
 
         internal bool ContainsFocus

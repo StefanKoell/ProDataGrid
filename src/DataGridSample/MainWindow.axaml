@@ -557,6 +557,9 @@
     <TabItem Header="Selection Origin">
       <pages:SelectionOriginPage />
     </TabItem>
+    <TabItem Header="Focus Retention on Scroll">
+      <pages:FocusLossOnScrollPage />
+    </TabItem>
     <TabItem Header="Auto-scroll">
       <pages:AutoScrollPage />
     </TabItem>

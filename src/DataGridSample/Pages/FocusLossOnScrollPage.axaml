@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:DataGridSample.Models"
+             xmlns:viewModels="clr-namespace:DataGridSample.ViewModels"
+             xmlns:converters="clr-namespace:DataGridSample.Converters"
+             x:Class="DataGridSample.Pages.FocusLossOnScrollPage"
+             x:DataType="viewModels:FocusLossOnScrollViewModel">
+  <UserControl.DataContext>
+    <viewModels:FocusLossOnScrollViewModel />
+  </UserControl.DataContext>
+
+  <UserControl.Resources>
+    <converters:FocusIndicatorBrushConverter x:Key="FocusIndicatorBrushConverter"
+                                             FocusedBrush="#2E7D32"
+                                             UnfocusedBrush="#9EA7B3" />
+  </UserControl.Resources>
+
+  <Grid RowDefinitions="Auto,Auto,Auto,*"
+        Margin="12"
+        RowSpacing="8">
+    <StackPanel Grid.Row="0" Spacing="4">
+      <TextBlock Classes="h2">Focus retention while scrolling</TextBlock>
+      <TextBlock Text="Issue #245: focus can be lost when a focused row is recycled during scrolling. Start editing a cell, then scroll so the row leaves the viewport. Editing will cancel (expected), but focus should remain within the grid."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12">
+      <TextBlock VerticalAlignment="Center" Text="Steps:" />
+      <TextBlock VerticalAlignment="Center" Text="1) Double-click a First/Last cell" />
+      <TextBlock VerticalAlignment="Center" Text="2) Type" />
+      <TextBlock VerticalAlignment="Center" Text="3) Scroll away" />
+      <TextBlock VerticalAlignment="Center" Text="4) Scroll back" />
+    </StackPanel>
+
+    <Border Grid.Row="2"
+            Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+            BorderThickness="1"
+            CornerRadius="4"
+            Padding="8">
+      <StackPanel Spacing="4">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock FontWeight="SemiBold" Text="DataGrid focus within:" />
+          <TextBlock Text="{Binding ElementName=FocusGrid, Path=IsKeyboardFocusWithin}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock FontWeight="SemiBold" Text="Focused control:" />
+          <TextBlock Text="{Binding FocusedElementDescription}"
+                     TextWrapping="Wrap" />
+        </StackPanel>
+      </StackPanel>
+    </Border>
+
+    <Border Grid.Row="3"
+            BorderBrush="{Binding ElementName=FocusGrid, Path=IsKeyboardFocusWithin, Converter={StaticResource FocusIndicatorBrushConverter}}"
+            BorderThickness="2"
+            CornerRadius="4"
+            Padding="2">
+      <DataGrid x:Name="FocusGrid"
+                ItemsSource="{Binding Items}"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                SelectionUnit="Cell"
+                SelectionMode="Extended"
+                UseLogicalScrollable="True"
+                HeadersVisibility="All"
+                GridLinesVisibility="All"
+                Height="360">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="First"
+                              Binding="{Binding FirstName}"
+                              Width="2*"
+                              x:DataType="models:Person" />
+          <DataGridTextColumn Header="Last"
+                              Binding="{Binding LastName}"
+                              Width="2*"
+                              x:DataType="models:Person" />
+          <DataGridTextColumn Header="Age"
+                              Binding="{Binding Age}"
+                              Width="*"
+                              x:DataType="models:Person" />
+          <DataGridCheckBoxColumn Header="Is Banned"
+                                  Binding="{Binding IsBanned}"
+                                  Width="*"
+                                  x:DataType="models:Person" />
+        </DataGrid.Columns>
+      </DataGrid>
+    </Border>
+  </Grid>
+</UserControl>

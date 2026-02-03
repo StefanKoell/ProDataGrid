@@ -547,6 +547,29 @@ public class DataGridKeyboardInputTests
     }
 
     [AvaloniaFact]
+    public void F2_On_Placeholder_Does_Not_Shift_Vertical_Offset()
+    {
+        var (grid, items) = CreateGrid(rowCount: 50, canUserAddRows: true);
+        grid.AutoScrollToSelectedItem = false;
+
+        SetCurrentCell(grid, rowIndex: items.Count, columnIndex: 0);
+        Dispatcher.UIThread.RunJobs();
+        grid.UpdateLayout();
+
+        var offsetBefore = grid.GetVerticalOffset();
+        Assert.True(offsetBefore > 0, $"Expected scroll offset to be > 0, got {offsetBefore}.");
+
+        var args = PressKey(grid, Key.F2);
+        Dispatcher.UIThread.RunJobs();
+        grid.UpdateLayout();
+
+        var offsetAfter = grid.GetVerticalOffset();
+        Assert.True(args.Handled);
+        Assert.NotNull(grid.EditingRow);
+        Assert.InRange(offsetAfter, offsetBefore - 0.5, offsetBefore + 0.5);
+    }
+
+    [AvaloniaFact]
     public void F2_Starts_Edit_When_Alt_Pressed()
     {
         var (grid, _) = CreateGrid();

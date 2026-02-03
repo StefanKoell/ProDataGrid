@@ -1092,12 +1092,23 @@ namespace Avalonia.Controls
                             // If we're grouping then we handle this through the CollectionViewGroup notifications
                             if (_onCollectionAddRemoveNewRowPlaceholder)
                             {
-                                if (_placeholderRowIndexDuringAdd.HasValue)
-                                {
-                                    _owner.RemoveRowAt(_placeholderRowIndexDuringAdd.Value, DataGridCollectionView.NewItemPlaceholder);
-                                }
+                                var placeholderIndex = _placeholderRowIndexDuringAdd;
                                 _placeholderRowIndexDuringAdd = null;
                                 _onCollectionAddRemoveNewRowPlaceholder = false;
+
+                                if (placeholderIndex.HasValue &&
+                                    e.NewItems != null &&
+                                    e.NewItems.Count == 1 &&
+                                    e.NewStartingIndex == placeholderIndex.Value)
+                                {
+                                    _owner.TryReplacePlaceholderRow(placeholderIndex.Value, e.NewItems[0]);
+                                    break;
+                                }
+
+                                if (placeholderIndex.HasValue)
+                                {
+                                    _owner.RemoveRowAt(placeholderIndex.Value, DataGridCollectionView.NewItemPlaceholder);
+                                }
                             }
                             if (e.NewStartingIndex < 0)
                             {

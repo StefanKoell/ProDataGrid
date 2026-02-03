@@ -517,6 +517,48 @@ internal
             RequestPointerOverRefresh();
         }
 
+        internal bool TryReplacePlaceholderRow(int rowIndex, object newItem)
+        {
+            int slot = SlotFromRowIndex(rowIndex);
+            if (slot < 0 || slot >= SlotCount || IsGroupSlot(slot))
+            {
+                return false;
+            }
+
+            if (!IsSlotVisible(slot))
+            {
+                return false;
+            }
+
+            if (DisplayData.GetDisplayedElement(slot) is not DataGridRow row)
+            {
+                return false;
+            }
+
+            var previousItem = row.DataContext;
+            var wasPlaceholder = row.IsPlaceholder;
+
+            row.Index = rowIndex;
+            row.Slot = slot;
+            PrepareContainerForItemOverride(row, newItem);
+            UpdateRowHeader(row);
+            ApplyConditionalFormattingForRow(row);
+
+            if (!ReferenceEquals(previousItem, newItem) &&
+                (wasPlaceholder || row.IsPlaceholder))
+            {
+                foreach (DataGridCell cell in row.Cells)
+                {
+                    cell.Content = cell.OwningColumn.GenerateElementInternal(cell, newItem);
+                }
+            }
+
+            row.ApplyState();
+            row.InvalidateMeasure();
+            RequestPointerOverRefresh();
+            return true;
+        }
+
         internal bool IsColumnDisplayed(int columnIndex)
         {
             return columnIndex >= FirstDisplayedNonFillerColumnIndex && columnIndex <= DisplayData.LastTotallyDisplayedScrollingCol;

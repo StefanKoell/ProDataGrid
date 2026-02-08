@@ -1703,6 +1703,37 @@ public class DataGridScrollingTests
     }
 
     [AvaloniaFact]
+    public void AutoScrollToSelectedItem_Expands_Collapsed_Group_To_Reveal_Selected_Item()
+    {
+        var items = Enumerable.Range(0, 60)
+            .Select(x => new GroupableTestModel($"Item {x}", $"Group {x / 10}"))
+            .ToList();
+
+        var target = CreateGroupedTarget(items, height: 220, useLogicalScrollable: true);
+        target.AutoScrollToSelectedItem = true;
+        target.UpdateLayout();
+
+        var headers = GetGroupHeaders(target)
+            .OrderBy(h => h.RowGroupInfo?.Slot ?? int.MaxValue)
+            .ToList();
+
+        Assert.NotEmpty(headers);
+        headers[0].ToggleExpandCollapse(isVisible: false, setCurrent: true);
+        target.UpdateLayout();
+
+        var selectedItem = items[5];
+        Assert.Null(FindRowForItem(target, selectedItem));
+
+        target.SelectedItem = selectedItem;
+        Dispatcher.UIThread.RunJobs();
+        target.UpdateLayout();
+
+        var row = FindRowForItem(target, selectedItem);
+        Assert.NotNull(row);
+        Assert.Equal(5, row!.Index);
+    }
+
+    [AvaloniaFact]
     public void Keyboard_Navigation_Scrolls_When_AutoScroll_Disabled()
     {
         // Arrange

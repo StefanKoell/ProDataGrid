@@ -1190,6 +1190,62 @@ public class DataGridScrollingTests
             $"Expected wheel scroll to update logical offset. Before: {initialOffset}, After: {scrolledOffset}");
     }
 
+    [AvaloniaFact]
+    public void MouseWheel_Horizontal_In_FluentV2_Uses_Small_Logical_Step()
+    {
+        var items = Enumerable.Range(0, 200).Select(x => new ScrollTestModel($"Item {x}")).ToList();
+        var root = new Window
+        {
+            Width = 320,
+            Height = 180,
+        };
+
+        root.SetThemeStyles(DataGridTheme.FluentV2);
+
+        var target = new DataGrid
+        {
+            ItemsSource = items,
+            HeadersVisibility = DataGridHeadersVisibility.Column,
+            UseLogicalScrollable = true,
+        };
+
+        target.ColumnsInternal.Add(new DataGridTextColumn
+        {
+            Header = "Wide",
+            Binding = new Binding(nameof(ScrollTestModel.Name)),
+            Width = new DataGridLength(400),
+        });
+        target.ColumnsInternal.Add(new DataGridTextColumn
+        {
+            Header = "Value",
+            Binding = new Binding(nameof(ScrollTestModel.Name)),
+            Width = new DataGridLength(160),
+        });
+
+        root.Content = target;
+        root.Show();
+        root.UpdateLayout();
+
+        var visualRoot = (TopLevel)target.GetVisualRoot()!;
+        var wheelPoint = target.TranslatePoint(
+            new Point(target.Bounds.Width / 2, target.Bounds.Height / 2),
+            visualRoot)!.Value;
+
+        var scrollViewer = target.GetSelfAndVisualDescendants()
+            .OfType<ScrollViewer>()
+            .First(sv => sv.Name == "PART_ScrollViewer");
+
+        var before = scrollViewer.Offset.X;
+
+        visualRoot.MouseWheel(wheelPoint, new Vector(-3, 0));
+        root.UpdateLayout();
+
+        var after = scrollViewer.Offset.X;
+        var delta = after - before;
+
+        Assert.InRange(delta, 47.9, 48.1);
+    }
+
     #endregion
 
     #region ILogicalScrollable Scrolling Tests

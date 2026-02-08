@@ -34,6 +34,7 @@ internal
         private bool _prefetchScheduled;
         private Vector _lastPrefetchOffset;
         private const int PrefetchBufferRows = 3;
+        private const double DefaultHorizontalScrollStep = 16;
 
         #region ILogicalScrollable Properties
 
@@ -80,7 +81,7 @@ internal
         /// Gets the size to scroll by for small scroll increments (e.g., arrow keys, mouse wheel).
         /// </summary>
         public Size ScrollSize => new Size(
-            OwningGrid?.ColumnsInternal.FirstVisibleScrollingColumn?.ActualWidth ?? 16, 
+            DefaultHorizontalScrollStep,
             OwningGrid?.RowHeightEstimate ?? 22);
 
         /// <summary>
@@ -157,7 +158,7 @@ internal
                 {
                     return true; // Already visible since we're editing it
                 }
-                
+
                 OwningGrid.ScrollIntoView(OwningGrid.DataConnection.GetDataItem(row.Index), null);
                 return true;
             }

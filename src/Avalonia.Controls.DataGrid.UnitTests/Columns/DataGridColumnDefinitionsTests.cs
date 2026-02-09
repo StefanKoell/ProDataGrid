@@ -271,6 +271,64 @@ public class DataGridColumnDefinitionsTests
     }
 
     [AvaloniaFact]
+    public void ColumnDefinitionsSource_Removes_Stale_Columns_When_Definitions_Change_While_Detached()
+    {
+        var definitions = new ObservableCollection<DataGridColumnDefinition>
+        {
+            new DataGridTextColumnDefinition
+            {
+                Header = "Name",
+                Binding = DataGridBindingDefinition.Create<Person, string>(p => p.Name)
+            },
+            new DataGridTextColumnDefinition
+            {
+                Header = "Age",
+                Binding = DataGridBindingDefinition.Create<Person, int>(p => p.Age)
+            }
+        };
+
+        var grid = new DataGrid
+        {
+            AutoGenerateColumns = false,
+            ColumnDefinitionsSource = definitions
+        };
+
+        var window = new Window
+        {
+            Width = 300,
+            Height = 200,
+            Content = grid
+        };
+
+        window.SetThemeStyles();
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            Assert.Equal(2, GetNonFillerColumns(grid).Count);
+
+            window.Content = null;
+            Dispatcher.UIThread.RunJobs();
+
+            definitions.RemoveAt(1);
+
+            window.Content = grid;
+            Dispatcher.UIThread.RunJobs();
+            grid.UpdateLayout();
+
+            var headers = GetNonFillerColumns(grid).Select(c => c.Header).ToArray();
+            Assert.Single(headers);
+            Assert.Equal("Name", headers[0]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void ColumnDefinitionsSource_Retains_Column_Instance_After_Reattach()
     {
         var definitions = new ObservableCollection<DataGridColumnDefinition>
